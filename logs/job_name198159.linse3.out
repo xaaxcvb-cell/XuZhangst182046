@@ -1,0 +1,132 @@
+[INFO] Allocated node: linse3
+/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/fabric/__init__.py:41: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/fabric/utilities/seed.py:40: No seed found, seed set to 0
+[rank: 0] Seed set to 0
+/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet50_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet50_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/torch/nn/utils/weight_norm.py:28: UserWarning: torch.nn.utils.weight_norm is deprecated in favor of torch.nn.utils.parametrizations.weight_norm.
+  warnings.warn("torch.nn.utils.weight_norm is deprecated in favor of torch.nn.utils.parametrizations.weight_norm.")
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+
+  | Name                    | Type               | Params | Mode 
+-----------------------------------------------------------------------
+0 | backbone                | ResNetBackbone     | 23.5 M | train
+1 | feature_extractor       | FeatureExtractor   | 525 K  | train
+2 | classifier              | Classifier         | 2.3 K  | train
+3 | feature_reduction       | Sequential         | 16.4 K | train
+4 | total_train_acc         | MulticlassAccuracy | 0      | train
+5 | total_online_tta_acc    | MulticlassAccuracy | 0      | train
+6 | total_online_tta_hscore | HScore             | 0      | train
+-----------------------------------------------------------------------
+24.1 M    Trainable params
+0         Non-trainable params
+24.1 M    Total params
+96.207    Total estimated model params size (MB)
+SLURM auto-requeueing enabled. Setting signal handlers.
+/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/torch/utils/data/dataloader.py:558: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 4, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
+Training: |          | 0/? [00:00<?, ?it/s]Training:   0%|          | 0/641 [00:00<?, ?it/s]Epoch 0:   0%|          | 0/641 [00:00<?, ?it/s] Traceback (most recent call last):
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/main.py", line 12, in <module>
+    main()
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/main.py", line 9, in main
+    cli = CustomCLI()
+          ^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/cli.py", line 394, in __init__
+    self._run_subcommand(self.subcommand)
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/cli.py", line 701, in _run_subcommand
+    fn(**fn_kwargs)
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 543, in fit
+    call._call_and_handle_interrupt(
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 44, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 579, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 986, in _run
+    results = self._run_stage()
+              ^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1030, in _run_stage
+    self.fit_loop.run()
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/loops/fit_loop.py", line 205, in run
+    self.advance()
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/loops/fit_loop.py", line 363, in advance
+    self.epoch_loop.run(self._data_fetcher)
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/loops/training_epoch_loop.py", line 140, in run
+    self.advance(data_fetcher)
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/loops/training_epoch_loop.py", line 250, in advance
+    batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/loops/optimization/automatic.py", line 190, in run
+    self._optimizer_step(batch_idx, closure)
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/loops/optimization/automatic.py", line 268, in _optimizer_step
+    call._call_lightning_module_hook(
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 159, in _call_lightning_module_hook
+    output = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/core/module.py", line 1308, in optimizer_step
+    optimizer.step(closure=optimizer_closure)
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/core/optimizer.py", line 153, in step
+    step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/strategies/strategy.py", line 238, in optimizer_step
+    return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/plugins/precision/precision.py", line 122, in optimizer_step
+    return optimizer.step(closure=closure, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/torch/optim/optimizer.py", line 391, in wrapper
+    out = func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/torch/optim/optimizer.py", line 76, in _use_grad
+    ret = func(self, *args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/torch/optim/sgd.py", line 71, in step
+    loss = closure()
+           ^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/plugins/precision/precision.py", line 108, in _wrap_closure
+    closure_result = closure()
+                     ^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/loops/optimization/automatic.py", line 144, in __call__
+    self._result = self.closure(*args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/loops/optimization/automatic.py", line 129, in closure
+    step_output = self._step_fn()
+                  ^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/loops/optimization/automatic.py", line 317, in _training_step
+    training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 311, in _call_strategy_hook
+    output = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/lightning/pytorch/strategies/strategy.py", line 390, in training_step
+    return self.lightning_module.training_step(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/adaptation.py", line 86, in training_step
+    _, pseudo_labels, likelihood = self.gmm.get_labels(feat_ext)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/utils.py", line 210, in get_labels
+    likelihood = self.get_likelihood(feat, self.mu, self.C)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/utils.py", line 194, in get_likelihood
+    rv = multivariate_normal(mean, cov, allow_singular=True)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/scipy/stats/_multivariate.py", line 397, in __call__
+    return multivariate_normal_frozen(mean, cov,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/scipy/stats/_multivariate.py", line 903, in __init__
+    self._dist._process_parameters(mean, cov, allow_singular))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/scipy/stats/_multivariate.py", line 421, in _process_parameters
+    psd = _PSD(cov, allow_singular=allow_singular)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/lib/python3.12/site-packages/scipy/stats/_multivariate.py", line 169, in __init__
+    raise ValueError(msg)
+ValueError: The input matrix must be symmetric positive semidefinite.
