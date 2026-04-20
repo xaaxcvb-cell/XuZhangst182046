@@ -1,0 +1,336 @@
+_wandb:
+    value:
+        cli_version: 0.26.0
+        e:
+            cdw816w4cainwfevdv3ua6bvu5o37dws:
+                args:
+                    - fit
+                    - --config
+                    - /usrhomes/s1501/st182046/dirichlet/GMM/configs/target_adaptation.yaml
+                codePath: main.py
+                cpu_count: 16
+                cpu_count_logical: 32
+                cudaVersion: "12.8"
+                disk:
+                    /:
+                        total: "1888558305280"
+                        used: "131786301440"
+                email: st182046@stud.uni-stuttgart.de
+                executable: /misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/bin/python
+                git:
+                    commit: 903dacedb88fee2812a5e7207621d415daa402cf
+                    remote: https://github.com/xaaxcvb-cell/XuZhangst182046.git
+                gpu: NVIDIA GeForce GTX 1080 Ti
+                gpu_count: 1
+                gpu_nvidia:
+                    - architecture: Pascal
+                      cudaCores: 3584
+                      memoryTotal: "11811160064"
+                      name: NVIDIA GeForce GTX 1080 Ti
+                      uuid: GPU-fe3dc8e0-8051-57af-dd6c-0dc0b266a687
+                host: linse2
+                memory:
+                    total: "135036313600"
+                os: Linux-6.8.0-106-generic-x86_64-with-glibc2.39
+                program: /misc/usrhomes/s1501/st182046/dirichlet/GMM/main.py
+                python: CPython 3.12.12
+                root: /misc/usrhomes/s1501/st182046/dirichlet/GMM/configs
+                slurm:
+                    cluster_name: compute-cluster
+                    conf: /var/spool/slurm/d/conf-cache/slurm.conf
+                    cpus_on_node: "2"
+                    cpus_per_task: "2"
+                    gpus: "1"
+                    gtids: "0"
+                    job_account: s1501
+                    job_cpus_per_node: "2"
+                    job_gid: "222"
+                    job_gpus: "0"
+                    job_id: "202225"
+                    job_name: Dirichlet
+                    job_nodelist: linse2
+                    job_num_nodes: "1"
+                    job_partition: stud
+                    job_qos: batch
+                    job_uid: "11501"
+                    job_user: s1501
+                    jobid: "202225"
+                    localid: "0"
+                    mem_per_node: "16384"
+                    nnodes: "1"
+                    node_aliases: (null)
+                    nodeid: "0"
+                    nodelist: linse2
+                    nprocs: "1"
+                    ntasks: "1"
+                    prio_process: "0"
+                    procid: "0"
+                    submit_dir: /misc/usrhomes/s1501/st182046/dirichlet/GMM
+                    submit_host: login1
+                    task_pid: "1788949"
+                    tasks_per_node: "1"
+                    topology_addr: linse2
+                    topology_addr_pattern: node
+                    working_cluster: compute-cluster:slurm-ctrl:6817:8960:109
+                startedAt: "2026-04-20T10:36:01.973957Z"
+                writerId: cdw816w4cainwfevdv3ua6bvu5o37dws
+        m: []
+        python_version: 3.12.12
+        t:
+            "1":
+                - 1
+                - 106
+            "2":
+                - 1
+                - 41
+                - 51
+                - 106
+            "3":
+                - 13
+                - 41
+                - 61
+            "4": 3.12.12
+            "5": 0.26.0
+            "12": 0.26.0
+            "13": linux-x86_64
+        visualize:
+            adaptation/selected accumulated know pseudo_labels acc correct/true_fixed:
+                panel_config:
+                    fieldSettings:
+                        stroke: null
+                        x: step
+                        "y": value
+                    panelDefId: wandb/line/v0
+                    stringSettings:
+                        title: adaptation/selected accumulated know pseudo_labels acc correct/true
+                    transform:
+                        name: tableWithLeafColNames
+                    userQuery:
+                        queryFields:
+                            - args:
+                                - name: runSets
+                                  value: ${runSets}
+                              fields:
+                                - fields: []
+                                  name: id
+                                - fields: []
+                                  name: name
+                                - fields: []
+                                  name: _defaultColorIndex
+                                - args:
+                                    - name: tableKey
+                                      value: adaptation/selected accumulated know pseudo_labels acc correct/true_fixed_table
+                                  fields: []
+                                  name: summaryTable
+                              name: runSets
+                panel_type: Vega2
+            adaptation/selected accumulated unknow pseudo_labels acc correct/true_fixed:
+                panel_config:
+                    fieldSettings:
+                        stroke: null
+                        x: step
+                        "y": value
+                    panelDefId: wandb/line/v0
+                    stringSettings:
+                        title: adaptation/selected accumulated unknow pseudo_labels acc correct/true
+                    transform:
+                        name: tableWithLeafColNames
+                    userQuery:
+                        queryFields:
+                            - args:
+                                - name: runSets
+                                  value: ${runSets}
+                              fields:
+                                - fields: []
+                                  name: id
+                                - fields: []
+                                  name: name
+                                - fields: []
+                                  name: _defaultColorIndex
+                                - args:
+                                    - name: tableKey
+                                      value: adaptation/selected accumulated unknow pseudo_labels acc correct/true_fixed_table
+                                  fields: []
+                                  name: summaryTable
+                              name: runSets
+                panel_type: Vega2
+            adaptation/selected step know pseudo_labels acc correct/true_fixed:
+                panel_config:
+                    fieldSettings:
+                        stroke: null
+                        x: step
+                        "y": value
+                    panelDefId: wandb/line/v0
+                    stringSettings:
+                        title: adaptation/selected step know pseudo_labels acc correct/true
+                    transform:
+                        name: tableWithLeafColNames
+                    userQuery:
+                        queryFields:
+                            - args:
+                                - name: runSets
+                                  value: ${runSets}
+                              fields:
+                                - fields: []
+                                  name: id
+                                - fields: []
+                                  name: name
+                                - fields: []
+                                  name: _defaultColorIndex
+                                - args:
+                                    - name: tableKey
+                                      value: adaptation/selected step know pseudo_labels acc correct/true_fixed_table
+                                  fields: []
+                                  name: summaryTable
+                              name: runSets
+                panel_type: Vega2
+            adaptation/selected step unknow pseudo_labels acc correct/true_fixed:
+                panel_config:
+                    fieldSettings:
+                        stroke: null
+                        x: step
+                        "y": value
+                    panelDefId: wandb/line/v0
+                    stringSettings:
+                        title: adaptation/selected step unknow pseudo_labels acc correct/true
+                    transform:
+                        name: tableWithLeafColNames
+                    userQuery:
+                        queryFields:
+                            - args:
+                                - name: runSets
+                                  value: ${runSets}
+                              fields:
+                                - fields: []
+                                  name: id
+                                - fields: []
+                                  name: name
+                                - fields: []
+                                  name: _defaultColorIndex
+                                - args:
+                                    - name: tableKey
+                                      value: adaptation/selected step unknow pseudo_labels acc correct/true_fixed_table
+                                  fields: []
+                                  name: summaryTable
+                              name: runSets
+                panel_type: Vega2
+            adaptation/step know preds acc_fixed:
+                panel_config:
+                    fieldSettings:
+                        stroke: null
+                        x: step
+                        "y": value
+                    panelDefId: wandb/line/v0
+                    stringSettings:
+                        title: adaptation/step know preds acc
+                    transform:
+                        name: tableWithLeafColNames
+                    userQuery:
+                        queryFields:
+                            - args:
+                                - name: runSets
+                                  value: ${runSets}
+                              fields:
+                                - fields: []
+                                  name: id
+                                - fields: []
+                                  name: name
+                                - fields: []
+                                  name: _defaultColorIndex
+                                - args:
+                                    - name: tableKey
+                                      value: adaptation/step know preds acc_fixed_table
+                                  fields: []
+                                  name: summaryTable
+                              name: runSets
+                panel_type: Vega2
+            adaptation/step total preds acc_fixed:
+                panel_config:
+                    fieldSettings:
+                        stroke: null
+                        x: step
+                        "y": value
+                    panelDefId: wandb/line/v0
+                    stringSettings:
+                        title: adaptation/step total preds acc
+                    transform:
+                        name: tableWithLeafColNames
+                    userQuery:
+                        queryFields:
+                            - args:
+                                - name: runSets
+                                  value: ${runSets}
+                              fields:
+                                - fields: []
+                                  name: id
+                                - fields: []
+                                  name: name
+                                - fields: []
+                                  name: _defaultColorIndex
+                                - args:
+                                    - name: tableKey
+                                      value: adaptation/step total preds acc_fixed_table
+                                  fields: []
+                                  name: summaryTable
+                              name: runSets
+                panel_type: Vega2
+            adaptation/step total pseudo_labels acc correct/true_fixed:
+                panel_config:
+                    fieldSettings:
+                        stroke: null
+                        x: step
+                        "y": value
+                    panelDefId: wandb/line/v0
+                    stringSettings:
+                        title: adaptation/step total pseudo_labels acc correct/true
+                    transform:
+                        name: tableWithLeafColNames
+                    userQuery:
+                        queryFields:
+                            - args:
+                                - name: runSets
+                                  value: ${runSets}
+                              fields:
+                                - fields: []
+                                  name: id
+                                - fields: []
+                                  name: name
+                                - fields: []
+                                  name: _defaultColorIndex
+                                - args:
+                                    - name: tableKey
+                                      value: adaptation/step total pseudo_labels acc correct/true_fixed_table
+                                  fields: []
+                                  name: summaryTable
+                              name: runSets
+                panel_type: Vega2
+            adaptation/step unknow preds acc_fixed:
+                panel_config:
+                    fieldSettings:
+                        stroke: null
+                        x: step
+                        "y": value
+                    panelDefId: wandb/line/v0
+                    stringSettings:
+                        title: adaptation/step unknow preds acc
+                    transform:
+                        name: tableWithLeafColNames
+                    userQuery:
+                        queryFields:
+                            - args:
+                                - name: runSets
+                                  value: ${runSets}
+                              fields:
+                                - fields: []
+                                  name: id
+                                - fields: []
+                                  name: name
+                                - fields: []
+                                  name: _defaultColorIndex
+                                - args:
+                                    - name: tableKey
+                                      value: adaptation/step unknow preds acc_fixed_table
+                                  fields: []
+                                  name: summaryTable
+                              name: runSets
+                panel_type: Vega2

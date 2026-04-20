@@ -96,18 +96,30 @@ class BaseModule(L.LightningModule):   #give archit to model
         self.feature_extractor = FeatureExtractor(self.backbone.output_dim, feature_dim, type='bn')
         self.classifier = Classifier(feature_dim, self.known_classes_num, type='wn')
 
-        self.classifier_di = Classifier(feature_dim, self.known_classes_num, type='wn')   #### classifier for dirichlet
+        self.classifier_di1 = Classifier(feature_dim, self.known_classes_num, type='wn')   #### classifier for dirichlet
 
+        cpu_rng_state = torch.get_rng_state()   ###Random number issue (for testing)
+        cuda_rng_state = torch.cuda.get_rng_state_all() if torch.cuda.is_available() else None
+        self.classifier_di2 = Classifier(feature_dim, self.known_classes_num, type='wn')
+        torch.set_rng_state(cpu_rng_state)
+        if cuda_rng_state is not None:
+            torch.cuda.set_rng_state_all(cuda_rng_state)
+        
         if ckpt_dir != '':
             checkpoint = torch.load(ckpt_dir, map_location=torch.device('cpu'))
             self.backbone.load_state_dict(checkpoint['backbone_state_dict'])
             self.feature_extractor.load_state_dict(checkpoint['feature_extractor_state_dict'])
             self.classifier.load_state_dict(checkpoint['classifier_state_dict'])
 
-        if 'classifier_di_state_dict' in checkpoint:   ###如果旧ckpt里没有 classifier_di，就用 classifier 的权重初始化它
-            self.classifier_di.load_state_dict(checkpoint['classifier_di_state_dict'])
+        if 'classifier_di1_state_dict' in checkpoint:   ###如果旧ckpt里没有 classifier_di，就用 classifier 的权重初始化它
+            self.classifier_di1.load_state_dict(checkpoint['classifier_di1_state_dict'])
         else:
-            self.classifier_di.load_state_dict(checkpoint['classifier_state_dict'])
+            self.classifier_di1.load_state_dict(checkpoint['classifier_state_dict'])
+
+        if 'classifier_di2_state_dict' in checkpoint:   ###如果旧ckpt里没有 classifier_di，就用 classifier 的权重初始化它
+            self.classifier_di2.load_state_dict(checkpoint['classifier_di2_state_dict'])
+        else:
+            self.classifier_di2.load_state_dict(checkpoint['classifier_state_dict'])
 
         self.lr = lr
 
@@ -124,16 +136,17 @@ class BaseModule(L.LightningModule):   #give archit to model
             x = nn.Softmax(dim=1)(x)
         return x, feature_embed
     """
-    #new add no softmax
+    #new add no softmax， add new classifier_di
     def forward(self, x):
         x = self.backbone(x)
         feature_embed = self.feature_extractor(x)
 
         logits_main = self.classifier(feature_embed)  
-        logits_di = self.classifier_di(feature_embed.detach())           ### no softmax     .detach()让LD1，LD2只更新h()
+        logits_di1 = self.classifier_di1(feature_embed.detach())           ### no softmax     .detach()让LD1，LD2只更新h()
+        logits_di2 = self.classifier_di2(feature_embed.detach()) 
         x = nn.Softmax(dim=1)(logits_main)                     # with softmax
     
-        return x, logits_di, feature_embed                   #shape  [B, K],[B, K], [B, D]   ~~~~should ask Pascal
+        return x, logits_di1,logits_di2, feature_embed                   #shape  [B, K],[B, K], [B, D]   ~~~~should ask Pascal
 
 
 class SourceModule(BaseModule):

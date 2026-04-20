@@ -1,24 +1,38 @@
 import torch
 import torch.nn as nn
 
+import wandb
+
+wandb.init(project="Dirichlet", name="adaption")
+
 ###
 
 from torchmetrics import Accuracy
 from torch.cuda.amp import autocast
 
 from networks import BaseModule
-from utils import HScore, GaussianMixtureModel, calculate_entropy, calculate_cosine_similarity, calculate_kld, kl_dirichlet, mask
+from utils import HScore, GaussianMixtureModel, calculate_entropy, calculate_cosine_similarity, calculate_kld, kl_dirichlet, DE_dirichlet, print_sorted,log_metrics, mask
 from augmentation import get_tta_transforms
 
 
 class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模块
     def __init__(self, datamodule, feature_dim=256, lr=1e-2, red_feature_dim=64, p_reject=0.5, N_init=30,
-                 augmentation=False, lam=1, temperature=0.1, ckpt_dir='', pseudo_label_quality=0.0):  ### add  pseudo_label_quality=1.0  augmentation=True   p_reject=0.5
-        super(GmmBaAdaptationModule, self).__init__(datamodule, feature_dim, lr, ckpt_dir)  #old  p_reject=0.5    N_init=30   
+                 augmentation=False, lam=1, temperature=0.1, ckpt_dir='', pseudo_label_quality=1.0, Dirichlet=0.0):  ### add  pseudo_label_quality=1.0  augmentation=True   p_reject=0.5
+        super(GmmBaAdaptationModule, self).__init__(datamodule, feature_dim, lr, ckpt_dir)  #old    N_init=30   
 
         self.ckpt_dir = ckpt_dir
         self.pseudo_label_quality = pseudo_label_quality      ###
         self.i_counter = 0                                  ###
+        self.Dirichlet = Dirichlet
+
+        self.num_correct_unknow_accum = 0           ###  用于精度统计的全局计数
+        self.num_correct_know_accum = 0             ###
+        self.num_all_unknow_accum = 0               ###
+        self.num_all_know_accum = 0                 ###
+        self.final_num_correct_unknow_accum = 0           ###  用于精度统计的全局计数
+        self.final_num_correct_know_accum = 0             ###
+        self.final_num_all_unknow_accum = 0               ###
+        self.final_num_all_know_accum = 0                 ###
 
         torch.set_printoptions(precision=2)                ### 全局打印精度
 
@@ -31,8 +45,7 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
 
 
         # Additional feature reduction model
-        self.feature_reduction = nn.Sequential(nn.Linear(feature_dim, red_feature_dim)).to(self.device)           ###
-        #old self.feature_reduction = nn.Sequential(nn.Linear(feature_dim, red_feature_dim)).to(self.device)
+        self.feature_reduction = nn.Sequential(nn.Linear(feature_dim, red_feature_dim)).to(self.device)
 
         # ---------- GMM ----------
         self.gmm = GaussianMixtureModel(self.source_class_num)
@@ -51,7 +64,7 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
         self.total_online_tta_acc = Accuracy(task='multiclass', num_classes=self.known_classes_num + 1)
         self.total_online_tta_hscore = HScore(self.known_classes_num, datamodule.shared_class_num)
 
-    def configure_optimizers(self): #优化器配置
+    def configure_optimizers(self): #优化器配置,包含lr
         # define different learning rates for different subnetworks
         params_group = []
 
@@ -61,6 +74,8 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
             params_group += [{'params': v, 'lr': self.lr}]
         for k, v in self.classifier.named_parameters():
             params_group += [{'params': v, 'lr': self.lr}]
+        for k, v in self.classifier_di1.named_parameters():
+            params_group += [{'params': v, 'lr': self.lr * 2}]
         for k, v in self.feature_reduction.named_parameters():
             params_group += [{'params': v, 'lr': self.lr}]
 
@@ -73,39 +88,61 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
         self.feature_extractor.train()
         self.classifier.train()
 
+
         with autocast(): #自动选择合适的数据精度（float16 / bfloat16 / float32）来执行运算
+
+            ###
+            ratio_Di1_unknown = 0.1            ###0.3     1 for original
+            ratio_Di1_known = 0.8             ###0.8      1 for original
+            ratio_Di2_unknown = 1            ###0.3     1 for original
+            ratio_Di2_known = 1           ###0.8      1 for original
+
+
             x, y = train_batch   ###y shape  [B]
-            
-            print(f"y shape: {y.shape}, y: {y.tolist()}")            ###
 
             # Determine ground truth for the ODA or OPDA scenario
             y = torch.where(y >= self.source_class_num, self.source_class_num, y)   ###torch.where(condition, A, B)  ture:A false:B
             y = y.to(self.device)
 
+            ###提取真实标签
+            true_known_mask = y != self.source_class_num                  ###
+            true_unknown_mask = y == self.source_class_num                ###
+            true_rejection_mask = true_known_mask | true_unknown_mask     ###
+            true_known_mask = true_known_mask.to(self.device)
+            true_unknown_mask = true_unknown_mask.to(self.device)
+            true_rejection_mask = true_rejection_mask.to(self.device)
+
             #y_hat, feat_ext = self.forward(x)  #y_hat为模型预测概率，feat_ext中间层提取出来的特征向量   #.forward from basemodel from network
-            y_hat, logits, feat_ext = self.forward(x)  # l  logits   shape [B,class_num]
-            softplus = nn.Softplus()
-            evidence_Di = softplus(logits)        ### ek in paper            shape [B, K] 
-            #print(f"--------evidence_Di--------: {evidence_Di}")                                    ###
+            y_hat, logits1, logits2, feat_ext = self.forward(x)  # l  logits   shape [B,class_num]
 
-            alpha_Di = evidence_Di + 1.0           ###shape [B, K] 
-            s_Di = alpha_Di.sum(dim=1, keepdim=True)   # [B, 1]  # Dirichlet strength     uncertainty u = K/s  #########
-            #print(f"===========s_Di=============: {s_Di}") 
+            if self.Dirichlet == 1.0:
+                softplus = nn.Softplus()
+                evidence_Di1 = softplus(logits1)        ### ek in paper            shape [B, K] 
+                #print(f"--------evidence_Di1--------: {evidence_Di1}")                                    ###
 
-            ###
-            _, y_hat_Di = torch.max(alpha_Di, dim=1) 
+                alpha_Di1 = evidence_Di1 + 1.0           ###shape [B, K] 
+                s_Di1 = alpha_Di1.sum(dim=1, keepdim=True)   # [B, 1]  # Dirichlet strength     uncertainty u = K/s  #########
+                #print(f"===========s_Di=============: {s_Di}") 
 
-            ###pres for dirichlet
-            #alpha_Di_clone_detached   = alpha_Di.clone().detach()              ####
-            #_, y_hat_Di = torch.max(alpha_Di_clone_detached, dim=1)           ####
+                alpha_Di2 = torch.exp(logits2)
+                de_Di2 = DE_dirichlet(alpha_Di2)            ###
+
+                ###
+                _, y_hat_Di1 = torch.max(alpha_Di1, dim=1) 
+                _, y_hat_Di2 = torch.max(alpha_Di2, dim=1)
+
+                ###pres for dirichlet
+                #alpha_Di1_clone_detached   = alpha_Di1.clone().detach()              ####
+                #_, y_hat_Di1 = torch.max(alpha_Di1_clone_detached, dim=1)           ####
 
 
-            K_Di = self.source_class_num
-            u_Di = K_Di / (s_Di)                                         ### uncertainty u = K/s
-            #print(f"--------uncertainty u--------: {u_Di}")             ###
+                K_Di1 = self.source_class_num
+                u_Di1 = K_Di1 / (s_Di1)                                         ###(s_Di1)   uncertainty u = K/s
+                u_Di1 = u_Di1.squeeze(1)                                      ###.squeeze(1)  和其他数据形状保持一致
+                #print(f"--------uncertainty u--------: {u_Di1}")             ###
 
             #y_hat_aug, feat_ext_aug = self.forward(self.tta_transform(x))
-            y_hat_aug, logits_aug, feat_ext_aug = self.forward(self.tta_transform(x))
+            y_hat_aug, logits1_aug, logits2_aug, feat_ext_aug = self.forward(self.tta_transform(x))
 
             with torch.no_grad():
                 feat_ext = self.feature_reduction(feat_ext)
@@ -113,8 +150,11 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
                 # Update the GMM
                 y_hat_clone_detached = y_hat.clone().detach()
                 self.gmm.soft_update(feat_ext, y_hat_clone_detached)
+                _, preds_test = torch.max(y_hat_clone_detached, dim=1)
 
                 _, pseudo_labels, likelihood = self.gmm.get_labels(feat_ext)
+                if self.pseudo_label_quality == 1.0:                                 ###若采用真实标签，用真实标签和mask替代
+                    pseudo_labels = y.clone() 
                 pseudo_labels = pseudo_labels.to(self.device)
 
                 #print(f"pseudo_labels: {pseudo_labels}")           ### test pseudo_labels
@@ -124,263 +164,215 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
             # ---------- Generate a mask and monitor the result ----------
             known_mask, unknown_mask, rejection_mask = self.mask.calculate_mask(likelihood) #用伪标签取得mask
 
-            #print("known_mask:", known_mask)                            ###
-            #print("unknown_mask:", unknown_mask)                        ###
-            #print("rejection_mask:", rejection_mask)                    ###
-
-
-
-            #print("known_mask:", known_mask)                            ###
-            #print("unknown_mask:", unknown_mask)                        ###
-            #print("rejection_mask:", rejection_mask)                    ###
-
             known_mask = known_mask.to(self.device)
             unknown_mask = unknown_mask.to(self.device)
             rejection_mask = rejection_mask.to(self.device)
             
 
-
-            ###
-            ratio_Di_unknown = 0.3 
-            ratio_Di_known = 0.8              ###
-             
-         
-
-            non_rejection_mask = ~rejection_mask  # for all known and unkown samples####
-
             # Assign unknown pseudo-labels
             pseudo_labels[unknown_mask] = self.source_class_num          #重要，将位置类别的值设为K+1（其实是K，因为从0开始）
             #print(f"pseudo_labels[known_mask]: {pseudo_labels[known_mask]}")           ### test pseudo_labels
             
-            entropy_values_test = calculate_entropy(likelihood)
-            entropy_values_test = torch.tensor(entropy_values_test)
-            
-            
-            ###按u大小打印伪标签和标签
-            print("==========pseudo_labels, y_hat_Di y, u_Di, entropy_values_test ==========: ") 
-            data_all = torch.cat([
-                pseudo_labels.unsqueeze(1).float(),
-                y_hat_Di.unsqueeze(1).float(),
-                y.unsqueeze(1).float(),
-                u_Di,
-                entropy_values_test.unsqueeze(1).float()
-            ], dim=1)
+            #entropy_values_test = calculate_entropy(likelihood)
+            #entropy_values_test = torch.tensor(entropy_values_test)
 
-            _, indices = torch.sort(data_all[:, -2], descending=True)   # 按最后2列（u_Di）降序排序
-            #_, indices = torch.sort(data_all[:, -1], descending=True)   # 按最后一列（u_Di）降序排序
-            data_all_sorted = data_all[indices]
-            print(data_all_sorted)
-
-
-            
-            ###按u大小打印源域外伪标签和标签
-            pseudo_labels_unknow = pseudo_labels[unknown_mask]                                           ###
-            y_unknow = y[unknown_mask]                                          ###
-            y_hat_Di_unknow  = y_hat_Di[unknown_mask]                                          ###
-            u_Di_unknow = u_Di[unknown_mask]               
-
-            entropy_values_test_unknow = entropy_values_test[unknown_mask] 
-            entropy_values_test_unknow = torch.tensor(entropy_values_test_unknow)
-            
-            print("==========pseudo_labels_unknow, y_hat_Di_unknow, y_unknow, u_Di_unknow, entropy_values_test_unknow ==========: ") 
-            data_unknow = torch.cat([
-                pseudo_labels_unknow.unsqueeze(1).float(),
-                y_hat_Di_unknow.unsqueeze(1).float(),
-                y_unknow.unsqueeze(1).float(),
-                u_Di_unknow,
-                entropy_values_test_unknow.unsqueeze(1).float()
-            ], dim=1)
-
-
-            _, indices = torch.sort(data_unknow[:, -2], descending=True)   # 按最后2列（u_Di）降序排序
-            #_, indices = torch.sort(data_unknow[:, -1], descending=True)   # 按最后一列（u_Di）降序排序
-            data_unknow_sorted = data_unknow[indices]
-            print(data_unknow_sorted)
-            #print(torch.cat([pseudo_labels_unknow.unsqueeze(1).float(), y_hat_Di_unknow.unsqueeze(1).float(), y_unknow.unsqueeze(1).float(),u_Di_unknow], dim=1))
-
-            ### 只取u_Di大于ratio_Di_unknown的部分作为新unknown_mask
-            u_flat = u_Di_unknow.squeeze(-1)  
-            _, indices = torch.sort(u_flat, descending=True)
-            k = max(1, int(len(u_flat) * ratio_Di_unknown))              ### 至少保留1个
-            topk_indices_in_unknown = indices[:k]
-            unknown_indices = torch.nonzero(unknown_mask, as_tuple=True)[0]
-            selected_indices = unknown_indices[topk_indices_in_unknown]
-            new_unknown_mask = torch.zeros_like(unknown_mask, dtype=torch.bool)
-            new_unknown_mask[selected_indices] = True
-            unknown_mask = new_unknown_mask
-
-
-
-            #u_Di_unknow_m = u_Di_unknow.mean()
-            #mask_high = (u_Di_unknow > u_Di_unknow_m).squeeze(-1) 
-            #unknown_indices = torch.nonzero(unknown_mask, as_tuple=True)[0]
-            #selected_indices = unknown_indices[mask_high]
-            #new_unknown_mask = torch.zeros_like(unknown_mask, dtype=torch.bool)
-            #new_unknown_mask[selected_indices] = True
-            #unknown_mask = new_unknown_mask
-
-
-
-            ###按u大小打印源域内伪标签和标签
-            pseudo_labels_know = pseudo_labels[known_mask]                                          ###
+            pseudo_labels_unknow = pseudo_labels[unknown_mask]              ###
+            y_unknow = y[unknown_mask]                                      ###
+            pseudo_labels_know = pseudo_labels[known_mask]                  ###
             y_know = y[known_mask]                                          ###
-            y_hat_Di_know  = y_hat_Di[known_mask]                                          ###
-            u_Di_know = u_Di[known_mask]                                          ###
             
-            entropy_values_test_know = entropy_values_test[known_mask] 
-            entropy_values_test_know = torch.tensor(entropy_values_test_know)
 
-            #print("pseudo_labels_know:", pseudo_labels_know.shape)
-            #print("y_hat_Di_know:", y_hat_Di_know.shape)
-            #print("y_know:", y_know.shape)
-            #print("u_Di_know:", u_Di_know.shape)
-            #print("entropy_values_test_know:", entropy_values_test_know.shape)
+            if self.Dirichlet == 1.0:
+                ###按u大小打印batch内所有伪标签，Di预测标签，真实标签，de不确定度，u不确定度
+                print_sorted(pseudo_labels, preds_test, y, de_Di2, u_Di1, descending=True, name="pseudo_labels, preds_test, y, de_Di2, u_Di1")
 
-            print("==========pseudo_labels_know, y_hat_Di_know, y_know, u_Di_know,entropy_values_test_know ==========: ") 
-            data_know = torch.cat([
-                pseudo_labels_know.unsqueeze(1).float(),
-                y_hat_Di_know.unsqueeze(1).float(),
-                y_know.unsqueeze(1).float(),
-                u_Di_know,
-                entropy_values_test_know.unsqueeze(1).float()
-            ], dim=1)
+                ###按u大小打印batch内unknown伪标签，Di预测标签，真实标签，de不确定度，u不确定度
+                                                        ###
+                y_hat_Di1_unknow  = y_hat_Di1[unknown_mask]                                          ###
+                de_Di2_unknow = de_Di2[unknown_mask]    
+                u_Di1_unknow = u_Di1[unknown_mask]               
 
+                #entropy_values_test_unknow = entropy_values_test[unknown_mask] 
+                #entropy_values_test_unknow = torch.tensor(entropy_values_test_unknow)
+                print_sorted(pseudo_labels_unknow, y_hat_Di1_unknow, y_unknow, de_Di2_unknow, u_Di1_unknow, descending=True, name="pseudo_labels_unknow, y_hat_Di1_unknow, y_unknow, de_Di2_unknow, u_Di1_unknow")
+                #print(torch.cat([pseudo_labels_unknow.unsqueeze(1).float(), y_hat_Di_unknow.unsqueeze(1).float(), y_unknow.unsqueeze(1).float(),u_Di_unknow], dim=1))
 
-            _, indices = torch.sort(data_know[:, -2], descending=True)   # 按最后2列（u_Di）降序排序
-            #_, indices = torch.sort(data_know[:, -1], descending=True)   # 按最后一列（u_Di）降序排序
-            data_know_sorted = data_know[indices]
-            print(data_know_sorted)
+                ###按u大小打印源域内伪标签和标签
+                
+                y_hat_Di1_know  = y_hat_Di1[known_mask]                                          ###
+                de_Di2_know = de_Di2[known_mask] 
+                u_Di1_know = u_Di1[known_mask]                                          ###
 
-            ### 只取u_Di小于ratio_Di_known的部分作为新known_mask
-            u_flat = u_Di_know.squeeze(-1)  
-            _, indices = torch.sort(u_flat, descending=False)
-            k = max(1, int(len(u_flat) * ratio_Di_known))              ### 至少保留1个
-            topk_indices_in_known = indices[:k]
-            known_indices = torch.nonzero(known_mask, as_tuple=True)[0]
-            selected_indices = known_indices[topk_indices_in_known]
-            new_known_mask = torch.zeros_like(known_mask, dtype=torch.bool)
-            new_known_mask[selected_indices] = True
-            known_mask = new_known_mask
+                print_sorted(pseudo_labels_know, y_hat_Di1_know, y_know, de_Di2_know, u_Di1_know, descending=True, name="pseudo_labels_know, y_hat_Di1_know, y_know, de_Di2_know, u_Di1_know")
+            
+                #entropy_values_test_know = entropy_values_test[known_mask] 
+                #entropy_values_test_know = torch.tensor(entropy_values_test_know)
 
 
+            ###打印原伪标签精度
+            correct_unknow = (pseudo_labels_unknow == y_unknow).sum().item()
+            correct_know = (pseudo_labels_know == y_know).sum().item()
+
+            total_unknow = y_unknow.numel()
+            total_know = y_know.numel()
+
+            acc_pseudo_labels_unknow = correct_unknow / total_unknow if total_unknow > 0 else 0.0
+            acc_pseudo_labels_know = correct_know / total_know if total_know > 0 else 0.0
+
+            self.num_correct_unknow_accum += correct_unknow
+            self.num_correct_know_accum += correct_know
+            self.num_all_unknow_accum += total_unknow
+            self.num_all_know_accum += total_know
+
+            acc_pseudo_labels_unknow_accum = self.num_correct_unknow_accum / self.num_all_unknow_accum if self.num_all_unknow_accum > 0 else 0.0
+            acc_pseudo_labels_know_accum = self.num_correct_know_accum / self.num_all_know_accum if self.num_all_know_accum > 0 else 0.0
+
+            print(f"acc_pseudo_labels_unknow_step: {acc_pseudo_labels_unknow}")
+            print(f"acc_pseudo_labels_know_step: {acc_pseudo_labels_know}")
+            print(f"acc_pseudo_labels_unknow_accum: {acc_pseudo_labels_unknow_accum}")
+            print(f"acc_pseudo_labels_know_accum: {acc_pseudo_labels_know_accum}")
 
 
-            #u_Di_know_m = u_Di_know.mean()
-            #mask_low = (u_Di_know < u_Di_know_m).squeeze(-1)   
-            #known_indices = torch.nonzero(known_mask, as_tuple=True)[0]
-            #selected_indices = known_indices[mask_low]
-            #new_known_mask = torch.zeros_like(known_mask, dtype=torch.bool)
-            #new_known_mask[selected_indices] = True
-            #known_mask = new_known_mask
+            if self.Dirichlet == 1.0:
+                ### 按不确定度更新unknown mask, Di1和Di2顺序可换
+                ###1.按U（Di1）排列unknown，只取部分作为新unknown_mask
+                u_flat = u_Di1_unknow.squeeze(-1)  
+                _, indices = torch.sort(u_flat, descending=True)
+                k = max(1, int(len(u_flat) * ratio_Di1_unknown))              ### 至少保留1个
+                topk_indices_in_unknown = indices[:k]
+                unknown_indices = torch.nonzero(unknown_mask, as_tuple=True)[0]
+                selected_indices = unknown_indices[topk_indices_in_unknown]
+                new_unknown_mask = torch.zeros_like(unknown_mask, dtype=torch.bool)   ###创建一个和 unknown_mask 形状完全一样的张量，但里面的值全部是 0
+                new_unknown_mask[selected_indices] = True
+                unknown_mask = new_unknown_mask
+
+                ###2.按DE（Di2）排列unknown，只取部分作为新unknown_mask
+                de_Di2_unknown = de_Di2[unknown_mask]   ###交换Di1和Di2顺序时要改
+
+                u_flat = de_Di2_unknown 
+                _, indices = torch.sort(u_flat, descending=True)
+                k = max(1, int(len(u_flat) * ratio_Di2_unknown))              ### 至少保留1个
+                topk_indices_in_unknown_2 = indices[:k]
+                unknown_indices_2 = torch.nonzero(unknown_mask, as_tuple=True)[0]
+                selected_indices_2 = unknown_indices_2[topk_indices_in_unknown_2]
+                new_unknown_mask_2 = torch.zeros_like(unknown_mask, dtype=torch.bool)
+                new_unknown_mask_2[selected_indices_2] = True
+                unknown_mask = new_unknown_mask_2                     ###使用new_known_mask替代known_mask
 
 
+                ### 按不确定度更新known mask, Di1和Di2顺序可换
+                ###1.按U（Di1）排列known，只取部分作为新known_mask
+                u_flat = u_Di1_know.squeeze(-1)  
+                _, indices = torch.sort(u_flat, descending=False)
+                k = max(1, int(len(u_flat) * ratio_Di1_known))              ### 至少保留1个
+                topk_indices_in_known = indices[:k]
+                known_indices = torch.nonzero(known_mask, as_tuple=True)[0]
+                selected_indices = known_indices[topk_indices_in_known]
+                new_known_mask = torch.zeros_like(known_mask, dtype=torch.bool)
+                new_known_mask[selected_indices] = True
+                known_mask = new_known_mask                     ###使用new_known_mask替代known_mask 
 
-            ### 再打印一遍
-            pseudo_labels_unknow = pseudo_labels[unknown_mask]                                           ###
-            y_unknow = y[unknown_mask]                                          ###
-            y_hat_Di_unknow  = y_hat_Di[unknown_mask]                                          ###
-            u_Di_unknow = u_Di[unknown_mask]                                          ###
+                ###2.按DE（Di2）排列unknown，只取部分作为新unknown_mask
+                de_Di2_known = de_Di2[known_mask]         ###交换Di1和Di2顺序时要改
 
-            entropy_values_test_unknow = entropy_values_test[unknown_mask] 
-            entropy_values_test_unknow = torch.tensor(entropy_values_test_unknow)
-
-            print("==========new pseudo_labels_unknow, y_hat_Di_unknow, y_unknow, u_Di_unknow ==========: ") 
-            data_unknow = torch.cat([
-                pseudo_labels_unknow.unsqueeze(1).float(),
-                y_hat_Di_unknow.unsqueeze(1).float(),
-                y_unknow.unsqueeze(1).float(),
-                u_Di_unknow,
-                entropy_values_test_unknow.unsqueeze(1).float()
-            ], dim=1)
-
-            _, indices = torch.sort(data_unknow[:, -2], descending=True)   # 按最后2列（u_Di）降序排序
-            #_, indices = torch.sort(data_unknow[:, -1], descending=True)   # 按最后一列（u_Di）降序排序
-            data_unknow_sorted = data_unknow[indices]
-            print(data_unknow_sorted)
-
-
-
-            pseudo_labels_know = pseudo_labels[known_mask]                                          ###
-            y_know = y[known_mask]                                          ###
-            y_hat_Di_know  = y_hat_Di[known_mask]                                          ###
-            u_Di_know = u_Di[known_mask]                                          ###
-
-            entropy_values_test_know = entropy_values_test[known_mask] 
-            entropy_values_test_know = torch.tensor(entropy_values_test_know)
-
-            print("==========new pseudo_labels_know, y_hat_Di_know, y_know, u_Di_know ==========: ") 
-            data_know = torch.cat([
-                pseudo_labels_know.unsqueeze(1).float(),
-                y_hat_Di_know.unsqueeze(1).float(),
-                y_know.unsqueeze(1).float(),
-                u_Di_know,
-                entropy_values_test_know.unsqueeze(1).float()
-            ], dim=1)
-
-            _, indices = torch.sort(data_know[:, -2], descending=True)   # 按最后2列（u_Di）降序排序
-            #_, indices = torch.sort(data_know[:, -1], descending=True)   # 按最后一列（u_Di）降序排序
-            data_know_sorted = data_know[indices]
-            print(data_know_sorted)
+                u_flat = de_Di2_known
+                _, indices = torch.sort(u_flat, descending=False)
+                k = max(1, int(len(u_flat) * ratio_Di2_known))              ### 至少保留1个
+                topk_indices_in_known_2 = indices[:k]
+                known_indices_2 = torch.nonzero(known_mask, as_tuple=True)[0]
+                selected_indices_2 = known_indices_2[topk_indices_in_known_2]
+                new_known_mask_2 = torch.zeros_like(known_mask, dtype=torch.bool)
+                new_known_mask_2[selected_indices_2] = True
+                known_mask = new_known_mask_2                     ###使用new_known_mask替代known_mask 
 
 
+                rejection_mask = known_mask | unknown_mask      ###update also rejection_mask
 
 
+                ###获取新unknown和known
+                pseudo_labels_unknow = pseudo_labels[unknown_mask]                       ###
+                y_hat_Di1_unknow  = y_hat_Di1[unknown_mask]                              ###
+                y_unknow = y[unknown_mask]                                               ###
+                de_Di2_unknow = de_Di2[unknown_mask]                                     ###
+                u_Di1_unknow = u_Di1[unknown_mask]                                       ###
+                
+                pseudo_labels_know = pseudo_labels[known_mask]                           ###
+                y_hat_Di1_know  = y_hat_Di1[known_mask]                                  ###
+                y_know = y[known_mask]                                                   ###
+                de_Di2_know = de_Di2[known_mask]                                         ###
+                u_Di1_know = u_Di1[known_mask]                                           ###
+                
+
+                ###打印新标签
+                #entropy_values_test_unknow = entropy_values_test[unknown_mask] 
+                #entropy_values_test_unknow = torch.tensor(entropy_values_test_unknow)
+                #entropy_values_test_know = entropy_values_test[known_mask] 
+                #entropy_values_test_know = torch.tensor(entropy_values_test_know)
+                print_sorted(pseudo_labels_unknow,y_hat_Di1_unknow,y_unknow, de_Di2_unknow, u_Di1_unknow,descending=True,name="final pseudo_labels_unknow, y_hat_Di1_unknow, y_unknow, de_Di2_unknow, u_Di1_unknow")
+                print_sorted(pseudo_labels_know,y_hat_Di1_know,y_know, de_Di2_know,u_Di1_know,descending=True,name="final pseudo_labels_know, y_hat_Di1_know, y_know, de_Di2_know, u_Di1_know")
 
 
+                ###打印新伪标签精度
+                final_correct_unknow = (pseudo_labels_unknow == y_unknow).sum().item()
+                final_correct_know = (pseudo_labels_know == y_know).sum().item()
 
-            #print(torch.cat([pseudo_labels_know.unsqueeze(1).float(), y_hat_Di_know.unsqueeze(1).float(), y_know.unsqueeze(1).float(),u_Di_know], dim=1))
+                final_total_unknow = y_unknow.numel()
+                final_total_know = y_know.numel()
 
-            ###若采用真实标签，用真实标签取得mask
-            true_known_mask = y != self.source_class_num                  ###
-            true_unknown_mask = y == self.source_class_num                ###
-            true_rejection_mask = true_known_mask | true_unknown_mask               ###
-            true_known_mask = true_known_mask.to(self.device)
-            true_unknown_mask = true_unknown_mask.to(self.device)
-            true_rejection_mask = true_rejection_mask.to(self.device)
+                final_acc_pseudo_labels_unknow = final_correct_unknow / final_total_unknow if final_total_unknow > 0 else 0.0
+                final_acc_pseudo_labels_know = final_correct_know / final_total_know if final_total_know > 0 else 0.0
+
+                self.final_num_correct_unknow_accum += final_correct_unknow
+                self.final_num_correct_know_accum += final_correct_know
+                self.final_num_all_unknow_accum += final_total_unknow
+                self.final_num_all_know_accum += final_total_know
+
+                final_acc_pseudo_labels_unknow_accum = self.final_num_correct_unknow_accum / self.final_num_all_unknow_accum if self.final_num_all_unknow_accum > 0 else 0.0
+                final_acc_pseudo_labels_know_accum = self.final_num_correct_know_accum / self.final_num_all_know_accum if self.final_num_all_know_accum > 0 else 0.0
+
+                print(f"\nfinal_acc_pseudo_labels_unknow_step: {final_acc_pseudo_labels_unknow}")
+                print(f"final_acc_pseudo_labels_know_step: {final_acc_pseudo_labels_know}")
+                print(f"final_acc_pseudo_labels_unknow_accum: {final_acc_pseudo_labels_unknow_accum}")
+                print(f"final_acc_pseudo_labels_know_accum: {final_acc_pseudo_labels_know_accum}")
 
 
-            ###
-            print(f"pseudo_labels: {pseudo_labels}")              ### 
-            print(f"yyyyyyyyyyyyy: {y}")                                      ###
-            same_ratio = (pseudo_labels == y).float().mean().item()                 ###       
-            print("same_ratio:", same_ratio * 100, "%")                    ### 
+            ###test pseudo_labels
+            print(f"pseudo_labels: {pseudo_labels}")                               ### 
+            print(f"y_ground truth: {y}")                                          ###
+            pseudo_labels_same_ratio = (pseudo_labels == y).float().mean().item()  ###
+            print("pseudo_labels same_ratio pseudo_labels/y_ground truth:", pseudo_labels_same_ratio * 100, "%")   ###
+                                 ###
 
-            # mask
-            real_unk = (y == self.source_class_num)                   ### 
-            real_kn = (y != self.source_class_num)                  ### 
+            
 
+            ###打印(最终)伪标签准确率
             # unknown
-            num_real_unk = real_unk.sum().item()            ### 
-            if num_real_unk > 0:
-                unk_same_ratio = (((pseudo_labels == self.source_class_num) & real_unk).sum().item()) / num_real_unk
+            num_true_unknown_mask = true_unknown_mask.sum().item()            ### 
+            if num_true_unknown_mask > 0:
+                unk_same_ratio = (((pseudo_labels == y) & true_unknown_mask).sum().item()) / num_true_unknown_mask
             else:
                 unk_same_ratio = 0.0
-            
             # known 
-            num_real_kn = real_kn.sum().item()            ### 
-            if num_real_kn > 0:
-                kn_same_ratio = (((pseudo_labels != self.source_class_num) & real_kn).sum().item()) / num_real_kn
+            num_true_known_mask = true_known_mask.sum().item()            ### 
+            if num_true_known_mask > 0:
+                kn_same_ratio = (((pseudo_labels == y) & true_known_mask).sum().item()) / num_true_known_mask
             else:
                 kn_same_ratio = 0.0
 
-            print("Unknown same_ratio P/y:", unk_same_ratio * 100, "%")                     ### 
-            print("not Unknown same_ratio P/y:", kn_same_ratio * 100, "%")                  ### 
+            print("pseudo_labels Unknown same_ratio pres/true:", unk_same_ratio * 100, "%")           ### correct pseudo_labels/true
+            print("pseudo_labels not Unknown same_ratio pres/true:", kn_same_ratio * 100, "%")        ### correct pseudo_labels/true
 
 
-
-
-            print(f"===============y_hat_Di===============: {y_hat_Di}")          ####
-            print(f"==============y_true_hat==============: {y}")                 ####
-
-            y_hat_Di_known = y_hat_Di[true_known_mask]
-            y_true_hat_known = y[true_known_mask]
-            y_hat_Di_known_accuracy = (y_hat_Di_known == y_true_hat_known).sum().float() / true_known_mask.sum()
-            print(f"==========y_hat_Di_accuracy==========: {y_hat_Di_known_accuracy}") 
+            ###y_hat Accuracy
+            #print(f"===============y_hat_Di===============: {y_hat_Di}")          ####
+            #print(f"==============y_true_hat==============: {y}")                 ####
+            #y_hat_Di1_known = y_hat_Di1[true_known_mask]
+            #y_true_hat_known = y[true_known_mask]
+            #y_hat_Di1_known_accuracy = (y_hat_Di1_known == y_true_hat_known).sum().float() / true_known_mask.sum()
+            #print(f"==========y_hat_Di_accuracy==========: {y_hat_Di_known_accuracy}") 
             #print("==========uncertainty u,y_hat_Di,y_true_hat,pseudo_labels==========: ") 
             #print(torch.cat([u_Di, y_hat_Di.unsqueeze(1).float(), y.unsqueeze(1).float(),pseudo_labels.unsqueeze(1).float()], dim=1))
             #print(f"--------uncertainty u,y_hat_Di,y_true_hat--------: {u_Di},{y_hat_Di},{y}")
-
-
 
 
             if self.pseudo_label_quality == 1.0:                                 ###若采用真实标签，用真实标签和mask替代
@@ -388,25 +380,55 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
                 known_mask = true_known_mask                                     ###
                 unknown_mask = true_unknown_mask                                 ###
                 rejection_mask = true_rejection_mask                             ###
-                
-            print(f"pseudo_labels: {pseudo_labels}")              ### 
-            print(f"yyyyyyyyyyyyy: {y}")                                      ###
-                #y_known_mask = (y < self.source_class_num)                      ###
-                #pseudo_labels[y_known_mask] = y[y_known_mask]                  ###
-
-                #unknown_mask = ~y_known_mask                                   ###
-                #pseudo_labels[unknown_mask] = self.source_class_num            ###
-
+                print(f"pseudo_labels: {pseudo_labels}")                         ### 
+                print(f"y_ground truth: {y}")                                    ###
 
 
             # ---------- Enable OPDA for predictions ----------
-            _, preds = torch.max(y_hat_clone_detached, dim=1)
-            unknown_threshold = (self.mask.tau_low + self.mask.tau_high) / 2
+            if self.Dirichlet == 1.0:
+                self.annealing_pres_step = 300                  ### old 100
+                annealing_pres_coef = min(1.0, self.global_step / self.annealing_pres_step)
+                _, preds = torch.max(y_hat_clone_detached, dim=1)
+                unknown_threshold = 0.7 * ((self.mask.tau_low + self.mask.tau_high) / 2) * (annealing_pres_coef)  +  0.01 * ((self.mask.tau_low + self.mask.tau_high) / 2)     ###threshold for determining unknown labels
+            else:
+                _, preds = torch.max(y_hat_clone_detached, dim=1)
+                unknown_threshold = (self.mask.tau_low + self.mask.tau_high) / 2
+
 
             entropy_values = calculate_entropy(likelihood)
             output_mask = torch.zeros_like(entropy_values, dtype=torch.bool)
             output_mask[entropy_values >= unknown_threshold] = True
             preds[output_mask] = self.source_class_num
+
+            print(f"y_ground truth: {y}")                                     ###
+            print(f"preds: {preds}")                                          ###
+            preds__same_ratio = (preds == y).float().mean().item()            ###
+            print("preds same_ratio preds/y_ground truth:", preds__same_ratio * 100, "%") 
+
+            ###打印(最终)预测准确率
+            # unknown
+            num_true_unknown_mask = true_unknown_mask.sum().item()            ### 
+            if num_true_unknown_mask > 0:
+                unk_same_ratio = (((preds == y) & true_unknown_mask).sum().item()) / num_true_unknown_mask
+            else:
+                unk_same_ratio = 0.0
+            # known 
+            num_true_known_mask = true_known_mask.sum().item()                ### 
+            if num_true_known_mask > 0:
+                kn_same_ratio = (((preds == y) & true_known_mask).sum().item()) / num_true_known_mask
+            else:
+                kn_same_ratio = 0.0
+
+            print("preds Unknown same_ratio pres/true:", unk_same_ratio * 100, "%")           ### correct pres/true
+            print("preds not Unknown same_ratio pres/true:", kn_same_ratio * 100, "%")        ### correct pres/true
+
+            num_pres_unknown = (preds == self.source_class_num).sum()
+            print(f"estimated number of unknown labels:  estimated unknown labels /total true labels: {num_pres_unknown}/64")
+
+            print(f"number of true unknown labels:  true unknown labels /total true labels: {num_true_unknown_mask}/64")
+
+            print(f"--------------self.tau_low: {self.mask.tau_low}")             ###test
+            print(f"-------------self.tau_high: {self.mask.tau_high}")            ###test
 
             # ---------- Update the H-Score ----------
             self.total_online_tta_acc(preds, y)
@@ -421,9 +443,9 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
             # ---------- Calculate the loss -----------
             # ---------- Contrastive loss -----------
             feat_ext = feat_ext.to(self.device)
-            logits = logits.to(self.device)                 # logits
+            logits1 = logits1.to(self.device)                 # logits
             feat_ext_aug = feat_ext_aug.to(self.device)
-            logits_aug = logits_aug.to(self.device)         # logits_aug
+            logits1_aug = logits1_aug.to(self.device)         # logits_aug
             if self.augmentation:
                 feat_total = torch.cat([feat_ext, feat_ext_aug], dim=0)
             else:
@@ -474,92 +496,110 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
 
             ### ---------- Dirichlet-evidence loss ----------        #####
             ###1
+            if self.Dirichlet == 1.0:
+                ### ---------- Dirichlet-evidence loss ----------        #####
+                ###1.Dirichlet squares loss
+
+                pseudo_labels_know = pseudo_labels[known_mask]
+                one_hot_know = torch.nn.functional.one_hot(pseudo_labels_know, num_classes=self.source_class_num)
+                one_hot_know_Di1 = one_hot_know.detach().float()
+                alpha_Di1_known = alpha_Di1[known_mask].float()
+                s_Di1_known = s_Di1[known_mask].float()
+                per_sample_L_Di1_sl = torch.sum((one_hot_know_Di1 - alpha_Di1_known / s_Di1_known) ** 2 + alpha_Di1_known * (s_Di1_known - alpha_Di1_known) / (s_Di1_known ** 2 * (s_Di1_known + 1)), dim=1 )
+                L_Di1_sl = torch.mean(per_sample_L_Di1_sl)    ###14.04.2026
 
 
+                ###2.Dirichlet  KL divergence loss
+                alpha_Di1_unknow = alpha_Di1[unknown_mask]       ###14.04.2026
+                alpha_Di1_tilde = alpha_Di1_unknow             ###因为unknown样本含有的全是错误alpha，所以期望其全部向1靠近
+                #alpha_Di1_tilde = one_hot_know_Di1 + (1 - one_hot_know_Di1)*alpha_Di
+                per_sample_L_Di1_kl = kl_dirichlet(alpha_Di1_tilde,self.source_class_num)
+                L_Di1_kl = torch.mean(per_sample_L_Di1_kl)    ###14.04.2026
 
-            one_hot_know = torch.nn.functional.one_hot(pseudo_labels_know, num_classes=self.source_class_num)
-            one_hot_know_Di = one_hot_know.detach().float()
+                self.annealing_step = 100                  ### old 200
+                annealing_coef = min(1.0, self.global_step / self.annealing_step)
+                a_L_Di1_kl = annealing_coef * L_Di1_kl
 
-            #print(f"one_hot_know_Di: {one_hot_know_Di}")
+                #print(f"\nself.global_step:{self.global_step}") 
+                #print(f"L_Di2: {L_Di2}") 
+                #print(f"annealing_coef: {annealing_coef}") 
+                #print(f"a_L_Di2: {a_L_Di2}")
 
-            alpha_Di = alpha_Di[known_mask].float()
-            s_Di = s_Di[known_mask].float()
+                log_metrics(
+                    {
 
-            per_sample_L_Di1 = torch.sum((one_hot_know_Di - alpha_Di / s_Di) ** 2 + alpha_Di * (s_Di - alpha_Di) / (s_Di ** 2 * (s_Di + 1)), dim=1 )
+                    "acc/final_step_unknow_pseudo_labels acc": final_acc_pseudo_labels_unknow,
+                    "acc/final_step_know_pseudo_labels acc": final_acc_pseudo_labels_know,
+                    "acc/final_accumulated_unknow_pseudo_labels acc": final_acc_pseudo_labels_unknow_accum,
+                    "acc/final_accumulated_know_pseudo_labels acc": final_acc_pseudo_labels_know_accum,
 
-            L_Di1 = torch.sum(per_sample_L_Di1)
-            #L_Di1 = ((one_hot_know_Di - alpha_Di/s_Di)**2 + alpha_Di* (s_Di - alpha_Di) / (s_Di**2 * (s_Di + 1))).sum()
+                    "acc/step_total_pseudo_labels_acc": pseudo_labels_same_ratio,     ###correct/true
+                    "acc/selected_step_unknow_pseudo_labels_acc": acc_pseudo_labels_unknow,     ###correct/true
+                    "acc/selected_step_know_pseudo_labels_acc": acc_pseudo_labels_know,     ###correct/true
+                    "acc/selected_accumulated_unknow_pseudo_labels_acc": acc_pseudo_labels_unknow_accum,     ###correct/true
+                    "acc/selected_accumulated_know_pseudo_labels_acc": acc_pseudo_labels_know_accum,     ###correct/true
 
-            ###old
-            #y_hat_Di_know = y_hat[known_mask,:]                       # y_hat_Di: [N_known, C]，每行是 softmax 概率
-            #pred_labels_know = torch.argmax(y_hat_Di_know, dim=1)          # [N_known]，每个样本一个类别索引
-            #s_Di_know = s_Di[known_mask, :] 
-            #one_hot_know_Di = torch.nn.functional.one_hot(pred_labels_know, num_classes=y_hat_Di_know.size(1)).float()    
-            #L_Di1 = ((one_hot_know_Di - y_hat_Di_know)**2 + y_hat_Di_know * (1 - y_hat_Di_know) / (s_Di_know + 1)).sum()
-            #print(f"======one_hot_know_Di=====: {one_hot_know_Di}") 
-            #print(f"======y_hat_Di_know=====: {y_hat_Di_know}") 
-            #print(f"======s_Di_know=====: {one_hot_know_Di}") 
+                    "acc/step_total_preds_acc": preds__same_ratio,
+                    "acc/step_unknow_preds_acc": unk_same_ratio,
+                    "acc/step_know_preds_acc": kn_same_ratio,
 
-            #for test
-            #A = torch.sum((one_hot_know_Di-alpha_Di / s_Di)**2, axis=1, keepdims=True) 
-            #B = torch.sum(alpha_Di*(s_Di - alpha_Di)/(s_Di*s_Di*(s_Di+1)), axis=1, keepdims=True) 
-            #AB = torch.sum(A + B) 
-            #print(f"A+B: {AB.item():.6f} \t L_Di1: {L_Di1.item():.6f}")
+                    "num_preds_unknown/64": num_pres_unknown,
+                    "num_true_unknown/64": num_true_unknown_mask,
 
 
-            ###2
+                    "tau_low": self.mask.tau_low,
+                    "tau_high": self.mask.tau_high,
 
-            alpha_Di_tilde = one_hot_know_Di + (1 - one_hot_know_Di)*alpha_Di
-            per_sample_L_Di2 = kl_dirichlet(alpha_Di_tilde,self.source_class_num)
+                    },
+                    step=self.global_step,
+                    prefix="adaptation"
+                )
+            else:
+                log_metrics(
+                    {
+
+                    "acc/step_total_pseudo_labels_acc": pseudo_labels_same_ratio,     ###correct/true
+                    "acc/selected_step_unknow_pseudo_labels_acc": acc_pseudo_labels_unknow,     ###correct/true
+                    "acc/selected_step_know_pseudo_labels_acc": acc_pseudo_labels_know,     ###correct/true
+                    "acc/selected_accumulated_unknow_pseudo_labels_acc": acc_pseudo_labels_unknow_accum,     ###correct/true
+                    "acc/selected_accumulated_know_pseudo_labels_acc": acc_pseudo_labels_know_accum,     ###correct/true
+
+                    "acc/step_total_preds_acc": preds__same_ratio,
+                    "acc/step_unknow_preds_acc": unk_same_ratio,
+                    "acc/step_know_preds_acc": kn_same_ratio,
+
+                    "num_preds_unknown/64": num_pres_unknown,
+                    "num_true_unknown/64": num_true_unknown_mask,
+
+
+                    "tau_low": self.mask.tau_low,
+                    "tau_high": self.mask.tau_high,
+
+                    },
+                    step=self.global_step,
+                    prefix="adaptation"
+                )
+
+            if self.Dirichlet == 1.0:
+                #self.loss = L_con + self.lam * L_kl   ###old    loss function
+                #self.loss = - L_con + self.lam * L_kl  + 1000000*L_Di1_sl + 1000000*a_L_Di1_kl
+                #self.loss = - L_con + self.lam * L_kl  + 100*L_Di1_sl + 100*a_L_Di1_kl
+                #self.loss = - L_con + self.lam * L_kl  + 10*L_Di1_sl + 10*a_L_Di1_kl
+                #self.loss = - L_con + self.lam * L_kl  + 5*L_Di1_sl + 5*a_L_Di1_kl
+                #self.loss = - L_con + self.lam * L_kl  + 2*L_Di1_sl + 2*a_L_Di1_kl
+                self.loss = - L_con + self.lam * L_kl  + L_Di1_sl + a_L_Di1_kl
+                #self.loss = - L_con + self.lam * L_kl  + 0.1*L_Di1_sl + 0.1*a_L_Di1_kl  ###loss function
+                #self.loss = L_Di1_sl + a_L_Di1_kl
+                #self.loss = 0.5*L_Di1_sl + 0.5*a_L_Di1_kl
+                #self.loss = 0.1*L_Di1_sl + 0.1*a_L_Di1_kl
+                #self.loss = 0.05*L_Di1_sl + 0.05*a_L_Di1_kl
             
-            L_Di2 = torch.sum(per_sample_L_Di2)
-            self.annealing_step = 200
-            annealing_coef = min(1.0, self.global_step / self.annealing_step)
-            
-            a_L_Di2 = annealing_coef * L_Di2
-            print(f"self.global_step:{self.global_step}") 
-            print(f"per_sample_L_Di2: {per_sample_L_Di2}") 
-            print(f"L_Di2: {L_Di2}") 
-            print(f"annealing_coef: {annealing_coef}") 
-            print(f"a_L_Di2: {a_L_Di2}")
-
-            ###old
-            #y_hat_Di_both = y_hat[rejection_mask,:]
-            #pred_labels_both = torch.argmax(y_hat_Di_both, dim=1)
-            #one_hot_both = torch.nn.functional.one_hot(pred_labels_both, num_classes=y_hat_Di_both.size(1)).float() 
-            #alpha_Di_both = alpha_Di[rejection_mask,:]
-            #alpha_Di_tilde = one_hot_both + (1 - one_hot_both)*alpha_Di_both
-            #L_Di2 = kl_dirichlet(alpha_Di_tilde)                                        ###
-            #print(f"-----------alpha_tilde----: {alpha_Di_tilde}")                          ###
-            #print(f"-----------L_Di2----------: {L_Di2}")  
-
-            #self.i_counter = self.i_counter + 1
-            #lambda_t = min(1.0, self.i_counter / 10)
-            #print(f"-----------self.trainer.current_epoch----------: {self.trainer.current_epoch}") 
-            #print(f"-----------lambda_t----------: {lambda_t}")  
-            #L_Di2 = lambda_t * L_Di2.sum()
-            #print(f"============L_Di2============: {L_Di2}") 
-
-
-            #self.loss = L_con + self.lam * L_kl   ###old    loss function
-            #self.loss = - L_con + self.lam * L_kl  + 5*L_Di1 + 5*a_L_Di2
-            #self.loss = - L_con + self.lam * L_kl  + 2*L_Di1 + 2*a_L_Di2
-            self.loss = - L_con + self.lam * L_kl  + L_Di1 + a_L_Di2
-            #self.loss = - L_con + self.lam * L_kl  + 0.1*L_Di1 + 0.1*a_L_Di2  ###loss function
-            #self.loss = L_Di1 + a_L_Di2
-            #self.loss = 0.5*L_Di1 + 0.5*a_L_Di2
-            #self.loss = 0.1*L_Di1 + 0.1*a_L_Di2
-            #self.loss = 0.05*L_Di1 + 0.05*a_L_Di2
-            
-            
-            
-
-            print(f"self.loss: {self.loss.item()}")                          ###
-            print(f"L_con: {L_con.item()}")                                           ###
-            print(f"L_kl: {L_kl.item()}")
-            print(f"L_Di1: {L_Di1.item()}, L_Di2: {L_Di2.item()}")                       ###, L_Di2: {L_Di2.item()}
-            #a = self.lam * L_kl
-            #print(f"L_con: {L_con.item()}, self.lam * L_kl: {a.item()}")
+                print(f"self.loss: {self.loss.item()}")                              ###
+                print(f"L_con: {L_con.item()}, L_kl: {L_kl.item()}")                 ###
+                print(f"L_Di_sl: {L_Di1_sl.item()}, L_Di1_kl: {L_Di1_kl.item()}")    ###, L_Di2: {L_Di2.item()}
+                
+            else:
+                self.loss = - L_con + self.lam * L_kl
 
         # log into progress bar
         self.log('train_loss', self.loss, on_epoch=True, prog_bar=True)

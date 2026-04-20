@@ -5,6 +5,30 @@ import torchmetrics
 import math
 from scipy.stats import multivariate_normal
 
+import random                      ###16.04
+from collections import deque      ###16.04
+
+import wandb                       ###18.04
+
+
+def log_metrics(metrics: dict, step: int, prefix: str = None):
+    """
+    Log multiple metrics to wandb.
+
+    Args:
+        metrics (dict): e.g. {"loss": 0.1, "acc": 0.95}
+        step (int): global step
+        prefix (str, optional): e.g. "train", "val"
+    """
+    log_dict = {}
+    for k, v in metrics.items():
+        if hasattr(v, "item"):
+            v = v.item()
+        name = f"{prefix}/{k}" if prefix else k
+        log_dict[name] = v
+
+    wandb.log(log_dict, step=step)
+
 
 def calculate_entropy(likelihood):
     entropy_values = -(likelihood * torch.log2(likelihood + 1e-10)).sum(dim=1)
@@ -66,6 +90,51 @@ def kl_dirichlet(alpha, K):
     kl = (term1 + term2).squeeze(1)                       # 
     return kl
 
+
+###Differential Entropy of Dirichlet Prior Network
+def DE_dirichlet(alpha: torch.Tensor) -> torch.Tensor:
+    alpha = alpha.to(dtype=torch.float64)
+
+    if alpha.ndim == 1:
+        alpha0 = torch.sum(alpha)
+        term1 = torch.sum(torch.lgamma(alpha))    ###lgamma就是ln gamma
+        term2 = torch.lgamma(alpha0)
+        term3 = torch.sum((alpha - 1.0) * (torch.digamma(alpha) - torch.digamma(alpha0)))
+        H = term1 - term2 - term3
+    else:
+        alpha0 = torch.sum(alpha, dim=1, keepdim=True)  # [B, 1]  dim=1，在K上求和
+        term1 = torch.sum(torch.lgamma(alpha), dim=1)   # [B]  dim=1，在K上求和
+        term2 = torch.lgamma(alpha0).squeeze(1)         # [B]
+        term3 = torch.sum(
+            (alpha - 1.0) * (torch.digamma(alpha) - torch.digamma(alpha0)),
+            dim=1
+        )                                               # [B]
+        H = term1 - term2 - term3
+
+    return H
+
+
+def print_sorted(pseudo_labels, y_hat_Di, y, u_Di, de_Di, descending, name):
+
+    title = f"\n=========={name}=========="
+    print(title)
+
+    data = torch.cat([
+        pseudo_labels.unsqueeze(1).float(),
+        y_hat_Di.unsqueeze(1).float(),
+        y.unsqueeze(1).float(),
+        u_Di.unsqueeze(1).float(),
+        de_Di.unsqueeze(1).float()
+    ], dim=1)
+
+    _, indices = torch.sort(data[:, -1], descending=descending)
+    data_sorted = data[indices]
+
+    print(data_sorted)
+
+    return data_sorted
+
+
 class mask():
     def __init__(self, known_percentage_threshold, unknown_percentage_threshold, N_init):
         self.known_percentage_threshold = known_percentage_threshold
@@ -86,6 +155,10 @@ class mask():
         entropy_values = calculate_entropy(likelihood)
         if self.count < self.N_init:
             # Sort values (from small to big)
+
+            print(f"--------------self.known_percentage_threshold: {self.known_percentage_threshold}")            ###
+            print(f"-------------self.unknown_percentage_threshold: {self.unknown_percentage_threshold}")            ###
+
             sorted_A, _ = torch.sort(entropy_values)
             threshold_idx_known = math.ceil(len(sorted_A) * (self.known_percentage_threshold))
             threshold_a = sorted_A[threshold_idx_known]
@@ -97,6 +170,9 @@ class mask():
             tau_high = torch.tensor(self.tau_high_list)
             self.tau_low = torch.mean(tau_low)
             self.tau_high = torch.mean(tau_high)
+
+            print(f"--------------self.tau_low: {self.tau_low}")            ###
+            print(f"-------------self.tau_high: {self.tau_high}")            ###
 
             self.count = self.count + 1
 
@@ -149,7 +225,6 @@ class GaussianMixtureModel():
         self.mu = None
         self.C = None
 
-        #self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")            ###
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") 
 
     def soft_update(self, feat, posterior):
@@ -284,3 +359,31 @@ class HScore(torchmetrics.Metric):
         unknown_acc = per_class_acc[-1]
         h_score = 2 * known_acc * unknown_acc / (known_acc + unknown_acc + 1e-5)
         return h_score, known_acc, unknown_acc
+
+###16.04
+class ReplayBuffer:
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.buffer = deque(maxlen=capacity)     ###构造一个长度capacity的双端数列作为buffer。self.buffer就是buffer本体。
+
+    def __len__(self):
+        return len(self.buffer)
+
+    def push_batch(self, x: torch.Tensor, y: torch.Tensor): ###后续从buffer中取samples仍会更新当前网络梯度，但不会回传给buffer输入的来源
+        x = x.detach().cpu()
+        y = y.detach().cpu()
+        for i in range(x.size(0)):
+            self.buffer.append((x[i].clone(), y[i].clone()))
+
+    def can_sample(self, batch_size: int) -> bool:
+        return len(self.buffer) >= batch_size       ###return True  or  False
+
+    def sample(self, batch_size: int, device=None):
+        batch = random.sample(self.buffer, batch_size)         ###随机抽batch_size个tensor放到batch中
+        bx = torch.stack([item[0] for item in batch], dim=0)   ###把batch中所有tensor存到列表item[0],再把item[0]转化为一个[B,原shape]的新tensor
+        by = torch.stack([item[1] for item in batch], dim=0)
+
+        if device is not None:
+            bx = bx.to(device)
+            by = by.to(device)
+        return bx, by
