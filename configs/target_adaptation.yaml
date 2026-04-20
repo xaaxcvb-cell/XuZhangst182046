@@ -21,18 +21,18 @@ model:
   init_args: 
     # select hyperparameters
     feature_dim: 256  # choose same number of feature dimensions as used for the source model (default is 256)
-    lr: 1e-2  # we used 1e-2 for VisDA-C and 1e-3 for DomainNet
+    lr: 0.1  # we used 1e-2 for VisDA-C and 1e-3 for DomainNet ###
     red_feature_dim: 64
     p_reject: 0.5
     N_init: 30
     augmentation: True
     lam: 1
     temperature: 0.1
-    ckpt_dir: 'source_models/visda/source_model_OPDA/checkpoints/source_ckpt.pt'  # select pre-trained source model matching the desired source domain and category shift
+    ckpt_dir: 'source_models/visda/source_model_ODA/checkpoints/source_ckpt.pt' ###PDA,ODA,OPDA  # select pre-trained source model matching the desired source domain and category shift
 data:
   class_path: datasets.VisDADataModule  # change to datasets.DomainNetDataModule for DomainNet dataset
   init_args:
     batch_size: 64
-    category_shift: 'OPDA'  # select category shift
+    category_shift: 'ODA'  # select category shift1          ###PDA,ODA,OPDA
     test_domain: 'validation'  # select target domain
 

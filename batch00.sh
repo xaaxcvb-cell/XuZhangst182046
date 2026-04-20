@@ -1,4 +1,4 @@
-#!/bin/bash -l
+#!/bin/bash  -l
 
 # Slurm parameters
 #SBATCH --job-name=Dirichlet
@@ -8,16 +8,23 @@
 #SBATCH --time=1:00:00
 #SBATCH --mem=16G
 #SBATCH --gpus=1
+
+#SBATCH --exclude=linse3     #The linse3 node always has issues.
+
 #SBATCH --qos=batch
 
 echo "[INFO] Allocated node: $(hostname)"
 cd ~/st182046/dirichlet/GMM
 
 source ~/st182046/dirichlet/GMM/venv/bin/activate
+#source /no_backups/s1501/.pyenv/versions/venv/bin/activate
 # python3 -c "import jsonargparse; print('jsonargparse', jsonargparse.__version__)"
 
 # Activate everything you need
-module load cuda/10.1
+#module load cuda/12.1
+#module load cuda/10.1     old 
+
+
 
 CONFIG=~/st182046/dirichlet/GMM/configs/target_adaptation.yaml
 

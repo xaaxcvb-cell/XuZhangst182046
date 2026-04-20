@@ -74,7 +74,7 @@ class Classifier(nn.Module):  #最后的分类头
         super(Classifier, self).__init__()
 
         self.type = type
-        if type == 'wn':
+        if type == 'wn':                  ###weight normalization
             self.fc = nn.utils.weight_norm(nn.Linear(feature_dim, class_num), name='weight')
             self.fc.apply(init_weights)
         else:
@@ -96,11 +96,18 @@ class BaseModule(L.LightningModule):   #give archit to model
         self.feature_extractor = FeatureExtractor(self.backbone.output_dim, feature_dim, type='bn')
         self.classifier = Classifier(feature_dim, self.known_classes_num, type='wn')
 
+        self.classifier_di = Classifier(feature_dim, self.known_classes_num, type='wn')   #### classifier for dirichlet
+
         if ckpt_dir != '':
             checkpoint = torch.load(ckpt_dir, map_location=torch.device('cpu'))
             self.backbone.load_state_dict(checkpoint['backbone_state_dict'])
             self.feature_extractor.load_state_dict(checkpoint['feature_extractor_state_dict'])
             self.classifier.load_state_dict(checkpoint['classifier_state_dict'])
+
+        if 'classifier_di_state_dict' in checkpoint:   ###如果旧ckpt里没有 classifier_di，就用 classifier 的权重初始化它
+            self.classifier_di.load_state_dict(checkpoint['classifier_di_state_dict'])
+        else:
+            self.classifier_di.load_state_dict(checkpoint['classifier_state_dict'])
 
         self.lr = lr
 
@@ -121,11 +128,12 @@ class BaseModule(L.LightningModule):   #give archit to model
     def forward(self, x):
         x = self.backbone(x)
         feature_embed = self.feature_extractor(x)
+
+        logits_main = self.classifier(feature_embed)  
+        logits_di = self.classifier_di(feature_embed.detach())           ### no softmax     .detach()让LD1，LD2只更新h()
+        x = nn.Softmax(dim=1)(logits_main)                     # with softmax
     
-        logits = self.classifier(feature_embed)           # no softmax
-        x = nn.Softmax(dim=1)(logits)                     # with softmax
-    
-        return x, logits, feature_embed
+        return x, logits_di, feature_embed                   #shape  [B, K],[B, K], [B, D]   ~~~~should ask Pascal
 
 
 class SourceModule(BaseModule):
@@ -199,10 +207,10 @@ class SourceModule(BaseModule):
                 feature_embedding = feature_embedding.cpu()
                 for c in range(self.known_classes_num):
                     idx = torch.where(y == c)
-                    aggregated_class_features[c] += feature_embedding[idx].sum(dim=0)
-                    class_sample_counter[c] += len(idx[0])
+                    aggregated_class_features[c] += feature_embedding[idx].sum(dim=0)  #每类特征和
+                    class_sample_counter[c] += len(idx[0])                             #每类数量
 
-        return aggregated_class_features / torch.unsqueeze(class_sample_counter, -1)
+        return aggregated_class_features / torch.unsqueeze(class_sample_counter, -1)  #返回中心。 形状[类别数，特征维度]
 
     def on_train_end(self): #训练结束自动生成原型并保存checkpoint
         print('Generating source prototypes...')
@@ -215,7 +223,7 @@ class SourceModule(BaseModule):
             'classifier_state_dict': self.classifier.state_dict(),
             'class_prototypes': prototypes,
         }, self.trainer.log_dir + '/checkpoints/source_ckpt.pt')
-#把测试集里的“未知类”合并成一个unknown标签，然后用“预测分布的熵”做拒识（unknown detection），最后统计总体准确率 + 开放集指标（H-Score、known/unknown acc、拒识的 TP/FP/TN/FN）。
+    #把测试集里的“未知类”合并成一个unknown标签，然后用“预测分布的熵”做拒识（unknown detection），最后统计总体准确率 + 开放集指标（H-Score、known/unknown acc、拒识的 TP/FP/TN/FN）。
     def test_step(self, test_batch, batch_idx):
         x, y = test_batch
         y = torch.where(y >= self.known_classes_num, self.known_classes_num, y)

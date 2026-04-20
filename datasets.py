@@ -67,18 +67,18 @@ class SFUniDADataModuleBase(L.LightningDataModule): #通用数据模块基类（
         self.test_set = torch.utils.data.Subset(self.test_set, test_indices)
 
     def train_dataloader(self):
-        if isinstance(self.trainer.lightning_module, SourceModule):
+        if isinstance(self.trainer.lightning_module, SourceModule):   ###这个对象是不是某个类（或其子类）的实例    #self.trainer.lightning_module 当前训练model
             return torch.utils.data.DataLoader(self.train_set, batch_size=self.batch_size, shuffle=True, drop_last=True,
-                                               num_workers=8)
+                                               num_workers=8)  ####num_workers=8  8个进程加载数据
         else:
             return torch.utils.data.DataLoader(self.test_set, batch_size=self.batch_size, shuffle=True, drop_last=True,
-                                               num_workers=8)
+                                               num_workers=8)  
 
     def test_dataloader(self):
         return torch.utils.data.DataLoader(self.test_set, batch_size=self.batch_size, shuffle=False, num_workers=8)
 
 
-class DomainNetDataModule(SFUniDADataModuleBase): #DomainNet 数据集的具体实现
+class DomainNetDataModule(SFUniDADataModuleBase): ###DomainNet 数据集的具体实现
     def __init__(self, batch_size, category_shift='', train_domain='painting', test_domain='real'):
         data_dir = 'data/domainnet/'
 

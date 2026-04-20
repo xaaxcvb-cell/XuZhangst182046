@@ -26,7 +26,24 @@ def calculate_cosine_similarity(mu, feat):
     cosine_sim = F.cosine_similarity(mu.unsqueeze(0), feat.unsqueeze(1), dim=2)
     return cosine_sim
 
-def kl_dirichlet(alpha_tilde):  ###~~~~~~~~~~~~~~
+###new dirichlet D2
+def kl_dirichlet(alpha, K):
+    beta = torch.ones((1, K), device=alpha.device, dtype=alpha.dtype)
+    S_alpha = torch.sum(alpha, dim=1, keepdim=True)
+    S_beta = torch.sum(beta, dim=1, keepdim=True)
+
+    lnB = torch.lgamma(S_alpha) - torch.sum(torch.lgamma(alpha), dim=1, keepdim=True)
+    lnB_uni = torch.sum(torch.lgamma(beta), dim=1, keepdim=True) - torch.lgamma(S_beta)
+
+    dg0 = torch.digamma(S_alpha)
+    dg1 = torch.digamma(alpha)
+
+    kl = torch.sum((alpha - beta) * (dg1 - dg0), dim=1, keepdim=True) + lnB + lnB_uni
+    return kl
+
+
+###old dirichlet D2
+#def kl_dirichlet(alpha_tilde):  ###~~~~~~~~~~~~~~
     """
     alpha_tilde: [B, K]
     return: [B]
@@ -62,6 +79,7 @@ class mask():
         self.count = 0
         self.N_init = N_init
 
+        #self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")        ###
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     def calculate_mask(self, likelihood):
@@ -88,21 +106,21 @@ class mask():
         tau_low = self.tau_low
         while torch.sum(known_mask).item() <= 1:
             tau_low += self.tau_low
-            known_mask = entropy_values <= tau_low   #~~~~
+            known_mask = entropy_values <= tau_low   #~~~~ 实际上并没有小于等于1的情况
 
         unknown_mask = torch.zeros_like(entropy_values, dtype=torch.bool)
         unknown_mask[entropy_values > self.tau_high] = True
         tau_high = self.tau_high
         while torch.sum(unknown_mask).item() <= 1:
             tau_high -= self.tau_high
-            unknown_mask = entropy_values >= tau_high  #~~~~
+            unknown_mask = entropy_values >= tau_high  #~~~~ 实际上并没有小于等于1的情况
 
         both_true = torch.logical_and(known_mask, unknown_mask)
         unknown_mask[both_true] = False
 
         rejection_mask = (known_mask | unknown_mask)
 
-        return known_mask, unknown_mask, rejection_mask  #?bulsche?
+        return known_mask, unknown_mask, rejection_mask  #?bulsche?  ###rejection_mask: known_mask or unknown_mask 即都算
 
 
 class CustomLRScheduler(torch.optim.lr_scheduler._LRScheduler):
@@ -131,7 +149,8 @@ class GaussianMixtureModel():
         self.mu = None
         self.C = None
 
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        #self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")            ###
+        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") 
 
     def soft_update(self, feat, posterior):
         # Set the desired data type
@@ -140,8 +159,9 @@ class GaussianMixtureModel():
         torch.set_printoptions(threshold=float('inf'))
 
         posterior = posterior.to(dtype)
-        feat = feat.to(device=self.device, dtype=dtype)
-        self.batch_weight = self.batch_weight.to(device=self.device, dtype=dtype)
+     
+        feat = feat.to(device=self.device, dtype=dtype)                               #old
+        self.batch_weight = self.batch_weight.to(device=self.device, dtype=dtype)     #old
 
         # ---------- Calculate mu ----------
         # Calculate the sum of the posteriors
@@ -196,7 +216,7 @@ class GaussianMixtureModel():
 
         # for numerical stability
         maximum_likelihood = torch.max(likelihood).item()
-        likelihood = likelihood - maximum_likelihood
+        likelihood = likelihood - maximum_likelihood  #所有likelihood都减去maximum_likelihood。
         likelihood = torch.exp(likelihood)
 
         # Normalize the likelihood
@@ -206,7 +226,7 @@ class GaussianMixtureModel():
 
         return likelihood
 
-    def get_labels(self, feat):
+    def get_labels(self, feat):                                        ####
         likelihood = self.get_likelihood(feat, self.mu, self.C)
         max_values, max_indices = torch.max(likelihood, dim=1)
 
