@@ -217,7 +217,7 @@ class CustomLRScheduler(torch.optim.lr_scheduler._LRScheduler):
             param_group['nesterov'] = True
         return self.optimizer
 
-
+"""
 class GaussianMixtureModel():
     def __init__(self, source_class_num):
         self.source_class_num = source_class_num
@@ -306,6 +306,202 @@ class GaussianMixtureModel():
         max_values, max_indices = torch.max(likelihood, dim=1)
 
         return max_values, max_indices, likelihood
+"""
+
+class GaussianMixtureModel():
+    """
+    Keep the same class name / interfaces, but internally use Student-t Mixture Model (TMM).
+    External methods unchanged:
+        - soft_update(feat, posterior)
+        - get_likelihood(feat, mu, C)
+        - get_labels(feat)
+    """
+    def __init__(self, source_class_num, nu=10.0, eps=1e-6):
+        self.source_class_num = source_class_num
+        self.batch_weight = torch.zeros(source_class_num, dtype=torch.float64)
+        self.mu = None
+        self.C = None
+
+        # degrees of freedom for each component in TMM
+        # keep fixed to avoid changing outer logic
+        self.nu = torch.full((source_class_num,), float(nu), dtype=torch.float64)
+
+        self.eps = eps
+        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+    def _regularize_cov(self, C):
+        """
+        Ensure covariance is symmetric positive semi-definite and numerically stable.
+        C: [K, D, D]
+        """
+        K, D, _ = C.shape
+        eye = torch.eye(D, device=C.device, dtype=C.dtype).unsqueeze(0)
+        C = 0.5 * (C + C.transpose(-1, -2))
+        C = C + self.eps * eye
+        return C
+
+    def _mahalanobis_squared(self, feat, mu, C):
+        """
+        Compute squared Mahalanobis distance:
+            delta[n, k] = (x_n - mu_k)^T C_k^{-1} (x_n - mu_k)
+        feat: [N, D]
+        mu:   [K, D]
+        C:    [K, D, D]
+        return: [N, K]
+        """
+        feat = feat.to(self.device)
+        mu = mu.to(self.device)
+        C = self._regularize_cov(C.to(self.device))
+
+        N, D = feat.shape
+        K = mu.shape[0]
+
+        diff = feat.unsqueeze(1) - mu.unsqueeze(0)   # [N, K, D]
+
+        # use pseudo-inverse for stability
+        C_inv = torch.linalg.pinv(C)                 # [K, D, D]
+
+        # delta[n,k] = diff[n,k,:]^T C_inv[k] diff[n,k,:]
+        delta = torch.einsum('nkd,kde,nke->nk', diff, C_inv, diff)
+        delta = torch.clamp(delta, min=0.0)
+        return delta
+
+    def _student_t_logpdf(self, feat, mu, C, nu):
+        """
+        Multivariate Student-t logpdf for each component.
+        feat: [N, D]
+        mu:   [K, D]
+        C:    [K, D, D]
+        nu:   [K]
+        return: [N, K]
+        """
+        feat = feat.to(device=self.device, dtype=torch.float64)
+        mu = mu.to(device=self.device, dtype=torch.float64)
+        C = self._regularize_cov(C.to(device=self.device, dtype=torch.float64))
+        nu = nu.to(device=self.device, dtype=torch.float64)
+
+        N, D = feat.shape
+        K = mu.shape[0]
+
+        delta = self._mahalanobis_squared(feat, mu, C)   # [N, K]
+
+        sign, logdet = torch.linalg.slogdet(C)           # [K]
+        # if sign <= 0, covariance is problematic; eps regularization above usually avoids that
+        logdet = torch.where(sign > 0, logdet, torch.full_like(logdet, 1e10))
+
+        # log normalization constant
+        # lgamma((nu + D)/2) - lgamma(nu/2)
+        # - 0.5 * (D log(nu*pi) + logdet)
+        term1 = torch.lgamma((nu + D) / 2.0) - torch.lgamma(nu / 2.0)   # [K]
+        term2 = 0.5 * (D * torch.log(nu * math.pi) + logdet)            # [K]
+
+        # - ((nu + D)/2) * log(1 + delta/nu)
+        term3 = ((nu + D) / 2.0).unsqueeze(0) * torch.log1p(delta / nu.unsqueeze(0))  # [N, K]
+
+        logpdf = term1.unsqueeze(0) - term2.unsqueeze(0) - term3        # [N, K]
+        return logpdf
+
+    def soft_update(self, feat, posterior):
+        """
+        Keep the same signature.
+        posterior: [N, K]
+        Internally use TMM robust reweighting:
+            r_tilde[n,k] = posterior[n,k] * u[n,k]
+            u[n,k] = (nu_k + D) / (nu_k + delta[n,k])
+        """
+        dtype = torch.float64
+        feat = feat.to(device=self.device, dtype=dtype)
+        posterior = posterior.to(device=self.device, dtype=dtype)
+        self.batch_weight = self.batch_weight.to(device=self.device, dtype=dtype)
+        self.nu = self.nu.to(device=self.device, dtype=dtype)
+
+        N, D = feat.shape
+        K = posterior.shape[1]
+
+        # ---------- Initialization: first update can use GMM-style stats ----------
+        # because TMM needs an initial mu/C to compute Mahalanobis distance
+        if self.mu is None or self.C is None:
+            batch_weight_new = torch.sum(posterior, dim=0) + self.batch_weight  # [K]
+
+            weighted_sum = posterior.T @ feat                                   # [K, D]
+            mu_new = weighted_sum / (batch_weight_new[:, None] + self.eps)
+
+            diff = feat.unsqueeze(1) - mu_new.unsqueeze(0)                      # [N, K, D]
+            outer = torch.einsum('nkd,nke->nkde', diff, diff)                   # [N, K, D, D]
+            weighted_cov_sum = torch.sum(
+                posterior.unsqueeze(-1).unsqueeze(-1) * outer, dim=0
+            )                                                                   # [K, D, D]
+
+            C_new = weighted_cov_sum / (batch_weight_new[:, None, None] + self.eps)
+            C_new = self._regularize_cov(C_new)
+
+            self.batch_weight = batch_weight_new
+            self.mu = mu_new
+            self.C = C_new
+            return
+
+        # ---------- TMM robust weights ----------
+        delta = self._mahalanobis_squared(feat, self.mu, self.C)                # [N, K]
+        u = (self.nu.unsqueeze(0) + D) / (self.nu.unsqueeze(0) + delta + self.eps)  # [N, K]
+
+        # effective posterior
+        posterior_eff = posterior * u                                           # [N, K]
+
+        # ---------- Update mu ----------
+        batch_weight_new = torch.sum(posterior_eff, dim=0) + self.batch_weight  # [K]
+
+        weighted_sum = posterior_eff.T @ feat                                   # [K, D]
+        if self.mu is not None:
+            weighted_sum = self.batch_weight.unsqueeze(1) * self.mu + weighted_sum
+
+        mu_new = weighted_sum / (batch_weight_new[:, None] + self.eps)
+
+        # ---------- Update covariance ----------
+        diff = feat.unsqueeze(1) - mu_new.unsqueeze(0)                          # [N, K, D]
+        outer = torch.einsum('nkd,nke->nkde', diff, diff)                       # [N, K, D, D]
+
+        weighted_cov_sum = torch.sum(
+            posterior_eff.unsqueeze(-1).unsqueeze(-1) * outer, dim=0
+        )                                                                       # [K, D, D]
+
+        if self.C is not None:
+            weighted_cov_sum = self.C * self.batch_weight.unsqueeze(1).unsqueeze(2) + weighted_cov_sum
+
+        C_new = weighted_cov_sum / (batch_weight_new[:, None, None] + self.eps)
+        C_new = self._regularize_cov(C_new)
+
+        self.batch_weight = batch_weight_new
+        self.mu = mu_new
+        self.C = C_new
+
+    def get_likelihood(self, feat, mu, C):
+        """
+        Keep the same interface and return shape.
+        Return normalized component likelihoods (actually posterior-like normalized scores).
+        """
+        feat = feat.to(device=self.device, dtype=torch.float64)
+        mu = mu.to(device=self.device, dtype=torch.float64)
+        C = C.to(device=self.device, dtype=torch.float64)
+        nu = self.nu.to(device=self.device, dtype=torch.float64)
+
+        # [N, K]
+        log_likelihood = self._student_t_logpdf(feat, mu, C, nu)
+
+        # numerical stability
+        max_per_sample = torch.max(log_likelihood, dim=1, keepdim=True)[0]
+        likelihood = torch.exp(log_likelihood - max_per_sample)
+
+        # normalize over components
+        likelihood = likelihood / (torch.sum(likelihood, dim=1, keepdim=True) + self.eps)
+
+        return likelihood
+
+    def get_labels(self, feat):
+        likelihood = self.get_likelihood(feat, self.mu, self.C)
+        max_values, max_indices = torch.max(likelihood, dim=1)
+        return max_values, max_indices, likelihood
+
+
 
 
 class CrossEntropyLabelSmooth(nn.Module):

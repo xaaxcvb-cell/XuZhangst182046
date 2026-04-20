@@ -17,7 +17,7 @@ from augmentation import get_tta_transforms
 
 class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模块
     def __init__(self, datamodule, feature_dim=256, lr=1e-2, red_feature_dim=64, p_reject=0.5, N_init=30,
-                 augmentation=False, lam=1, temperature=0.1, ckpt_dir='', pseudo_label_quality=1.0, Dirichlet=0.0):  ### add  pseudo_label_quality=1.0  augmentation=True   p_reject=0.5
+                 augmentation=False, lam=1, temperature=0.1, ckpt_dir='', pseudo_label_quality=0.0, Dirichlet=0.0):  ### add  pseudo_label_quality=1.0  augmentation=True   p_reject=0.5
         super(GmmBaAdaptationModule, self).__init__(datamodule, feature_dim, lr, ckpt_dir)  #old    N_init=30   
 
         self.ckpt_dir = ckpt_dir
