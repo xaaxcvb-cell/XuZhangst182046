@@ -12,12 +12,12 @@ from torch.cuda.amp import autocast
 
 from networks import BaseModule
 from utils import HScore, GaussianMixtureModel, calculate_entropy, calculate_cosine_similarity, calculate_kld, kl_dirichlet, DE_dirichlet, print_sorted,log_metrics, mask
-from augmentation import get_tta_transforms
+from augmentation import get_tta_transforms, get_tta_transforms_Di
 
 
 class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模块
     def __init__(self, datamodule, feature_dim=256, lr=1e-2, red_feature_dim=64, p_reject=0.5, N_init=30,
-                 augmentation=False, lam=1, temperature=0.1, ckpt_dir='', pseudo_label_quality=0.0, Dirichlet=0.0):  ### add  pseudo_label_quality=1.0  augmentation=True   p_reject=0.5
+                 augmentation=True, lam=1, temperature=0.1, ckpt_dir='', pseudo_label_quality=0.0, Dirichlet=1.0):  ### add  pseudo_label_quality=1.0  augmentation=True   p_reject=0.5
         super(GmmBaAdaptationModule, self).__init__(datamodule, feature_dim, lr, ckpt_dir)  #old    N_init=30   
 
         self.ckpt_dir = ckpt_dir
@@ -33,6 +33,9 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
         self.final_num_correct_know_accum = 0             ###
         self.final_num_all_unknow_accum = 0               ###
         self.final_num_all_know_accum = 0                 ###
+
+        self.Di3_U = 0                 ###
+        self.Di3_step = 100000           ###
 
         torch.set_printoptions(precision=2)                ### 全局打印精度
 
@@ -55,6 +58,7 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
 
         # ---------- Further initializations ----------
         self.tta_transform = get_tta_transforms()
+        self.tta_transform_Di = get_tta_transforms_Di()     ###21.04 aug for unknown   
         self.augmentation = augmentation
         self.temperature = temperature
         self.lam = lam  #lam（lambda）权重系数 / 超参数
@@ -75,7 +79,9 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
         for k, v in self.classifier.named_parameters():
             params_group += [{'params': v, 'lr': self.lr}]
         for k, v in self.classifier_di1.named_parameters():
-            params_group += [{'params': v, 'lr': self.lr * 2}]
+            params_group += [{'params': v, 'lr': self.lr * 0.1}]
+        for k, v in self.classifier_di3.named_parameters():
+            params_group += [{'params': v, 'lr': self.lr * 0.1}]
         for k, v in self.feature_reduction.named_parameters():
             params_group += [{'params': v, 'lr': self.lr}]
 
@@ -92,8 +98,8 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
         with autocast(): #自动选择合适的数据精度（float16 / bfloat16 / float32）来执行运算
 
             ###
-            ratio_Di1_unknown = 0.1            ###0.3     1 for original
-            ratio_Di1_known = 0.8             ###0.8      1 for original
+            ratio_Di1_unknown = 1            ###0.3     1 for original
+            ratio_Di1_known = 1            ###0.8      1 for original
             ratio_Di2_unknown = 1            ###0.3     1 for original
             ratio_Di2_known = 1           ###0.8      1 for original
 
@@ -113,16 +119,23 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
             true_rejection_mask = true_rejection_mask.to(self.device)
 
             #y_hat, feat_ext = self.forward(x)  #y_hat为模型预测概率，feat_ext中间层提取出来的特征向量   #.forward from basemodel from network
-            y_hat, logits1, logits2, feat_ext = self.forward(x)  # l  logits   shape [B,class_num]
+            y_hat, logits1, logits2, logits3, feat_ext = self.forward(x)  # l  logits   shape [B,class_num]
+            y_hat_Diunknown, logits1_Diunknown, _, logits3_Diunknown, _ = self.forward(self.tta_transform_Di(x))
 
             if self.Dirichlet == 1.0:
                 softplus = nn.Softplus()
                 evidence_Di1 = softplus(logits1)        ### ek in paper            shape [B, K] 
-                #print(f"--------evidence_Di1--------: {evidence_Di1}")                                    ###
+                evidence_Di1_Diunknown = softplus(logits1_Diunknown) 
+                evidence_Di3 = softplus(logits3)                                ###
+                evidence_Di3_Diunknown = softplus(logits3_Diunknown)
 
                 alpha_Di1 = evidence_Di1 + 1.0           ###shape [B, K] 
+                alpha_Di1_Diunknown = evidence_Di1_Diunknown + 1.0  
+                alpha_Di3 = evidence_Di3 + 1.0  
+                alpha_Di3_Diunknown = evidence_Di3_Diunknown + 1.0 
+
                 s_Di1 = alpha_Di1.sum(dim=1, keepdim=True)   # [B, 1]  # Dirichlet strength     uncertainty u = K/s  #########
-                #print(f"===========s_Di=============: {s_Di}") 
+                s_Di3 = alpha_Di3.sum(dim=1, keepdim=True) 
 
                 alpha_Di2 = torch.exp(logits2)
                 de_Di2 = DE_dirichlet(alpha_Di2)            ###
@@ -130,6 +143,7 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
                 ###
                 _, y_hat_Di1 = torch.max(alpha_Di1, dim=1) 
                 _, y_hat_Di2 = torch.max(alpha_Di2, dim=1)
+                _, y_hat_Di3 = torch.max(alpha_Di1, dim=1) 
 
                 ###pres for dirichlet
                 #alpha_Di1_clone_detached   = alpha_Di1.clone().detach()              ####
@@ -139,10 +153,14 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
                 K_Di1 = self.source_class_num
                 u_Di1 = K_Di1 / (s_Di1)                                         ###(s_Di1)   uncertainty u = K/s
                 u_Di1 = u_Di1.squeeze(1)                                      ###.squeeze(1)  和其他数据形状保持一致
+
+                K_Di3 = self.source_class_num
+                u_Di3 = K_Di3 / (s_Di3)                                         ###(s_Di1)   uncertainty u = K/s
+                u_Di3 = u_Di3.squeeze(1)    
                 #print(f"--------uncertainty u--------: {u_Di1}")             ###
 
             #y_hat_aug, feat_ext_aug = self.forward(self.tta_transform(x))
-            y_hat_aug, logits1_aug, logits2_aug, feat_ext_aug = self.forward(self.tta_transform(x))
+            y_hat_aug, logits1_aug, logits2_aug, logits3_aug, feat_ext_aug = self.forward(self.tta_transform(x))
 
             with torch.no_grad():
                 feat_ext = self.feature_reduction(feat_ext)
@@ -184,7 +202,7 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
 
             if self.Dirichlet == 1.0:
                 ###按u大小打印batch内所有伪标签，Di预测标签，真实标签，de不确定度，u不确定度
-                print_sorted(pseudo_labels, preds_test, y, de_Di2, u_Di1, descending=True, name="pseudo_labels, preds_test, y, de_Di2, u_Di1")
+                print_sorted(pseudo_labels, preds_test, y, u_Di1,u_Di3, descending=True, name="pseudo_labels, preds_test, y, u_Di1,u_Di3")
 
                 ###按u大小打印batch内unknown伪标签，Di预测标签，真实标签，de不确定度，u不确定度
                                                         ###
@@ -237,6 +255,8 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
                 ### 按不确定度更新unknown mask, Di1和Di2顺序可换
                 ###1.按U（Di1）排列unknown，只取部分作为新unknown_mask
                 u_flat = u_Di1_unknow.squeeze(-1)  
+                if u_flat.dim() == 0:
+                    u_flat = u_flat.unsqueeze(0)
                 _, indices = torch.sort(u_flat, descending=True)
                 k = max(1, int(len(u_flat) * ratio_Di1_unknown))              ### 至少保留1个
                 topk_indices_in_unknown = indices[:k]
@@ -250,6 +270,8 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
                 de_Di2_unknown = de_Di2[unknown_mask]   ###交换Di1和Di2顺序时要改
 
                 u_flat = de_Di2_unknown 
+                if u_flat.dim() == 0:
+                    u_flat = u_flat.unsqueeze(0)
                 _, indices = torch.sort(u_flat, descending=True)
                 k = max(1, int(len(u_flat) * ratio_Di2_unknown))              ### 至少保留1个
                 topk_indices_in_unknown_2 = indices[:k]
@@ -263,6 +285,8 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
                 ### 按不确定度更新known mask, Di1和Di2顺序可换
                 ###1.按U（Di1）排列known，只取部分作为新known_mask
                 u_flat = u_Di1_know.squeeze(-1)  
+                if u_flat.dim() == 0:
+                    u_flat = u_flat.unsqueeze(0)
                 _, indices = torch.sort(u_flat, descending=False)
                 k = max(1, int(len(u_flat) * ratio_Di1_known))              ### 至少保留1个
                 topk_indices_in_known = indices[:k]
@@ -276,6 +300,8 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
                 de_Di2_known = de_Di2[known_mask]         ###交换Di1和Di2顺序时要改
 
                 u_flat = de_Di2_known
+                if u_flat.dim() == 0:
+                    u_flat = u_flat.unsqueeze(0)
                 _, indices = torch.sort(u_flat, descending=False)
                 k = max(1, int(len(u_flat) * ratio_Di2_known))              ### 至少保留1个
                 topk_indices_in_known_2 = indices[:k]
@@ -385,25 +411,39 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
 
 
             # ---------- Enable OPDA for predictions ----------
-            if self.Dirichlet == 1.0:
-                self.annealing_pres_step = 300                  ### old 100
-                annealing_pres_coef = min(1.0, self.global_step / self.annealing_pres_step)
-                _, preds = torch.max(y_hat_clone_detached, dim=1)
-                unknown_threshold = 0.7 * ((self.mask.tau_low + self.mask.tau_high) / 2) * (annealing_pres_coef)  +  0.01 * ((self.mask.tau_low + self.mask.tau_high) / 2)     ###threshold for determining unknown labels
-            else:
-                _, preds = torch.max(y_hat_clone_detached, dim=1)
-                unknown_threshold = (self.mask.tau_low + self.mask.tau_high) / 2
+            #if self.Dirichlet == 0.0:   ###暂时先不使用
+            #    self.annealing_pres_step = 300                  ### old 100
+            #    annealing_pres_coef = min(1.0, self.global_step / self.annealing_pres_step)
+            #    _, preds = torch.max(y_hat_clone_detached, dim=1)
+            #    unknown_threshold = 0.7 * ((self.mask.tau_low + self.mask.tau_high) / 2) * (annealing_pres_coef)  +  0.01 * ((self.mask.tau_low + self.mask.tau_high) / 2)     ###threshold for determining unknown labels
+            #else:
+            _, preds = torch.max(y_hat_clone_detached, dim=1)
+            unknown_threshold = (self.mask.tau_low + self.mask.tau_high) / 2
 
 
             entropy_values = calculate_entropy(likelihood)
-            output_mask = torch.zeros_like(entropy_values, dtype=torch.bool)
-            output_mask[entropy_values >= unknown_threshold] = True
+            
+
+
+            ### after self.Di3_step use u_Di3 chose unknown_mask
+            if self.global_step <= self.Di3_step:
+                
+                output_mask = torch.zeros_like(entropy_values, dtype=torch.bool)
+                output_mask[entropy_values >= unknown_threshold] = True
+
+                value_30 = torch.topk(u_Di3, k=30).values[-1]
+                self.Di3_U = 0.3 * self.Di3_U + 0.7 * value_30
+
+            if self.global_step > self.Di3_step:
+                print(f"=================Di3 U===================: {self.Di3_U}") 
+                output_mask = u_Di3 > self.Di3_U
+
             preds[output_mask] = self.source_class_num
 
             print(f"y_ground truth: {y}")                                     ###
             print(f"preds: {preds}")                                          ###
-            preds__same_ratio = (preds == y).float().mean().item()            ###
-            print("preds same_ratio preds/y_ground truth:", preds__same_ratio * 100, "%") 
+            preds_acc = (preds == y).float().mean().item()            ###
+            print("preds same_ratio preds/y_ground truth:", preds_acc  * 100, "%") 
 
             ###打印(最终)预测准确率
             # unknown
@@ -488,7 +528,8 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
             kl_known = - torch.sum(calculate_kld(likelihood, true_dist))
 
             # Minimize divergence between uniform distribution and models output of unknown classes
-            likelihood = y_hat[unknown_mask,:]
+            likelihood = y_hat_Diunknown[unknown_mask,:]    ###21.04  augmentation for unknown pseudolLabels sample
+            #likelihood = y_hat[unknown_mask,:]
             true_dist = torch.ones_like(likelihood) / 1e3
             kl_unknown = torch.sum(calculate_kld(likelihood, true_dist))
 
@@ -510,7 +551,8 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
 
 
                 ###2.Dirichlet  KL divergence loss
-                alpha_Di1_unknow = alpha_Di1[unknown_mask]       ###14.04.2026
+                alpha_Di1_unknow = alpha_Di1_Diunknown[unknown_mask]  ###21.04  augmentation for unknown pseudolLabels sample
+                #alpha_Di1_unknow = alpha_Di1[unknown_mask]       ###14.04.2026
                 alpha_Di1_tilde = alpha_Di1_unknow             ###因为unknown样本含有的全是错误alpha，所以期望其全部向1靠近
                 #alpha_Di1_tilde = one_hot_know_Di1 + (1 - one_hot_know_Di1)*alpha_Di
                 per_sample_L_Di1_kl = kl_dirichlet(alpha_Di1_tilde,self.source_class_num)
@@ -519,6 +561,40 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
                 self.annealing_step = 100                  ### old 200
                 annealing_coef = min(1.0, self.global_step / self.annealing_step)
                 a_L_Di1_kl = annealing_coef * L_Di1_kl
+
+
+
+                ###1.Dirichlet3 squares loss
+
+                pseudo_labels_know3 = pseudo_labels[known_mask]
+                one_hot_know3 = torch.nn.functional.one_hot(pseudo_labels_know3, num_classes=self.source_class_num)
+                one_hot_know_Di3 = one_hot_know3.detach().float()
+                alpha_Di3_known = alpha_Di3[known_mask].float()
+                s_Di3_known = s_Di3[known_mask].float()
+                per_sample_L_Di3_sl = torch.sum((one_hot_know_Di3 - alpha_Di3_known / s_Di3_known) ** 2 + alpha_Di3_known * (s_Di3_known - alpha_Di3_known) / (s_Di3_known ** 2 * (s_Di3_known + 1)), dim=1 )
+                L_Di3_sl = torch.mean(per_sample_L_Di3_sl)    ###14.04.2026
+
+
+                ###2.Dirichlet3  KL divergence loss
+                alpha_Di3_unknow = alpha_Di3_Diunknown[unknown_mask]    ###21.04  augmentation for unknown pseudolLabels sample
+                #alpha_Di3_unknow = alpha_Di3[unknown_mask]       ###14.04.2026
+                alpha_Di3_tilde = alpha_Di3_unknow             ###因为unknown样本含有的全是错误alpha，所以期望其全部向1靠近
+                #alpha_Di3_tilde = one_hot_know_Di3 + (1 - one_hot_know_Di3)*alpha_Di3
+                per_sample_L_Di3_kl = kl_dirichlet(alpha_Di3_tilde,self.source_class_num)
+                L_Di3_kl = torch.mean(per_sample_L_Di3_kl)    ###14.04.2026
+
+
+
+
+
+                pseudo_labels_unknow = pseudo_labels[unknown_mask]
+                y_unknown = y[unknown_mask]
+                y_known = y[known_mask]
+                print(f"pseudo_labels_know: {pseudo_labels_know}")   
+                print(f"-----------y_known: {y_known}")   
+                print(f"====================================================================")  
+                print(f"pseudo_labels_unknow: {pseudo_labels_unknow}")   
+                print(f"-----------y_unknown: {y_unknown}")   
 
                 #print(f"\nself.global_step:{self.global_step}") 
                 #print(f"L_Di2: {L_Di2}") 
@@ -539,7 +615,7 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
                     "acc/selected_accumulated_unknow_pseudo_labels_acc": acc_pseudo_labels_unknow_accum,     ###correct/true
                     "acc/selected_accumulated_know_pseudo_labels_acc": acc_pseudo_labels_know_accum,     ###correct/true
 
-                    "acc/step_total_preds_acc": preds__same_ratio,
+                    "acc/step_total_preds_acc": preds_acc,
                     "acc/step_unknow_preds_acc": unk_same_ratio,
                     "acc/step_know_preds_acc": kn_same_ratio,
 
@@ -564,7 +640,7 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
                     "acc/selected_accumulated_unknow_pseudo_labels_acc": acc_pseudo_labels_unknow_accum,     ###correct/true
                     "acc/selected_accumulated_know_pseudo_labels_acc": acc_pseudo_labels_know_accum,     ###correct/true
 
-                    "acc/step_total_preds_acc": preds__same_ratio,
+                    "acc/step_total_preds_acc": preds_acc,
                     "acc/step_unknow_preds_acc": unk_same_ratio,
                     "acc/step_know_preds_acc": kn_same_ratio,
 
@@ -587,7 +663,10 @@ class GmmBaAdaptationModule(BaseModule): #基于 GMM 的在线无源自适应模
                 #self.loss = - L_con + self.lam * L_kl  + 10*L_Di1_sl + 10*a_L_Di1_kl
                 #self.loss = - L_con + self.lam * L_kl  + 5*L_Di1_sl + 5*a_L_Di1_kl
                 #self.loss = - L_con + self.lam * L_kl  + 2*L_Di1_sl + 2*a_L_Di1_kl
-                self.loss = - L_con + self.lam * L_kl  + L_Di1_sl + a_L_Di1_kl
+                if self.global_step <= self.Di3_step:
+                    self.loss = - L_con + self.lam * L_kl  + L_Di1_sl + a_L_Di1_kl + L_Di3_sl + L_Di3_kl
+                else:
+                    self.loss = - L_con + self.lam * L_kl  + L_Di1_sl + a_L_Di1_kl 
                 #self.loss = - L_con + self.lam * L_kl  + 0.1*L_Di1_sl + 0.1*a_L_Di1_kl  ###loss function
                 #self.loss = L_Di1_sl + a_L_Di1_kl
                 #self.loss = 0.5*L_Di1_sl + 0.5*a_L_Di1_kl

@@ -165,3 +165,42 @@ def get_tta_transforms(gaussian_std: float = 0.005, soft=False, padding_mode='ed
                            Clip(0.0, 1.0)]
 
     return transforms.Compose(tta_transforms)
+
+
+
+####
+def get_tta_transforms_Di(gaussian_std: float = 0.005, soft=False, padding_mode='edge', cotta_augs=True):
+    img_shape = (224, 224, 3)
+    n_pixels = img_shape[0]
+
+    tta_transforms = [
+        Clip(0.0, 1.0),
+        ColorJitterPro(
+            brightness=[0.8, 1.2] if soft else [0.4, 1.7],
+            contrast=[0.85, 1.15] if soft else [0.5, 1.5],
+            saturation=[0.75, 1.25] if soft else [0.3, 1.7],
+            hue=[-0.03, 0.03] if soft else [-0.08, 0.08],
+            gamma=[0.85, 1.15] if soft else [0.5, 1.5]
+        ),
+        transforms.Pad(padding=int(n_pixels / 2), padding_mode=padding_mode),
+        transforms.RandomAffine(
+            degrees=[-8, 8] if soft else [-90, 90],
+            translate=(1 / 16, 1 / 16),
+            scale=(0.95, 1.05) if soft else (0.7, 1.3),
+            shear=None,
+            interpolation=PIL.Image.BILINEAR,
+            fill=0
+        )
+    ]
+    if cotta_augs:
+        tta_transforms += [transforms.GaussianBlur(kernel_size=5, sigma=[0.001, 0.25] if soft else [0.001, 0.8]),
+                           transforms.CenterCrop(size=n_pixels),
+                           transforms.RandomHorizontalFlip(p=0.5),
+                           GaussianNoise(0, gaussian_std),
+                           Clip(0.0, 1.0)]
+    else:
+        tta_transforms += [transforms.CenterCrop(size=n_pixels),
+                           transforms.RandomHorizontalFlip(p=0.5),
+                           Clip(0.0, 1.0)]
+
+    return transforms.Compose(tta_transforms)

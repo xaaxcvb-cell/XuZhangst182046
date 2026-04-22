@@ -1,0 +1,82 @@
+{
+  "os": "Linux-6.8.0-106-generic-x86_64-with-glibc2.39",
+  "python": "CPython 3.12.12",
+  "startedAt": "2026-04-21T00:07:09.781467Z",
+  "args": [
+    "fit",
+    "--config",
+    "/usrhomes/s1501/st182046/dirichlet/GMM/configs/target_adaptation.yaml"
+  ],
+  "program": "/misc/usrhomes/s1501/st182046/dirichlet/GMM/main.py",
+  "codePath": "main.py",
+  "git": {
+    "remote": "https://github.com/xaaxcvb-cell/XuZhangst182046.git",
+    "commit": "2c601f6a8df1796d67071a382b51c17fc5c1805d"
+  },
+  "email": "st182046@stud.uni-stuttgart.de",
+  "root": "/misc/usrhomes/s1501/st182046/dirichlet/GMM/configs",
+  "host": "linse2",
+  "executable": "/misc/usrhomes/s1501/st182046/dirichlet/GMM/venv/bin/python",
+  "cpu_count": 16,
+  "cpu_count_logical": 32,
+  "gpu": "NVIDIA GeForce GTX 1080 Ti",
+  "gpu_count": 1,
+  "disk": {
+    "/": {
+      "total": "1888558305280",
+      "used": "131786850304"
+    }
+  },
+  "memory": {
+    "total": "135036313600"
+  },
+  "gpu_nvidia": [
+    {
+      "name": "NVIDIA GeForce GTX 1080 Ti",
+      "memoryTotal": "11811160064",
+      "cudaCores": 3584,
+      "architecture": "Pascal",
+      "uuid": "GPU-a15fa5f5-5388-b8de-fcae-6c07b8f6083d"
+    }
+  ],
+  "cudaVersion": "12.8",
+  "slurm": {
+    "cluster_name": "compute-cluster",
+    "conf": "/var/spool/slurm/d/conf-cache/slurm.conf",
+    "cpus_on_node": "2",
+    "cpus_per_task": "2",
+    "gpus": "1",
+    "gtids": "0",
+    "job_account": "s1501",
+    "job_cpus_per_node": "2",
+    "job_gid": "222",
+    "job_gpus": "1",
+    "job_id": "202424",
+    "job_name": "Dirichlet",
+    "job_nodelist": "linse2",
+    "job_num_nodes": "1",
+    "job_partition": "stud",
+    "job_qos": "batch",
+    "job_uid": "11501",
+    "job_user": "s1501",
+    "jobid": "202424",
+    "localid": "0",
+    "mem_per_node": "16384",
+    "nnodes": "1",
+    "node_aliases": "(null)",
+    "nodeid": "0",
+    "nodelist": "linse2",
+    "nprocs": "1",
+    "ntasks": "1",
+    "prio_process": "0",
+    "procid": "0",
+    "submit_dir": "/misc/usrhomes/s1501/st182046/dirichlet/GMM",
+    "submit_host": "login1",
+    "task_pid": "1861810",
+    "tasks_per_node": "1",
+    "topology_addr": "linse2",
+    "topology_addr_pattern": "node",
+    "working_cluster": "compute-cluster:slurm-ctrl:6817:8960:109"
+  },
+  "writerId": "33cpfj8syiet0804f998m32y38cnkl57"
+}

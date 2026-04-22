@@ -84,6 +84,23 @@ class Classifier(nn.Module):  #最后的分类头
     def forward(self, x):
         x = self.fc(x)
         return x
+    
+class ClassifierDi(nn.Module):
+    def __init__(self, feature_dim, class_num, hidden_dim=256):
+        super(ClassifierDi, self).__init__()
+
+        self.net = nn.Sequential(
+            nn.Linear(feature_dim, hidden_dim),
+            nn.ReLU(),
+
+            #nn.Linear(hidden_dim, hidden_dim),
+            #nn.ReLU(),
+
+            nn.Linear(hidden_dim, class_num)
+        )
+
+    def forward(self, x):
+        return self.net(x)
 
 #基础框架。把网络“拼起来”的 LightningModule 基类
 class BaseModule(L.LightningModule):   #give archit to model
@@ -96,11 +113,14 @@ class BaseModule(L.LightningModule):   #give archit to model
         self.feature_extractor = FeatureExtractor(self.backbone.output_dim, feature_dim, type='bn')
         self.classifier = Classifier(feature_dim, self.known_classes_num, type='wn')
 
-        self.classifier_di1 = Classifier(feature_dim, self.known_classes_num, type='wn')   #### classifier for dirichlet
+        self.classifier_di1 = Classifier(feature_dim, self.known_classes_num, type='wn')   #### classifierDi for dirichlet  #20.04尝试使用独立的两层神经网咯
 
         cpu_rng_state = torch.get_rng_state()   ###Random number issue (for testing)
         cuda_rng_state = torch.cuda.get_rng_state_all() if torch.cuda.is_available() else None
+
         self.classifier_di2 = Classifier(feature_dim, self.known_classes_num, type='wn')
+        self.classifier_di3 = ClassifierDi(feature_dim, self.known_classes_num)
+
         torch.set_rng_state(cpu_rng_state)
         if cuda_rng_state is not None:
             torch.cuda.set_rng_state_all(cuda_rng_state)
@@ -144,9 +164,10 @@ class BaseModule(L.LightningModule):   #give archit to model
         logits_main = self.classifier(feature_embed)  
         logits_di1 = self.classifier_di1(feature_embed.detach())           ### no softmax     .detach()让LD1，LD2只更新h()
         logits_di2 = self.classifier_di2(feature_embed.detach()) 
+        logits_di3 = self.classifier_di3(feature_embed.detach()) 
         x = nn.Softmax(dim=1)(logits_main)                     # with softmax
     
-        return x, logits_di1,logits_di2, feature_embed                   #shape  [B, K],[B, K], [B, D]   ~~~~should ask Pascal
+        return x, logits_di1,logits_di2,logits_di3, feature_embed                   #shape  [B, K],[B, K], [B, D]   ~~~~should ask Pascal
 
 
 class SourceModule(BaseModule):
