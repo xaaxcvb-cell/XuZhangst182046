@@ -16823,4 +16823,1320 @@ number of true unknown labels:  true unknown labels /total true labels: 29/64
 -------------self.tau_high: 0.17327344033952752
 <class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
 <class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
-Epoch 0:  69%|██████▉   | 595/865 [07:41<03:29,  1.29it/s, v_num=516, train_loss_step=109.0, tta_acc_step=0.625]Epoch 0:  69%|██████▉   | 595/865 [07:41<03:29,  1.29it/s, v_num=516, train_loss_step=128.0, tta_acc_step=0.609]
+Epoch 0:  69%|██████▉   | 595/865 [07:41<03:29,  1.29it/s, v_num=516, train_loss_step=109.0, tta_acc_step=0.625]Epoch 0:  69%|██████▉   | 595/865 [07:41<03:29,  1.29it/s, v_num=516, train_loss_step=128.0, tta_acc_step=0.609]acc_pseudo_labels_unknow_step: 0.6153846153846154
+acc_pseudo_labels_know_step: 0.6666666666666666
+acc_pseudo_labels_unknow_accum: 0.6158730158730159
+acc_pseudo_labels_know_accum: 0.7343052662897948
+pseudo_labels: tensor([6, 6, 1, 6, 3, 4, 6, 3, 6, 2, 1, 6, 6, 1, 2, 1, 6, 6, 3, 6, 6, 4, 6, 2,
+        6, 4, 1, 4, 4, 2, 2, 4, 6, 2, 6, 3, 0, 2, 2, 1, 6, 6, 6, 1, 3, 4, 1, 6,
+        1, 3, 0, 6, 2, 6, 6, 1, 3, 4, 6, 6, 6, 3, 6, 2], device='cuda:0')
+y_ground truth: tensor([2, 6, 1, 6, 3, 4, 3, 3, 6, 2, 1, 3, 6, 6, 6, 6, 3, 6, 3, 6, 2, 4, 6, 6,
+        6, 3, 1, 4, 4, 6, 2, 4, 6, 2, 3, 6, 0, 3, 6, 1, 6, 6, 6, 6, 6, 4, 6, 3,
+        1, 3, 0, 6, 6, 6, 5, 6, 3, 4, 3, 5, 6, 3, 6, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 60.9375 %
+pseudo_labels Unknown same_ratio pres/true: 55.172413793103445 %
+pseudo_labels not Unknown same_ratio pres/true: 65.71428571428571 %
+y_ground truth: tensor([2, 6, 1, 6, 3, 4, 3, 3, 6, 2, 1, 3, 6, 6, 6, 6, 3, 6, 3, 6, 2, 4, 6, 6,
+        6, 3, 1, 4, 4, 6, 2, 4, 6, 2, 3, 6, 0, 3, 6, 1, 6, 6, 6, 6, 6, 4, 6, 3,
+        1, 3, 0, 6, 6, 6, 5, 6, 3, 4, 3, 5, 6, 3, 6, 6], device='cuda:0')
+preds: tensor([6, 6, 1, 6, 3, 4, 6, 3, 6, 6, 6, 6, 6, 3, 2, 6, 6, 6, 3, 6, 6, 4, 6, 2,
+        6, 5, 1, 4, 4, 2, 2, 4, 6, 2, 6, 3, 0, 6, 2, 1, 6, 6, 6, 1, 3, 4, 1, 6,
+        1, 3, 0, 6, 2, 6, 6, 1, 3, 4, 6, 6, 6, 3, 6, 2], device='cuda:0')
+preds same_ratio preds/y_ground truth: 59.375 %
+preds Unknown same_ratio pres/true: 58.620689655172406 %
+preds not Unknown same_ratio pres/true: 60.0 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 30/64
+number of true unknown labels:  true unknown labels /total true labels: 29/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  69%|██████▉   | 596/865 [07:42<03:28,  1.29it/s, v_num=516, train_loss_step=128.0, tta_acc_step=0.609]Epoch 0:  69%|██████▉   | 596/865 [07:42<03:28,  1.29it/s, v_num=516, train_loss_step=117.0, tta_acc_step=0.594]acc_pseudo_labels_unknow_step: 0.6956521739130435
+acc_pseudo_labels_know_step: 0.6956521739130435
+acc_pseudo_labels_unknow_accum: 0.6159827730589783
+acc_pseudo_labels_know_accum: 0.7342172966554522
+pseudo_labels: tensor([6, 1, 6, 6, 0, 6, 0, 0, 6, 3, 6, 4, 2, 3, 1, 0, 2, 6, 3, 3, 6, 1, 4, 4,
+        0, 6, 4, 3, 5, 6, 2, 2, 1, 2, 3, 6, 6, 2, 6, 4, 6, 6, 6, 6, 6, 4, 1, 2,
+        5, 6, 2, 1, 0, 0, 2, 6, 6, 3, 2, 3, 0, 1, 6, 6], device='cuda:0')
+y_ground truth: tensor([6, 1, 5, 6, 0, 3, 0, 0, 5, 6, 2, 4, 6, 3, 6, 0, 2, 3, 3, 3, 6, 1, 4, 4,
+        0, 6, 4, 3, 6, 6, 6, 6, 6, 6, 3, 6, 6, 6, 3, 4, 6, 6, 6, 5, 6, 4, 1, 6,
+        3, 6, 6, 1, 0, 0, 3, 6, 6, 3, 2, 3, 0, 6, 6, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 67.1875 %
+pseudo_labels Unknown same_ratio pres/true: 57.14285714285714 %
+pseudo_labels not Unknown same_ratio pres/true: 75.0 %
+y_ground truth: tensor([6, 1, 5, 6, 0, 3, 0, 0, 5, 6, 2, 4, 6, 3, 6, 0, 2, 3, 3, 3, 6, 1, 4, 4,
+        0, 6, 4, 3, 6, 6, 6, 6, 6, 6, 3, 6, 6, 6, 3, 4, 6, 6, 6, 5, 6, 4, 1, 6,
+        3, 6, 6, 1, 0, 0, 3, 6, 6, 3, 2, 3, 0, 6, 6, 6], device='cuda:0')
+preds: tensor([6, 1, 6, 6, 0, 6, 0, 0, 6, 6, 6, 4, 2, 6, 6, 0, 2, 6, 3, 3, 6, 1, 4, 4,
+        0, 6, 4, 3, 6, 6, 2, 2, 1, 2, 3, 6, 6, 2, 6, 4, 6, 6, 6, 6, 6, 4, 1, 2,
+        3, 6, 2, 1, 0, 0, 6, 6, 6, 6, 2, 3, 0, 1, 6, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 70.3125 %
+preds Unknown same_ratio pres/true: 67.85714285714286 %
+preds not Unknown same_ratio pres/true: 72.22222222222221 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 29/64
+number of true unknown labels:  true unknown labels /total true labels: 28/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  69%|██████▉   | 597/865 [07:43<03:27,  1.29it/s, v_num=516, train_loss_step=117.0, tta_acc_step=0.594]Epoch 0:  69%|██████▉   | 597/865 [07:43<03:27,  1.29it/s, v_num=516, train_loss_step=170.0, tta_acc_step=0.703]acc_pseudo_labels_unknow_step: 0.6129032258064516
+acc_pseudo_labels_know_step: 0.6923076923076923
+acc_pseudo_labels_unknow_accum: 0.6159770732581049
+acc_pseudo_labels_know_accum: 0.7341634548868465
+pseudo_labels: tensor([2, 0, 6, 6, 4, 2, 1, 6, 6, 2, 3, 0, 6, 0, 6, 4, 6, 4, 2, 0, 2, 6, 6, 2,
+        2, 3, 6, 3, 6, 6, 6, 6, 1, 1, 6, 1, 1, 2, 1, 6, 4, 6, 2, 6, 6, 4, 6, 6,
+        5, 6, 6, 6, 5, 6, 6, 6, 6, 2, 5, 6, 6, 3, 1, 6], device='cuda:0')
+y_ground truth: tensor([6, 0, 4, 6, 4, 6, 6, 5, 6, 2, 6, 0, 5, 0, 6, 4, 3, 4, 6, 0, 2, 6, 3, 2,
+        2, 3, 2, 3, 6, 3, 6, 6, 1, 6, 6, 6, 6, 6, 6, 6, 4, 6, 6, 6, 5, 3, 6, 3,
+        6, 6, 3, 3, 6, 6, 5, 6, 6, 2, 6, 6, 6, 3, 6, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 56.25 %
+pseudo_labels Unknown same_ratio pres/true: 55.88235294117647 %
+pseudo_labels not Unknown same_ratio pres/true: 56.666666666666664 %
+y_ground truth: tensor([6, 0, 4, 6, 4, 6, 6, 5, 6, 2, 6, 0, 5, 0, 6, 4, 3, 4, 6, 0, 2, 6, 3, 2,
+        2, 3, 2, 3, 6, 3, 6, 6, 1, 6, 6, 6, 6, 6, 6, 6, 4, 6, 6, 6, 5, 3, 6, 3,
+        6, 6, 3, 3, 6, 6, 5, 6, 6, 2, 6, 6, 6, 3, 6, 6], device='cuda:0')
+preds: tensor([2, 0, 6, 6, 4, 2, 6, 6, 6, 2, 3, 0, 6, 0, 6, 4, 6, 4, 2, 0, 2, 6, 6, 6,
+        2, 3, 6, 3, 6, 6, 6, 6, 1, 1, 6, 1, 1, 2, 1, 6, 4, 6, 2, 6, 6, 4, 6, 6,
+        5, 6, 6, 6, 3, 6, 6, 6, 6, 2, 5, 6, 6, 3, 1, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 56.25 %
+preds Unknown same_ratio pres/true: 58.82352941176471 %
+preds not Unknown same_ratio pres/true: 53.333333333333336 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 33/64
+number of true unknown labels:  true unknown labels /total true labels: 34/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  69%|██████▉   | 598/865 [07:43<03:27,  1.29it/s, v_num=516, train_loss_step=170.0, tta_acc_step=0.703]Epoch 0:  69%|██████▉   | 598/865 [07:43<03:27,  1.29it/s, v_num=516, train_loss_step=94.20, tta_acc_step=0.562]acc_pseudo_labels_unknow_step: 0.4827586206896552
+acc_pseudo_labels_know_step: 0.7142857142857143
+acc_pseudo_labels_unknow_accum: 0.6157468113005126
+acc_pseudo_labels_know_accum: 0.7341359913155038
+pseudo_labels: tensor([0, 6, 6, 4, 1, 6, 1, 4, 1, 3, 6, 1, 6, 6, 6, 6, 1, 2, 6, 2, 0, 2, 6, 6,
+        0, 5, 2, 6, 6, 1, 6, 6, 3, 4, 1, 6, 0, 6, 6, 6, 6, 3, 4, 3, 6, 6, 1, 3,
+        1, 6, 5, 6, 6, 6, 3, 6, 2, 2, 6, 3, 4, 6, 1, 4], device='cuda:0')
+y_ground truth: tensor([0, 3, 4, 4, 6, 6, 1, 4, 6, 6, 2, 6, 4, 6, 3, 6, 1, 6, 1, 6, 0, 6, 6, 6,
+        0, 6, 6, 6, 6, 6, 3, 3, 6, 4, 1, 6, 0, 3, 6, 2, 6, 3, 4, 3, 3, 1, 6, 6,
+        6, 5, 1, 6, 6, 3, 3, 6, 6, 2, 3, 3, 4, 6, 6, 4], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 50.0 %
+pseudo_labels Unknown same_ratio pres/true: 46.666666666666664 %
+pseudo_labels not Unknown same_ratio pres/true: 52.94117647058824 %
+y_ground truth: tensor([0, 3, 4, 4, 6, 6, 1, 4, 6, 6, 2, 6, 4, 6, 3, 6, 1, 6, 1, 6, 0, 6, 6, 6,
+        0, 6, 6, 6, 6, 6, 3, 3, 6, 4, 1, 6, 0, 3, 6, 2, 6, 3, 4, 3, 3, 1, 6, 6,
+        6, 5, 1, 6, 6, 3, 3, 6, 6, 2, 3, 3, 4, 6, 6, 4], device='cuda:0')
+preds: tensor([0, 6, 6, 4, 1, 6, 1, 4, 1, 3, 6, 1, 6, 6, 6, 6, 1, 6, 6, 6, 0, 2, 6, 6,
+        0, 6, 2, 6, 6, 6, 6, 6, 3, 4, 1, 6, 6, 6, 6, 6, 6, 3, 4, 3, 6, 6, 1, 3,
+        1, 6, 6, 6, 6, 6, 6, 6, 2, 2, 6, 3, 4, 6, 6, 4], device='cuda:0')
+preds same_ratio preds/y_ground truth: 54.6875 %
+preds Unknown same_ratio pres/true: 63.33333333333333 %
+preds not Unknown same_ratio pres/true: 47.05882352941176 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 37/64
+number of true unknown labels:  true unknown labels /total true labels: 30/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  69%|██████▉   | 599/865 [07:44<03:26,  1.29it/s, v_num=516, train_loss_step=94.20, tta_acc_step=0.562]Epoch 0:  69%|██████▉   | 599/865 [07:44<03:26,  1.29it/s, v_num=516, train_loss_step=86.80, tta_acc_step=0.547]acc_pseudo_labels_unknow_step: 0.6129032258064516
+acc_pseudo_labels_know_step: 0.7058823529411765
+acc_pseudo_labels_unknow_accum: 0.6157415670176691
+acc_pseudo_labels_know_accum: 0.734088669950739
+pseudo_labels: tensor([6, 0, 6, 6, 5, 6, 2, 3, 6, 6, 6, 6, 6, 3, 6, 4, 4, 3, 6, 1, 6, 0, 4, 1,
+        6, 4, 6, 2, 6, 6, 0, 3, 6, 0, 6, 2, 6, 4, 6, 3, 4, 1, 6, 6, 2, 6, 1, 6,
+        6, 4, 1, 6, 6, 1, 3, 6, 6, 0, 0, 2, 6, 1, 6, 4], device='cuda:0')
+y_ground truth: tensor([6, 0, 3, 2, 3, 3, 2, 6, 6, 6, 6, 6, 3, 3, 6, 4, 4, 3, 2, 1, 6, 0, 4, 6,
+        3, 6, 3, 6, 6, 6, 0, 3, 6, 0, 6, 2, 6, 4, 6, 6, 6, 6, 2, 6, 2, 4, 6, 5,
+        6, 4, 1, 6, 6, 6, 6, 6, 5, 0, 0, 2, 3, 6, 6, 4], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 62.5 %
+pseudo_labels Unknown same_ratio pres/true: 63.33333333333333 %
+pseudo_labels not Unknown same_ratio pres/true: 61.76470588235294 %
+y_ground truth: tensor([6, 0, 3, 2, 3, 3, 2, 6, 6, 6, 6, 6, 3, 3, 6, 4, 4, 3, 2, 1, 6, 0, 4, 6,
+        3, 6, 3, 6, 6, 6, 0, 3, 6, 0, 6, 2, 6, 4, 6, 6, 6, 6, 2, 6, 2, 4, 6, 5,
+        6, 4, 1, 6, 6, 6, 6, 6, 5, 0, 0, 2, 3, 6, 6, 4], device='cuda:0')
+preds: tensor([6, 0, 6, 6, 6, 6, 2, 3, 6, 6, 6, 6, 6, 3, 6, 4, 4, 3, 6, 1, 6, 0, 4, 1,
+        6, 4, 6, 2, 6, 6, 0, 3, 6, 6, 6, 2, 6, 4, 6, 3, 6, 1, 6, 6, 2, 6, 6, 6,
+        6, 4, 1, 6, 6, 1, 3, 6, 6, 0, 0, 6, 6, 1, 6, 4], device='cuda:0')
+preds same_ratio preds/y_ground truth: 62.5 %
+preds Unknown same_ratio pres/true: 70.0 %
+preds not Unknown same_ratio pres/true: 55.88235294117647 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 36/64
+number of true unknown labels:  true unknown labels /total true labels: 30/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  69%|██████▉   | 600/865 [07:45<03:25,  1.29it/s, v_num=516, train_loss_step=86.80, tta_acc_step=0.547]Epoch 0:  69%|██████▉   | 600/865 [07:45<03:25,  1.29it/s, v_num=516, train_loss_step=104.0, tta_acc_step=0.625]acc_pseudo_labels_unknow_step: 0.6666666666666666
+acc_pseudo_labels_know_step: 0.9230769230769231
+acc_pseudo_labels_unknow_accum: 0.6158594491927826
+acc_pseudo_labels_know_accum: 0.7343304142477615
+pseudo_labels: tensor([6, 6, 0, 0, 6, 6, 4, 6, 6, 6, 6, 6, 1, 6, 3, 6, 6, 6, 2, 6, 6, 3, 5, 6,
+        6, 2, 1, 4, 0, 4, 6, 6, 6, 3, 6, 6, 5, 6, 6, 3, 6, 6, 6, 6, 1, 2, 6, 2,
+        0, 6, 6, 2, 6, 6, 0, 3, 3, 6, 2, 6, 6, 6, 6, 6], device='cuda:0')
+y_ground truth: tensor([3, 3, 0, 0, 6, 6, 4, 3, 6, 6, 6, 3, 1, 6, 6, 0, 3, 6, 2, 2, 5, 6, 6, 6,
+        6, 2, 1, 6, 0, 4, 6, 5, 6, 3, 3, 6, 3, 6, 6, 3, 6, 6, 6, 6, 1, 6, 6, 2,
+        0, 6, 6, 2, 6, 3, 0, 3, 3, 6, 6, 6, 6, 4, 3, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 68.75 %
+pseudo_labels Unknown same_ratio pres/true: 81.25 %
+pseudo_labels not Unknown same_ratio pres/true: 56.25 %
+y_ground truth: tensor([3, 3, 0, 0, 6, 6, 4, 3, 6, 6, 6, 3, 1, 6, 6, 0, 3, 6, 2, 2, 5, 6, 6, 6,
+        6, 2, 1, 6, 0, 4, 6, 5, 6, 3, 3, 6, 3, 6, 6, 3, 6, 6, 6, 6, 1, 6, 6, 2,
+        0, 6, 6, 2, 6, 3, 0, 3, 3, 6, 6, 6, 6, 4, 3, 6], device='cuda:0')
+preds: tensor([6, 6, 0, 0, 6, 6, 4, 6, 6, 6, 6, 6, 1, 6, 3, 6, 6, 6, 2, 6, 6, 6, 5, 6,
+        6, 2, 1, 6, 0, 4, 6, 6, 6, 3, 6, 6, 5, 6, 6, 6, 6, 6, 6, 6, 1, 2, 6, 2,
+        0, 6, 6, 2, 6, 6, 0, 3, 3, 6, 2, 6, 6, 6, 6, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 70.3125 %
+preds Unknown same_ratio pres/true: 87.5 %
+preds not Unknown same_ratio pres/true: 53.125 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 42/64
+number of true unknown labels:  true unknown labels /total true labels: 32/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  69%|██████▉   | 601/865 [07:46<03:24,  1.29it/s, v_num=516, train_loss_step=104.0, tta_acc_step=0.625]Epoch 0:  69%|██████▉   | 601/865 [07:46<03:24,  1.29it/s, v_num=516, train_loss_step=89.60, tta_acc_step=0.703]acc_pseudo_labels_unknow_step: 0.5333333333333333
+acc_pseudo_labels_know_step: 0.75
+acc_pseudo_labels_unknow_accum: 0.6157127621756132
+acc_pseudo_labels_know_accum: 0.7343550446998723
+pseudo_labels: tensor([3, 2, 1, 2, 6, 2, 1, 6, 6, 6, 2, 6, 1, 6, 4, 6, 3, 3, 5, 2, 6, 6, 6, 6,
+        3, 1, 2, 4, 6, 6, 6, 4, 2, 3, 3, 1, 2, 6, 6, 6, 6, 4, 6, 6, 6, 4, 6, 6,
+        3, 6, 6, 6, 2, 2, 0, 2, 4, 6, 2, 6, 6, 1, 6, 1], device='cuda:0')
+y_ground truth: tensor([6, 6, 6, 2, 6, 6, 6, 6, 6, 6, 6, 6, 1, 6, 4, 6, 3, 6, 6, 6, 1, 6, 6, 2,
+        3, 1, 6, 4, 3, 3, 3, 4, 2, 2, 3, 6, 2, 6, 5, 5, 5, 4, 6, 3, 6, 6, 6, 3,
+        3, 6, 3, 6, 2, 6, 0, 2, 4, 5, 6, 2, 6, 1, 3, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 53.125 %
+pseudo_labels Unknown same_ratio pres/true: 51.61290322580645 %
+pseudo_labels not Unknown same_ratio pres/true: 54.54545454545454 %
+y_ground truth: tensor([6, 6, 6, 2, 6, 6, 6, 6, 6, 6, 6, 6, 1, 6, 4, 6, 3, 6, 6, 6, 1, 6, 6, 2,
+        3, 1, 6, 4, 3, 3, 3, 4, 2, 2, 3, 6, 2, 6, 5, 5, 5, 4, 6, 3, 6, 6, 6, 3,
+        3, 6, 3, 6, 2, 6, 0, 2, 4, 5, 6, 2, 6, 1, 3, 6], device='cuda:0')
+preds: tensor([3, 0, 1, 2, 6, 6, 1, 6, 6, 6, 2, 6, 1, 6, 4, 6, 3, 3, 5, 2, 6, 6, 6, 6,
+        3, 1, 2, 4, 6, 6, 6, 4, 2, 3, 3, 1, 2, 6, 6, 6, 6, 4, 6, 6, 6, 6, 6, 6,
+        6, 6, 6, 6, 2, 2, 0, 2, 4, 6, 2, 6, 6, 1, 6, 1], device='cuda:0')
+preds same_ratio preds/y_ground truth: 54.6875 %
+preds Unknown same_ratio pres/true: 58.06451612903226 %
+preds not Unknown same_ratio pres/true: 51.515151515151516 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 33/64
+number of true unknown labels:  true unknown labels /total true labels: 31/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  70%|██████▉   | 602/865 [07:46<03:23,  1.29it/s, v_num=516, train_loss_step=89.60, tta_acc_step=0.703]Epoch 0:  70%|██████▉   | 602/865 [07:47<03:24,  1.29it/s, v_num=516, train_loss_step=120.0, tta_acc_step=0.547]acc_pseudo_labels_unknow_step: 0.5
+acc_pseudo_labels_know_step: 0.7058823529411765
+acc_pseudo_labels_unknow_accum: 0.6155074520936835
+acc_pseudo_labels_know_accum: 0.7343075715967046
+pseudo_labels: tensor([1, 6, 5, 2, 3, 2, 6, 6, 0, 3, 6, 6, 6, 2, 3, 0, 2, 6, 3, 6, 6, 6, 1, 6,
+        2, 6, 6, 6, 6, 3, 2, 0, 6, 4, 0, 3, 6, 6, 0, 6, 4, 5, 3, 6, 6, 6, 2, 4,
+        2, 6, 6, 1, 6, 1, 2, 6, 1, 4, 4, 6, 6, 6, 6, 2], device='cuda:0')
+y_ground truth: tensor([6, 2, 2, 6, 3, 2, 6, 6, 0, 3, 6, 6, 3, 6, 3, 0, 6, 3, 6, 6, 6, 6, 6, 2,
+        6, 3, 6, 3, 3, 3, 6, 0, 6, 4, 0, 3, 3, 3, 6, 6, 4, 6, 3, 6, 6, 6, 6, 4,
+        2, 6, 5, 6, 0, 1, 2, 3, 6, 4, 4, 4, 5, 6, 3, 2], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 54.6875 %
+pseudo_labels Unknown same_ratio pres/true: 53.57142857142857 %
+pseudo_labels not Unknown same_ratio pres/true: 55.55555555555556 %
+y_ground truth: tensor([6, 2, 2, 6, 3, 2, 6, 6, 0, 3, 6, 6, 3, 6, 3, 0, 6, 3, 6, 6, 6, 6, 6, 2,
+        6, 3, 6, 3, 3, 3, 6, 0, 6, 4, 0, 3, 3, 3, 6, 6, 4, 6, 3, 6, 6, 6, 6, 4,
+        2, 6, 5, 6, 0, 1, 2, 3, 6, 4, 4, 4, 5, 6, 3, 2], device='cuda:0')
+preds: tensor([1, 6, 6, 2, 3, 2, 6, 6, 0, 3, 6, 6, 6, 2, 3, 0, 6, 6, 0, 6, 6, 6, 1, 6,
+        2, 6, 6, 6, 6, 3, 2, 0, 6, 4, 0, 3, 6, 6, 0, 6, 4, 6, 3, 6, 6, 6, 2, 4,
+        2, 6, 6, 1, 6, 1, 2, 6, 1, 4, 4, 6, 6, 6, 6, 2], device='cuda:0')
+preds same_ratio preds/y_ground truth: 57.8125 %
+preds Unknown same_ratio pres/true: 60.71428571428571 %
+preds not Unknown same_ratio pres/true: 55.55555555555556 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 33/64
+number of true unknown labels:  true unknown labels /total true labels: 28/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  70%|██████▉   | 603/865 [07:47<03:23,  1.29it/s, v_num=516, train_loss_step=120.0, tta_acc_step=0.547]Epoch 0:  70%|██████▉   | 603/865 [07:47<03:23,  1.29it/s, v_num=516, train_loss_step=110.0, tta_acc_step=0.578]acc_pseudo_labels_unknow_step: 0.7096774193548387
+acc_pseudo_labels_know_step: 0.7647058823529411
+acc_pseudo_labels_unknow_accum: 0.6156797921955252
+acc_pseudo_labels_know_accum: 0.7343581709585822
+pseudo_labels: tensor([6, 2, 6, 6, 6, 2, 1, 6, 3, 3, 4, 1, 2, 4, 2, 6, 1, 3, 3, 2, 0, 6, 6, 4,
+        1, 6, 6, 6, 2, 6, 6, 1, 6, 2, 2, 0, 6, 6, 2, 6, 6, 6, 6, 3, 6, 0, 2, 6,
+        6, 5, 6, 3, 1, 1, 6, 6, 1, 6, 0, 6, 0, 6, 6, 6], device='cuda:0')
+y_ground truth: tensor([1, 6, 6, 6, 6, 2, 6, 6, 3, 3, 4, 1, 2, 4, 6, 6, 1, 3, 6, 2, 0, 6, 3, 4,
+        1, 6, 6, 3, 2, 6, 6, 6, 6, 6, 6, 0, 2, 6, 6, 6, 2, 6, 6, 6, 3, 0, 2, 6,
+        3, 5, 6, 3, 6, 6, 6, 6, 1, 6, 0, 5, 0, 6, 5, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 68.75 %
+pseudo_labels Unknown same_ratio pres/true: 66.66666666666666 %
+pseudo_labels not Unknown same_ratio pres/true: 70.96774193548387 %
+y_ground truth: tensor([1, 6, 6, 6, 6, 2, 6, 6, 3, 3, 4, 1, 2, 4, 6, 6, 1, 3, 6, 2, 0, 6, 3, 4,
+        1, 6, 6, 3, 2, 6, 6, 6, 6, 6, 6, 0, 2, 6, 6, 6, 2, 6, 6, 6, 3, 0, 2, 6,
+        3, 5, 6, 3, 6, 6, 6, 6, 1, 6, 0, 5, 0, 6, 5, 6], device='cuda:0')
+preds: tensor([6, 2, 6, 6, 6, 2, 1, 6, 3, 3, 4, 1, 2, 4, 6, 6, 1, 3, 3, 2, 0, 6, 6, 4,
+        1, 6, 6, 6, 2, 6, 6, 1, 6, 2, 2, 0, 6, 6, 2, 6, 6, 6, 6, 3, 6, 0, 2, 6,
+        6, 6, 6, 3, 1, 6, 6, 6, 1, 6, 0, 6, 0, 6, 6, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 70.3125 %
+preds Unknown same_ratio pres/true: 72.72727272727273 %
+preds not Unknown same_ratio pres/true: 67.74193548387096 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 34/64
+number of true unknown labels:  true unknown labels /total true labels: 33/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  70%|██████▉   | 604/865 [07:48<03:22,  1.29it/s, v_num=516, train_loss_step=110.0, tta_acc_step=0.578]Epoch 0:  70%|██████▉   | 604/865 [07:48<03:22,  1.29it/s, v_num=516, train_loss_step=103.0, tta_acc_step=0.703]acc_pseudo_labels_unknow_step: 0.7
+acc_pseudo_labels_know_step: 0.85
+acc_pseudo_labels_unknow_accum: 0.6158288643997879
+acc_pseudo_labels_know_accum: 0.7345841884100459
+pseudo_labels: tensor([3, 6, 1, 4, 6, 6, 6, 6, 5, 1, 6, 2, 2, 6, 2, 6, 4, 6, 6, 6, 2, 1, 2, 6,
+        2, 6, 1, 6, 0, 6, 6, 0, 2, 3, 6, 6, 6, 5, 3, 1, 3, 6, 2, 6, 2, 0, 2, 4,
+        6, 4, 6, 6, 6, 0, 1, 3, 5, 6, 1, 6, 6, 4, 6, 6], device='cuda:0')
+y_ground truth: tensor([6, 6, 6, 4, 6, 0, 6, 6, 6, 1, 6, 6, 6, 6, 6, 3, 4, 6, 6, 1, 2, 1, 6, 6,
+        6, 5, 1, 6, 0, 6, 6, 0, 6, 2, 6, 6, 6, 6, 3, 6, 3, 5, 2, 6, 2, 0, 2, 4,
+        3, 4, 3, 6, 6, 0, 6, 3, 3, 6, 6, 5, 6, 4, 6, 3], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 62.5 %
+pseudo_labels Unknown same_ratio pres/true: 61.76470588235294 %
+pseudo_labels not Unknown same_ratio pres/true: 63.33333333333333 %
+y_ground truth: tensor([6, 6, 6, 4, 6, 0, 6, 6, 6, 1, 6, 6, 6, 6, 6, 3, 4, 6, 6, 1, 2, 1, 6, 6,
+        6, 5, 1, 6, 0, 6, 6, 0, 6, 2, 6, 6, 6, 6, 3, 6, 3, 5, 2, 6, 2, 0, 2, 4,
+        3, 4, 3, 6, 6, 0, 6, 3, 3, 6, 6, 5, 6, 4, 6, 3], device='cuda:0')
+preds: tensor([3, 6, 1, 4, 6, 6, 6, 6, 6, 1, 6, 2, 6, 6, 2, 6, 4, 6, 6, 6, 2, 1, 2, 6,
+        2, 6, 1, 6, 0, 6, 6, 0, 2, 6, 6, 6, 6, 5, 3, 1, 6, 6, 2, 6, 2, 0, 2, 4,
+        6, 4, 6, 6, 6, 0, 1, 3, 5, 6, 1, 6, 6, 4, 6, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 64.0625 %
+preds Unknown same_ratio pres/true: 67.64705882352942 %
+preds not Unknown same_ratio pres/true: 60.0 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 34/64
+number of true unknown labels:  true unknown labels /total true labels: 34/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  70%|██████▉   | 605/865 [07:49<03:21,  1.29it/s, v_num=516, train_loss_step=103.0, tta_acc_step=0.703]Epoch 0:  70%|██████▉   | 605/865 [07:49<03:21,  1.29it/s, v_num=516, train_loss_step=130.0, tta_acc_step=0.641]acc_pseudo_labels_unknow_step: 0.6428571428571429
+acc_pseudo_labels_know_step: 0.8888888888888888
+acc_pseudo_labels_unknow_accum: 0.6158733894216627
+acc_pseudo_labels_know_accum: 0.7348551360842844
+pseudo_labels: tensor([2, 3, 3, 0, 3, 6, 4, 6, 0, 3, 6, 3, 6, 6, 6, 1, 6, 5, 3, 0, 2, 2, 4, 0,
+        6, 5, 3, 2, 6, 4, 0, 0, 6, 6, 6, 3, 6, 6, 6, 6, 1, 6, 6, 6, 6, 3, 6, 6,
+        2, 1, 6, 2, 5, 6, 4, 1, 0, 6, 6, 6, 3, 6, 2, 0], device='cuda:0')
+y_ground truth: tensor([2, 6, 3, 0, 3, 6, 6, 3, 0, 3, 6, 3, 3, 6, 3, 1, 6, 6, 3, 0, 2, 2, 4, 0,
+        6, 6, 3, 6, 3, 4, 0, 6, 6, 2, 6, 6, 6, 6, 6, 6, 1, 6, 3, 2, 6, 3, 6, 5,
+        2, 6, 6, 2, 5, 6, 4, 6, 0, 3, 6, 6, 3, 5, 6, 0], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 68.75 %
+pseudo_labels Unknown same_ratio pres/true: 64.28571428571429 %
+pseudo_labels not Unknown same_ratio pres/true: 72.22222222222221 %
+y_ground truth: tensor([2, 6, 3, 0, 3, 6, 6, 3, 0, 3, 6, 3, 3, 6, 3, 1, 6, 6, 3, 0, 2, 2, 4, 0,
+        6, 6, 3, 6, 3, 4, 0, 6, 6, 2, 6, 6, 6, 6, 6, 6, 1, 6, 3, 2, 6, 3, 6, 5,
+        2, 6, 6, 2, 5, 6, 4, 6, 0, 3, 6, 6, 3, 5, 6, 0], device='cuda:0')
+preds: tensor([2, 3, 3, 0, 3, 6, 4, 6, 0, 3, 6, 3, 6, 6, 6, 1, 6, 5, 3, 0, 2, 2, 4, 0,
+        6, 6, 3, 6, 6, 4, 0, 6, 6, 6, 6, 3, 6, 6, 6, 6, 1, 6, 6, 6, 6, 3, 6, 6,
+        2, 1, 6, 2, 6, 6, 4, 1, 0, 6, 6, 6, 6, 6, 2, 0], device='cuda:0')
+preds same_ratio preds/y_ground truth: 70.3125 %
+preds Unknown same_ratio pres/true: 75.0 %
+preds not Unknown same_ratio pres/true: 66.66666666666666 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 33/64
+number of true unknown labels:  true unknown labels /total true labels: 28/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  70%|███████   | 606/865 [07:50<03:20,  1.29it/s, v_num=516, train_loss_step=130.0, tta_acc_step=0.641]Epoch 0:  70%|███████   | 606/865 [07:50<03:20,  1.29it/s, v_num=516, train_loss_step=123.0, tta_acc_step=0.703]acc_pseudo_labels_unknow_step: 0.6923076923076923
+acc_pseudo_labels_know_step: 0.7222222222222222
+acc_pseudo_labels_unknow_accum: 0.6159901309992363
+acc_pseudo_labels_know_accum: 0.7348329925017042
+pseudo_labels: tensor([1, 6, 1, 4, 0, 6, 6, 6, 2, 3, 4, 0, 4, 3, 6, 6, 6, 5, 6, 2, 0, 0, 0, 4,
+        2, 1, 2, 6, 6, 3, 6, 2, 2, 6, 1, 6, 3, 6, 2, 6, 6, 3, 2, 6, 4, 6, 1, 0,
+        6, 6, 6, 3, 4, 1, 6, 5, 5, 6, 5, 6, 6, 2, 3, 6], device='cuda:0')
+y_ground truth: tensor([1, 6, 6, 4, 0, 6, 6, 6, 2, 3, 6, 0, 4, 3, 6, 6, 6, 6, 3, 6, 0, 0, 0, 4,
+        6, 6, 6, 6, 6, 6, 6, 3, 2, 6, 6, 6, 3, 6, 6, 3, 3, 6, 6, 4, 4, 6, 6, 0,
+        6, 6, 6, 6, 4, 1, 5, 3, 3, 3, 3, 5, 6, 2, 3, 3], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 59.375 %
+pseudo_labels Unknown same_ratio pres/true: 56.25 %
+pseudo_labels not Unknown same_ratio pres/true: 62.5 %
+y_ground truth: tensor([1, 6, 6, 4, 0, 6, 6, 6, 2, 3, 6, 0, 4, 3, 6, 6, 6, 6, 3, 6, 0, 0, 0, 4,
+        6, 6, 6, 6, 6, 6, 6, 3, 2, 6, 6, 6, 3, 6, 6, 3, 3, 6, 6, 4, 4, 6, 6, 0,
+        6, 6, 6, 6, 4, 1, 5, 3, 3, 3, 3, 5, 6, 2, 3, 3], device='cuda:0')
+preds: tensor([1, 6, 1, 4, 0, 6, 6, 6, 2, 3, 4, 0, 4, 3, 6, 6, 6, 6, 6, 2, 0, 0, 0, 4,
+        2, 1, 2, 6, 6, 3, 6, 2, 2, 6, 1, 6, 3, 6, 2, 6, 6, 3, 2, 6, 4, 6, 6, 0,
+        6, 6, 6, 3, 4, 1, 6, 6, 6, 6, 5, 6, 6, 2, 3, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 62.5 %
+preds Unknown same_ratio pres/true: 62.5 %
+preds not Unknown same_ratio pres/true: 62.5 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 30/64
+number of true unknown labels:  true unknown labels /total true labels: 32/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  70%|███████   | 607/865 [07:50<03:20,  1.29it/s, v_num=516, train_loss_step=123.0, tta_acc_step=0.703]Epoch 0:  70%|███████   | 607/865 [07:50<03:20,  1.29it/s, v_num=516, train_loss_step=131.0, tta_acc_step=0.625]acc_pseudo_labels_unknow_step: 0.5925925925925926
+acc_pseudo_labels_know_step: 0.875
+acc_pseudo_labels_unknow_accum: 0.6159530791788856
+acc_pseudo_labels_know_accum: 0.735051045211473
+pseudo_labels: tensor([2, 6, 2, 6, 3, 2, 6, 1, 6, 4, 6, 2, 0, 1, 5, 4, 6, 2, 3, 3, 2, 6, 6, 3,
+        6, 5, 3, 6, 6, 3, 6, 3, 0, 5, 6, 6, 1, 6, 0, 4, 6, 0, 6, 0, 0, 6, 6, 6,
+        6, 5, 2, 6, 4, 6, 6, 2, 1, 3, 2, 6, 2, 6, 4, 6], device='cuda:0')
+y_ground truth: tensor([6, 3, 6, 5, 3, 6, 6, 1, 6, 4, 6, 6, 0, 6, 6, 4, 6, 2, 3, 3, 6, 6, 3, 3,
+        3, 6, 3, 3, 6, 3, 6, 3, 0, 3, 6, 6, 6, 5, 0, 6, 6, 0, 5, 0, 0, 3, 6, 6,
+        6, 6, 6, 2, 4, 6, 6, 3, 1, 6, 2, 5, 2, 6, 4, 3], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 59.375 %
+pseudo_labels Unknown same_ratio pres/true: 55.172413793103445 %
+pseudo_labels not Unknown same_ratio pres/true: 62.857142857142854 %
+y_ground truth: tensor([6, 3, 6, 5, 3, 6, 6, 1, 6, 4, 6, 6, 0, 6, 6, 4, 6, 2, 3, 3, 6, 6, 3, 3,
+        3, 6, 3, 3, 6, 3, 6, 3, 0, 3, 6, 6, 6, 5, 0, 6, 6, 0, 5, 0, 0, 3, 6, 6,
+        6, 6, 6, 2, 4, 6, 6, 3, 1, 6, 2, 5, 2, 6, 4, 3], device='cuda:0')
+preds: tensor([2, 6, 2, 6, 3, 2, 6, 1, 6, 4, 6, 2, 0, 1, 5, 4, 6, 2, 3, 3, 2, 6, 6, 3,
+        6, 6, 3, 6, 6, 3, 6, 3, 0, 6, 6, 6, 6, 6, 0, 6, 6, 0, 6, 0, 0, 6, 6, 6,
+        6, 6, 2, 6, 4, 6, 6, 3, 1, 3, 2, 6, 2, 6, 4, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 67.1875 %
+preds Unknown same_ratio pres/true: 68.96551724137932 %
+preds not Unknown same_ratio pres/true: 65.71428571428571 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 32/64
+number of true unknown labels:  true unknown labels /total true labels: 29/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  70%|███████   | 608/865 [07:51<03:19,  1.29it/s, v_num=516, train_loss_step=131.0, tta_acc_step=0.625]Epoch 0:  70%|███████   | 608/865 [07:51<03:19,  1.29it/s, v_num=516, train_loss_step=111.0, tta_acc_step=0.672]acc_pseudo_labels_unknow_step: 0.65625
+acc_pseudo_labels_know_step: 0.7692307692307693
+acc_pseudo_labels_unknow_accum: 0.6160285680833626
+acc_pseudo_labels_know_accum: 0.7350941930471936
+pseudo_labels: tensor([0, 6, 6, 6, 6, 2, 1, 6, 4, 6, 6, 2, 6, 3, 5, 6, 6, 0, 0, 6, 6, 6, 3, 6,
+        3, 5, 2, 6, 1, 6, 1, 6, 6, 1, 4, 6, 4, 1, 2, 2, 2, 2, 2, 6, 4, 2, 6, 5,
+        6, 6, 1, 6, 6, 3, 6, 4, 2, 6, 6, 6, 6, 2, 6, 6], device='cuda:0')
+y_ground truth: tensor([0, 6, 1, 6, 6, 2, 6, 1, 6, 6, 6, 2, 2, 3, 6, 6, 3, 0, 0, 6, 6, 6, 3, 6,
+        3, 3, 2, 3, 1, 6, 1, 0, 6, 6, 3, 6, 4, 1, 2, 6, 6, 2, 6, 6, 4, 6, 6, 5,
+        4, 6, 6, 3, 3, 6, 6, 4, 6, 6, 6, 0, 2, 6, 6, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 60.9375 %
+pseudo_labels Unknown same_ratio pres/true: 63.63636363636363 %
+pseudo_labels not Unknown same_ratio pres/true: 58.06451612903226 %
+y_ground truth: tensor([0, 6, 1, 6, 6, 2, 6, 1, 6, 6, 6, 2, 2, 3, 6, 6, 3, 0, 0, 6, 6, 6, 3, 6,
+        3, 3, 2, 3, 1, 6, 1, 0, 6, 6, 3, 6, 4, 1, 2, 6, 6, 2, 6, 6, 4, 6, 6, 5,
+        4, 6, 6, 3, 3, 6, 6, 4, 6, 6, 6, 0, 2, 6, 6, 6], device='cuda:0')
+preds: tensor([0, 6, 6, 6, 6, 2, 6, 6, 4, 6, 6, 2, 6, 3, 5, 6, 6, 0, 0, 6, 6, 6, 3, 6,
+        3, 5, 2, 6, 1, 6, 1, 6, 6, 1, 4, 6, 4, 1, 2, 6, 2, 2, 2, 6, 4, 2, 6, 5,
+        6, 6, 1, 6, 6, 3, 6, 6, 6, 6, 6, 6, 6, 2, 6, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 64.0625 %
+preds Unknown same_ratio pres/true: 72.72727272727273 %
+preds not Unknown same_ratio pres/true: 54.83870967741935 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 36/64
+number of true unknown labels:  true unknown labels /total true labels: 33/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  70%|███████   | 609/865 [07:52<03:18,  1.29it/s, v_num=516, train_loss_step=111.0, tta_acc_step=0.672]Epoch 0:  70%|███████   | 609/865 [07:52<03:18,  1.29it/s, v_num=516, train_loss_step=77.20, tta_acc_step=0.641]acc_pseudo_labels_unknow_step: 0.6666666666666666
+acc_pseudo_labels_know_step: 0.9166666666666666
+acc_pseudo_labels_unknow_accum: 0.6161262050832603
+acc_pseudo_labels_know_accum: 0.7353055286129971
+pseudo_labels: tensor([2, 6, 6, 6, 5, 3, 3, 4, 4, 6, 0, 4, 6, 6, 0, 1, 6, 6, 6, 6, 6, 6, 6, 3,
+        2, 5, 1, 5, 6, 6, 1, 2, 6, 2, 6, 0, 6, 6, 6, 3, 6, 6, 0, 6, 2, 6, 3, 2,
+        2, 6, 6, 3, 6, 4, 3, 6, 0, 6, 1, 6, 3, 6, 6, 6], device='cuda:0')
+y_ground truth: tensor([6, 6, 3, 6, 5, 3, 3, 4, 4, 1, 0, 4, 6, 3, 0, 6, 6, 6, 6, 3, 6, 6, 6, 3,
+        2, 3, 6, 6, 6, 6, 1, 2, 6, 6, 3, 0, 6, 2, 6, 6, 6, 6, 0, 3, 6, 6, 3, 6,
+        2, 6, 6, 3, 6, 4, 3, 2, 0, 3, 6, 3, 3, 3, 6, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 67.1875 %
+pseudo_labels Unknown same_ratio pres/true: 70.96774193548387 %
+pseudo_labels not Unknown same_ratio pres/true: 63.63636363636363 %
+y_ground truth: tensor([6, 6, 3, 6, 5, 3, 3, 4, 4, 1, 0, 4, 6, 3, 0, 6, 6, 6, 6, 3, 6, 6, 6, 3,
+        2, 3, 6, 6, 6, 6, 1, 2, 6, 6, 3, 0, 6, 2, 6, 6, 6, 6, 0, 3, 6, 6, 3, 6,
+        2, 6, 6, 3, 6, 4, 3, 2, 0, 3, 6, 3, 3, 3, 6, 6], device='cuda:0')
+preds: tensor([2, 6, 6, 6, 6, 3, 3, 4, 4, 6, 0, 6, 6, 6, 0, 1, 6, 6, 6, 6, 6, 6, 6, 3,
+        2, 5, 1, 1, 6, 6, 1, 2, 6, 2, 6, 0, 6, 6, 6, 3, 6, 6, 0, 6, 2, 6, 6, 2,
+        2, 6, 6, 3, 6, 4, 3, 6, 0, 6, 1, 6, 3, 6, 6, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 62.5 %
+preds Unknown same_ratio pres/true: 70.96774193548387 %
+preds not Unknown same_ratio pres/true: 54.54545454545454 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 36/64
+number of true unknown labels:  true unknown labels /total true labels: 31/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  71%|███████   | 610/865 [07:53<03:17,  1.29it/s, v_num=516, train_loss_step=77.20, tta_acc_step=0.641]Epoch 0:  71%|███████   | 610/865 [07:53<03:17,  1.29it/s, v_num=516, train_loss_step=59.20, tta_acc_step=0.625]acc_pseudo_labels_unknow_step: 0.4642857142857143
+acc_pseudo_labels_know_step: 0.7647058823529411
+acc_pseudo_labels_unknow_accum: 0.6158782010149916
+acc_pseudo_labels_know_accum: 0.7353539266001743
+pseudo_labels: tensor([0, 6, 5, 1, 6, 4, 6, 5, 6, 4, 6, 2, 6, 6, 6, 4, 6, 0, 2, 4, 6, 6, 1, 0,
+        3, 6, 6, 3, 6, 6, 3, 6, 2, 6, 6, 6, 6, 6, 2, 3, 3, 2, 4, 1, 2, 6, 0, 6,
+        6, 1, 0, 6, 3, 6, 2, 1, 6, 2, 3, 2, 6, 4, 4, 0], device='cuda:0')
+y_ground truth: tensor([0, 6, 2, 3, 6, 4, 3, 6, 6, 4, 3, 6, 0, 5, 3, 4, 5, 0, 6, 4, 2, 2, 1, 0,
+        6, 6, 6, 3, 2, 6, 3, 6, 6, 3, 6, 6, 6, 3, 2, 3, 6, 2, 4, 1, 6, 3, 0, 3,
+        6, 6, 0, 6, 3, 6, 6, 1, 3, 6, 3, 6, 3, 4, 4, 0], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 56.25 %
+pseudo_labels Unknown same_ratio pres/true: 54.166666666666664 %
+pseudo_labels not Unknown same_ratio pres/true: 57.49999999999999 %
+y_ground truth: tensor([0, 6, 2, 3, 6, 4, 3, 6, 6, 4, 3, 6, 0, 5, 3, 4, 5, 0, 6, 4, 2, 2, 1, 0,
+        6, 6, 6, 3, 2, 6, 3, 6, 6, 3, 6, 6, 6, 3, 2, 3, 6, 2, 4, 1, 6, 3, 0, 3,
+        6, 6, 0, 6, 3, 6, 6, 1, 3, 6, 3, 6, 3, 4, 4, 0], device='cuda:0')
+preds: tensor([0, 6, 6, 1, 6, 4, 6, 6, 6, 4, 6, 2, 6, 6, 6, 4, 6, 0, 2, 4, 6, 6, 1, 0,
+        3, 6, 6, 3, 6, 6, 6, 6, 2, 6, 6, 6, 6, 6, 2, 3, 6, 2, 4, 1, 6, 6, 0, 6,
+        6, 1, 0, 6, 3, 6, 2, 1, 6, 2, 3, 6, 6, 4, 4, 0], device='cuda:0')
+preds same_ratio preds/y_ground truth: 60.9375 %
+preds Unknown same_ratio pres/true: 70.83333333333334 %
+preds not Unknown same_ratio pres/true: 55.00000000000001 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 34/64
+number of true unknown labels:  true unknown labels /total true labels: 24/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  71%|███████   | 611/865 [07:53<03:17,  1.29it/s, v_num=516, train_loss_step=59.20, tta_acc_step=0.625]Epoch 0:  71%|███████   | 611/865 [07:54<03:17,  1.29it/s, v_num=516, train_loss_step=119.0, tta_acc_step=0.609]acc_pseudo_labels_unknow_step: 0.6774193548387096
+acc_pseudo_labels_know_step: 0.5882352941176471
+acc_pseudo_labels_unknow_accum: 0.6159892861301968
+acc_pseudo_labels_know_accum: 0.7351121423047177
+pseudo_labels: tensor([6, 6, 6, 1, 0, 1, 6, 0, 4, 2, 3, 1, 6, 6, 4, 6, 6, 1, 6, 0, 2, 6, 3, 2,
+        6, 1, 6, 4, 4, 6, 6, 6, 2, 6, 2, 4, 3, 2, 1, 1, 0, 6, 6, 6, 0, 5, 2, 6,
+        6, 6, 6, 6, 0, 0, 6, 0, 6, 6, 6, 6, 3, 6, 6, 3], device='cuda:0')
+y_ground truth: tensor([6, 6, 6, 3, 0, 6, 3, 0, 4, 2, 3, 6, 6, 3, 4, 6, 6, 6, 6, 0, 2, 6, 3, 6,
+        6, 1, 6, 4, 3, 6, 3, 6, 2, 6, 6, 4, 6, 6, 6, 6, 0, 6, 6, 2, 0, 1, 6, 3,
+        6, 1, 3, 6, 0, 0, 6, 0, 6, 1, 3, 6, 6, 5, 6, 3], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 62.5 %
+pseudo_labels Unknown same_ratio pres/true: 65.625 %
+pseudo_labels not Unknown same_ratio pres/true: 59.375 %
+y_ground truth: tensor([6, 6, 6, 3, 0, 6, 3, 0, 4, 2, 3, 6, 6, 3, 4, 6, 6, 6, 6, 0, 2, 6, 3, 6,
+        6, 1, 6, 4, 3, 6, 3, 6, 2, 6, 6, 4, 6, 6, 6, 6, 0, 6, 6, 2, 0, 1, 6, 3,
+        6, 1, 3, 6, 0, 0, 6, 0, 6, 1, 3, 6, 6, 5, 6, 3], device='cuda:0')
+preds: tensor([6, 6, 6, 1, 0, 1, 6, 0, 6, 2, 3, 1, 6, 6, 4, 6, 6, 1, 6, 0, 2, 6, 3, 2,
+        6, 1, 6, 4, 4, 6, 6, 6, 2, 6, 2, 4, 6, 2, 1, 6, 0, 6, 6, 6, 0, 5, 2, 6,
+        6, 6, 6, 6, 0, 0, 6, 0, 6, 6, 6, 6, 3, 6, 6, 3], device='cuda:0')
+preds same_ratio preds/y_ground truth: 64.0625 %
+preds Unknown same_ratio pres/true: 71.875 %
+preds not Unknown same_ratio pres/true: 56.25 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 34/64
+number of true unknown labels:  true unknown labels /total true labels: 32/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  71%|███████   | 612/865 [07:54<03:16,  1.29it/s, v_num=516, train_loss_step=119.0, tta_acc_step=0.609]Epoch 0:  71%|███████   | 612/865 [07:54<03:16,  1.29it/s, v_num=516, train_loss_step=114.0, tta_acc_step=0.641]acc_pseudo_labels_unknow_step: 0.6666666666666666
+acc_pseudo_labels_know_step: 0.7857142857142857
+acc_pseudo_labels_unknow_accum: 0.61609529343405
+acc_pseudo_labels_know_accum: 0.7351805367831628
+pseudo_labels: tensor([6, 6, 1, 6, 6, 1, 2, 6, 6, 2, 4, 6, 2, 6, 4, 5, 6, 6, 6, 1, 2, 3, 2, 0,
+        6, 4, 3, 6, 5, 6, 6, 0, 1, 6, 3, 1, 6, 6, 3, 1, 2, 3, 6, 6, 6, 6, 6, 6,
+        6, 6, 2, 0, 6, 6, 6, 1, 6, 6, 6, 6, 6, 6, 6, 4], device='cuda:0')
+y_ground truth: tensor([6, 5, 6, 3, 6, 1, 2, 3, 6, 3, 4, 6, 6, 6, 4, 3, 6, 3, 6, 1, 2, 3, 6, 0,
+        6, 4, 3, 6, 6, 6, 6, 0, 6, 3, 3, 6, 6, 6, 3, 1, 2, 3, 6, 2, 5, 5, 3, 6,
+        6, 2, 2, 0, 6, 6, 6, 6, 6, 6, 5, 3, 6, 6, 6, 4], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 67.1875 %
+pseudo_labels Unknown same_ratio pres/true: 77.41935483870968 %
+pseudo_labels not Unknown same_ratio pres/true: 57.57575757575758 %
+y_ground truth: tensor([6, 5, 6, 3, 6, 1, 2, 3, 6, 3, 4, 6, 6, 6, 4, 3, 6, 3, 6, 1, 2, 3, 6, 0,
+        6, 4, 3, 6, 6, 6, 6, 0, 6, 3, 3, 6, 6, 6, 3, 1, 2, 3, 6, 2, 5, 5, 3, 6,
+        6, 2, 2, 0, 6, 6, 6, 6, 6, 6, 5, 3, 6, 6, 6, 4], device='cuda:0')
+preds: tensor([6, 6, 1, 6, 6, 1, 2, 6, 6, 6, 4, 6, 2, 6, 4, 6, 6, 6, 6, 1, 2, 3, 2, 0,
+        6, 4, 3, 6, 6, 6, 6, 0, 1, 6, 3, 6, 6, 6, 3, 1, 2, 6, 6, 6, 6, 6, 6, 6,
+        6, 6, 2, 0, 6, 6, 6, 1, 6, 6, 6, 6, 6, 6, 6, 4], device='cuda:0')
+preds same_ratio preds/y_ground truth: 68.75 %
+preds Unknown same_ratio pres/true: 83.87096774193549 %
+preds not Unknown same_ratio pres/true: 54.54545454545454 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 41/64
+number of true unknown labels:  true unknown labels /total true labels: 31/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  71%|███████   | 613/865 [07:55<03:15,  1.29it/s, v_num=516, train_loss_step=114.0, tta_acc_step=0.641]Epoch 0:  71%|███████   | 613/865 [07:55<03:15,  1.29it/s, v_num=516, train_loss_step=81.60, tta_acc_step=0.688]acc_pseudo_labels_unknow_step: 0.6666666666666666
+acc_pseudo_labels_know_step: 0.8
+acc_pseudo_labels_unknow_accum: 0.6161832946635731
+acc_pseudo_labels_know_accum: 0.7352742697387448
+pseudo_labels: tensor([1, 6, 6, 1, 3, 1, 6, 2, 6, 0, 6, 6, 5, 6, 6, 6, 4, 1, 4, 3, 6, 6, 2, 6,
+        2, 1, 1, 6, 6, 4, 6, 3, 6, 3, 4, 0, 0, 6, 6, 1, 2, 4, 2, 6, 6, 2, 6, 6,
+        6, 6, 6, 5, 2, 4, 2, 6, 6, 6, 0, 3, 1, 6, 2, 6], device='cuda:0')
+y_ground truth: tensor([1, 3, 3, 6, 3, 6, 3, 2, 3, 0, 3, 6, 5, 6, 6, 6, 4, 6, 4, 3, 6, 6, 6, 5,
+        6, 6, 1, 6, 6, 6, 6, 3, 6, 3, 4, 0, 0, 6, 6, 6, 2, 4, 6, 6, 6, 3, 6, 6,
+        3, 3, 6, 6, 2, 4, 2, 6, 2, 2, 0, 3, 6, 6, 6, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 64.0625 %
+pseudo_labels Unknown same_ratio pres/true: 62.5 %
+pseudo_labels not Unknown same_ratio pres/true: 65.625 %
+y_ground truth: tensor([1, 3, 3, 6, 3, 6, 3, 2, 3, 0, 3, 6, 5, 6, 6, 6, 4, 6, 4, 3, 6, 6, 6, 5,
+        6, 6, 1, 6, 6, 6, 6, 3, 6, 3, 4, 0, 0, 6, 6, 6, 2, 4, 6, 6, 6, 3, 6, 6,
+        3, 3, 6, 6, 2, 4, 2, 6, 2, 2, 0, 3, 6, 6, 6, 6], device='cuda:0')
+preds: tensor([6, 6, 6, 1, 6, 1, 6, 2, 6, 0, 6, 6, 6, 6, 6, 6, 4, 6, 4, 3, 6, 6, 2, 6,
+        2, 1, 1, 6, 6, 6, 6, 3, 6, 3, 4, 0, 0, 6, 6, 1, 2, 4, 6, 6, 6, 2, 6, 6,
+        6, 6, 6, 5, 2, 4, 2, 6, 6, 6, 0, 3, 1, 6, 2, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 64.0625 %
+preds Unknown same_ratio pres/true: 71.875 %
+preds not Unknown same_ratio pres/true: 56.25 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 36/64
+number of true unknown labels:  true unknown labels /total true labels: 32/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  71%|███████   | 614/865 [07:56<03:14,  1.29it/s, v_num=516, train_loss_step=81.60, tta_acc_step=0.688]Epoch 0:  71%|███████   | 614/865 [07:56<03:14,  1.29it/s, v_num=516, train_loss_step=96.40, tta_acc_step=0.641]acc_pseudo_labels_unknow_step: 0.6764705882352942
+acc_pseudo_labels_know_step: 0.6923076923076923
+acc_pseudo_labels_unknow_accum: 0.6163019566979275
+acc_pseudo_labels_know_accum: 0.7352204891199692
+pseudo_labels: tensor([5, 2, 6, 2, 6, 6, 6, 6, 1, 6, 6, 6, 2, 6, 2, 6, 6, 6, 3, 1, 6, 6, 4, 6,
+        4, 6, 6, 4, 6, 2, 4, 6, 6, 6, 6, 2, 6, 6, 6, 2, 6, 6, 1, 3, 3, 3, 2, 6,
+        4, 6, 4, 6, 6, 6, 4, 2, 2, 1, 5, 2, 6, 4, 1, 6], device='cuda:0')
+y_ground truth: tensor([3, 6, 6, 6, 6, 6, 6, 2, 6, 6, 5, 6, 2, 6, 2, 6, 6, 6, 3, 6, 6, 3, 3, 3,
+        4, 6, 6, 4, 6, 2, 4, 6, 6, 6, 6, 2, 3, 2, 6, 6, 5, 6, 6, 3, 3, 6, 6, 3,
+        4, 6, 4, 2, 3, 6, 4, 3, 2, 6, 3, 6, 6, 4, 6, 3], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 59.375 %
+pseudo_labels Unknown same_ratio pres/true: 67.64705882352942 %
+pseudo_labels not Unknown same_ratio pres/true: 50.0 %
+y_ground truth: tensor([3, 6, 6, 6, 6, 6, 6, 2, 6, 6, 5, 6, 2, 6, 2, 6, 6, 6, 3, 6, 6, 3, 3, 3,
+        4, 6, 6, 4, 6, 2, 4, 6, 6, 6, 6, 2, 3, 2, 6, 6, 5, 6, 6, 3, 3, 6, 6, 3,
+        4, 6, 4, 2, 3, 6, 4, 3, 2, 6, 3, 6, 6, 4, 6, 3], device='cuda:0')
+preds: tensor([5, 2, 6, 2, 6, 6, 6, 6, 1, 6, 6, 6, 2, 6, 2, 6, 6, 6, 6, 1, 6, 6, 4, 6,
+        4, 6, 6, 4, 6, 2, 4, 6, 6, 6, 6, 2, 6, 6, 6, 2, 6, 6, 1, 3, 3, 3, 6, 6,
+        4, 6, 4, 6, 6, 6, 4, 6, 2, 1, 6, 2, 6, 4, 1, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 59.375 %
+preds Unknown same_ratio pres/true: 70.58823529411765 %
+preds not Unknown same_ratio pres/true: 46.666666666666664 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 38/64
+number of true unknown labels:  true unknown labels /total true labels: 34/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  71%|███████   | 615/865 [07:56<03:13,  1.29it/s, v_num=516, train_loss_step=96.40, tta_acc_step=0.641]Epoch 0:  71%|███████   | 615/865 [07:57<03:13,  1.29it/s, v_num=516, train_loss_step=96.90, tta_acc_step=0.594]acc_pseudo_labels_unknow_step: 0.6
+acc_pseudo_labels_know_step: 0.8823529411764706
+acc_pseudo_labels_unknow_accum: 0.6162736939435969
+acc_pseudo_labels_know_accum: 0.73546092473325
+pseudo_labels: tensor([0, 6, 1, 6, 6, 6, 6, 6, 6, 6, 2, 4, 5, 6, 2, 6, 2, 1, 4, 6, 1, 2, 6, 3,
+        6, 6, 2, 2, 5, 6, 3, 2, 4, 6, 4, 1, 2, 6, 3, 1, 6, 6, 0, 6, 2, 6, 6, 3,
+        6, 6, 1, 6, 6, 4, 6, 1, 6, 3, 1, 6, 0, 3, 6, 5], device='cuda:0')
+y_ground truth: tensor([0, 3, 1, 6, 6, 3, 0, 6, 6, 1, 2, 4, 3, 3, 6, 6, 6, 6, 4, 3, 6, 2, 3, 3,
+        6, 6, 2, 2, 5, 6, 3, 6, 4, 6, 4, 1, 6, 5, 3, 1, 6, 2, 0, 2, 2, 1, 6, 3,
+        6, 6, 6, 6, 6, 4, 3, 1, 6, 3, 1, 6, 0, 3, 6, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 67.1875 %
+pseudo_labels Unknown same_ratio pres/true: 69.23076923076923 %
+pseudo_labels not Unknown same_ratio pres/true: 65.78947368421053 %
+y_ground truth: tensor([0, 3, 1, 6, 6, 3, 0, 6, 6, 1, 2, 4, 3, 3, 6, 6, 6, 6, 4, 3, 6, 2, 3, 3,
+        6, 6, 2, 2, 5, 6, 3, 6, 4, 6, 4, 1, 6, 5, 3, 1, 6, 2, 0, 2, 2, 1, 6, 3,
+        6, 6, 6, 6, 6, 4, 3, 1, 6, 3, 1, 6, 0, 3, 6, 6], device='cuda:0')
+preds: tensor([0, 6, 1, 6, 6, 6, 6, 6, 6, 6, 2, 4, 5, 6, 2, 6, 2, 1, 4, 6, 1, 2, 6, 6,
+        6, 6, 2, 2, 5, 6, 3, 2, 4, 6, 4, 1, 2, 6, 3, 1, 6, 6, 0, 6, 2, 6, 6, 3,
+        6, 6, 1, 6, 6, 4, 6, 1, 6, 3, 1, 6, 0, 3, 6, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 67.1875 %
+preds Unknown same_ratio pres/true: 73.07692307692307 %
+preds not Unknown same_ratio pres/true: 63.1578947368421 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 32/64
+number of true unknown labels:  true unknown labels /total true labels: 26/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  71%|███████   | 616/865 [07:57<03:13,  1.29it/s, v_num=516, train_loss_step=96.90, tta_acc_step=0.594]Epoch 0:  71%|███████   | 616/865 [07:57<03:13,  1.29it/s, v_num=516, train_loss_step=113.0, tta_acc_step=0.672]acc_pseudo_labels_unknow_step: 0.5666666666666667
+acc_pseudo_labels_know_step: 0.5384615384615384
+acc_pseudo_labels_unknow_accum: 0.616187838929272
+acc_pseudo_labels_know_accum: 0.7352150537634409
+pseudo_labels: tensor([6, 6, 0, 6, 6, 6, 1, 6, 2, 2, 3, 6, 1, 4, 6, 6, 6, 6, 3, 6, 4, 5, 6, 6,
+        6, 3, 3, 4, 6, 3, 6, 4, 1, 6, 3, 0, 6, 6, 6, 0, 6, 6, 6, 3, 2, 2, 2, 6,
+        6, 6, 4, 3, 4, 2, 6, 1, 3, 2, 6, 1, 5, 6, 3, 0], device='cuda:0')
+y_ground truth: tensor([6, 2, 0, 6, 5, 3, 6, 6, 2, 3, 3, 3, 6, 4, 5, 6, 6, 6, 3, 6, 6, 5, 3, 6,
+        6, 3, 3, 6, 6, 6, 6, 4, 6, 6, 3, 6, 6, 6, 6, 0, 3, 6, 4, 3, 6, 6, 6, 5,
+        6, 5, 4, 3, 4, 6, 0, 1, 6, 6, 3, 6, 6, 3, 3, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 53.125 %
+pseudo_labels Unknown same_ratio pres/true: 51.515151515151516 %
+pseudo_labels not Unknown same_ratio pres/true: 54.83870967741935 %
+y_ground truth: tensor([6, 2, 0, 6, 5, 3, 6, 6, 2, 3, 3, 3, 6, 4, 5, 6, 6, 6, 3, 6, 6, 5, 3, 6,
+        6, 3, 3, 6, 6, 6, 6, 4, 6, 6, 3, 6, 6, 6, 6, 0, 3, 6, 4, 3, 6, 6, 6, 5,
+        6, 5, 4, 3, 4, 6, 0, 1, 6, 6, 3, 6, 6, 3, 3, 6], device='cuda:0')
+preds: tensor([6, 6, 0, 6, 6, 6, 6, 6, 2, 2, 3, 6, 1, 4, 6, 6, 6, 6, 3, 6, 4, 6, 6, 6,
+        6, 6, 3, 4, 6, 6, 6, 4, 1, 6, 3, 0, 6, 6, 6, 0, 6, 6, 6, 3, 2, 2, 2, 6,
+        6, 6, 4, 3, 4, 2, 6, 1, 3, 2, 6, 6, 4, 6, 6, 0], device='cuda:0')
+preds same_ratio preds/y_ground truth: 53.125 %
+preds Unknown same_ratio pres/true: 60.60606060606061 %
+preds not Unknown same_ratio pres/true: 45.16129032258064 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 36/64
+number of true unknown labels:  true unknown labels /total true labels: 33/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  71%|███████▏  | 617/865 [07:58<03:12,  1.29it/s, v_num=516, train_loss_step=113.0, tta_acc_step=0.672]Epoch 0:  71%|███████▏  | 617/865 [07:58<03:12,  1.29it/s, v_num=516, train_loss_step=83.30, tta_acc_step=0.531]acc_pseudo_labels_unknow_step: 0.4074074074074074
+acc_pseudo_labels_know_step: 0.7916666666666666
+acc_pseudo_labels_unknow_accum: 0.6158631415241057
+acc_pseudo_labels_know_accum: 0.7353448275862069
+pseudo_labels: tensor([6, 0, 4, 0, 4, 2, 1, 3, 1, 2, 6, 6, 2, 6, 1, 6, 1, 6, 6, 5, 3, 1, 2, 3,
+        6, 0, 6, 6, 4, 6, 6, 2, 3, 2, 2, 6, 6, 2, 6, 6, 6, 6, 6, 6, 5, 6, 6, 0,
+        2, 4, 4, 1, 2, 6, 6, 6, 6, 4, 2, 6, 4, 4, 4, 0], device='cuda:0')
+y_ground truth: tensor([3, 0, 4, 0, 4, 2, 6, 3, 1, 2, 3, 6, 6, 6, 6, 6, 1, 3, 6, 3, 3, 6, 6, 3,
+        1, 0, 2, 3, 4, 6, 3, 6, 3, 2, 2, 6, 3, 6, 6, 5, 3, 1, 5, 6, 5, 5, 6, 0,
+        6, 4, 4, 1, 6, 3, 6, 5, 6, 4, 6, 4, 4, 4, 4, 0], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 57.8125 %
+pseudo_labels Unknown same_ratio pres/true: 52.38095238095239 %
+pseudo_labels not Unknown same_ratio pres/true: 60.46511627906976 %
+y_ground truth: tensor([3, 0, 4, 0, 4, 2, 6, 3, 1, 2, 3, 6, 6, 6, 6, 6, 1, 3, 6, 3, 3, 6, 6, 3,
+        1, 0, 2, 3, 4, 6, 3, 6, 3, 2, 2, 6, 3, 6, 6, 5, 3, 1, 5, 6, 5, 5, 6, 0,
+        6, 4, 4, 1, 6, 3, 6, 5, 6, 4, 6, 4, 4, 4, 4, 0], device='cuda:0')
+preds: tensor([6, 0, 4, 0, 4, 2, 1, 3, 1, 2, 6, 6, 6, 6, 1, 6, 1, 6, 6, 5, 3, 1, 2, 3,
+        6, 0, 6, 6, 4, 6, 6, 6, 3, 2, 2, 6, 6, 2, 6, 6, 6, 6, 6, 6, 0, 6, 6, 6,
+        2, 4, 4, 1, 2, 6, 6, 6, 6, 4, 2, 6, 4, 4, 4, 0], device='cuda:0')
+preds same_ratio preds/y_ground truth: 57.8125 %
+preds Unknown same_ratio pres/true: 61.904761904761905 %
+preds not Unknown same_ratio pres/true: 55.81395348837209 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 30/64
+number of true unknown labels:  true unknown labels /total true labels: 21/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  71%|███████▏  | 618/865 [07:59<03:11,  1.29it/s, v_num=516, train_loss_step=83.30, tta_acc_step=0.531]Epoch 0:  71%|███████▏  | 618/865 [07:59<03:11,  1.29it/s, v_num=516, train_loss_step=203.0, tta_acc_step=0.578]acc_pseudo_labels_unknow_step: 0.7419354838709677
+acc_pseudo_labels_know_step: 0.8235294117647058
+acc_pseudo_labels_unknow_accum: 0.6160878564857406
+acc_pseudo_labels_know_accum: 0.7354881897293679
+pseudo_labels: tensor([6, 2, 2, 2, 1, 6, 6, 3, 4, 3, 6, 6, 6, 0, 6, 6, 2, 6, 6, 4, 2, 2, 3, 6,
+        0, 2, 6, 6, 2, 1, 6, 6, 6, 6, 6, 1, 6, 3, 6, 4, 6, 6, 3, 6, 6, 6, 6, 0,
+        2, 0, 6, 1, 6, 1, 6, 0, 4, 4, 3, 6, 1, 6, 3, 3], device='cuda:0')
+y_ground truth: tensor([6, 6, 6, 6, 1, 6, 6, 3, 4, 3, 6, 6, 6, 0, 6, 6, 2, 6, 6, 4, 6, 6, 3, 6,
+        0, 6, 3, 5, 6, 1, 3, 3, 6, 6, 6, 1, 6, 3, 6, 6, 3, 6, 6, 3, 6, 3, 6, 6,
+        2, 0, 6, 1, 6, 1, 3, 0, 4, 4, 3, 6, 1, 6, 3, 3], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 71.875 %
+pseudo_labels Unknown same_ratio pres/true: 69.6969696969697 %
+pseudo_labels not Unknown same_ratio pres/true: 74.19354838709677 %
+y_ground truth: tensor([6, 6, 6, 6, 1, 6, 6, 3, 4, 3, 6, 6, 6, 0, 6, 6, 2, 6, 6, 4, 6, 6, 3, 6,
+        0, 6, 3, 5, 6, 1, 3, 3, 6, 6, 6, 1, 6, 3, 6, 6, 3, 6, 6, 3, 6, 3, 6, 6,
+        2, 0, 6, 1, 6, 1, 3, 0, 4, 4, 3, 6, 1, 6, 3, 3], device='cuda:0')
+preds: tensor([6, 2, 2, 2, 6, 6, 6, 3, 4, 3, 6, 6, 6, 0, 6, 6, 6, 6, 6, 4, 6, 2, 3, 6,
+        0, 2, 6, 6, 2, 1, 6, 6, 6, 6, 6, 1, 6, 3, 6, 4, 6, 6, 6, 6, 6, 6, 6, 0,
+        2, 0, 6, 1, 6, 1, 6, 0, 4, 4, 3, 6, 1, 6, 3, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 70.3125 %
+preds Unknown same_ratio pres/true: 75.75757575757575 %
+preds not Unknown same_ratio pres/true: 64.51612903225806 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 36/64
+number of true unknown labels:  true unknown labels /total true labels: 33/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  72%|███████▏  | 619/865 [07:59<03:10,  1.29it/s, v_num=516, train_loss_step=203.0, tta_acc_step=0.578]Epoch 0:  72%|███████▏  | 619/865 [08:00<03:10,  1.29it/s, v_num=516, train_loss_step=108.0, tta_acc_step=0.703]acc_pseudo_labels_unknow_step: 0.6764705882352942
+acc_pseudo_labels_know_step: 0.8461538461538461
+acc_pseudo_labels_unknow_accum: 0.6162056696889705
+acc_pseudo_labels_know_accum: 0.7356255969436485
+pseudo_labels: tensor([1, 5, 1, 6, 1, 6, 1, 6, 6, 6, 6, 1, 6, 6, 6, 2, 2, 2, 6, 6, 6, 1, 2, 2,
+        1, 6, 3, 6, 1, 6, 6, 4, 3, 6, 5, 0, 5, 6, 6, 6, 6, 2, 6, 6, 5, 6, 5, 6,
+        6, 0, 6, 3, 6, 5, 2, 3, 6, 6, 6, 6, 2, 6, 3, 6], device='cuda:0')
+y_ground truth: tensor([1, 6, 6, 3, 6, 6, 1, 6, 5, 6, 6, 6, 6, 6, 6, 2, 6, 3, 6, 6, 5, 6, 2, 2,
+        1, 6, 3, 3, 6, 3, 3, 4, 3, 6, 5, 3, 6, 6, 6, 6, 6, 2, 6, 6, 3, 6, 3, 4,
+        5, 0, 6, 3, 3, 6, 2, 3, 6, 6, 4, 6, 6, 1, 3, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 60.9375 %
+pseudo_labels Unknown same_ratio pres/true: 69.6969696969697 %
+pseudo_labels not Unknown same_ratio pres/true: 51.61290322580645 %
+y_ground truth: tensor([1, 6, 6, 3, 6, 6, 1, 6, 5, 6, 6, 6, 6, 6, 6, 2, 6, 3, 6, 6, 5, 6, 2, 2,
+        1, 6, 3, 3, 6, 3, 3, 4, 3, 6, 5, 3, 6, 6, 6, 6, 6, 2, 6, 6, 3, 6, 3, 4,
+        5, 0, 6, 3, 3, 6, 2, 3, 6, 6, 4, 6, 6, 1, 3, 6], device='cuda:0')
+preds: tensor([1, 2, 1, 6, 1, 6, 1, 6, 6, 6, 6, 1, 6, 6, 6, 2, 2, 2, 6, 6, 6, 1, 2, 2,
+        1, 6, 3, 6, 1, 6, 6, 4, 3, 6, 6, 0, 6, 6, 6, 6, 6, 2, 6, 6, 5, 6, 6, 6,
+        6, 0, 6, 3, 6, 6, 2, 3, 6, 6, 6, 6, 2, 6, 3, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 62.5 %
+preds Unknown same_ratio pres/true: 75.75757575757575 %
+preds not Unknown same_ratio pres/true: 48.38709677419355 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 38/64
+number of true unknown labels:  true unknown labels /total true labels: 33/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  72%|███████▏  | 620/865 [08:00<03:09,  1.29it/s, v_num=516, train_loss_step=108.0, tta_acc_step=0.703]Epoch 0:  72%|███████▏  | 620/865 [08:00<03:10,  1.29it/s, v_num=516, train_loss_step=86.20, tta_acc_step=0.625]acc_pseudo_labels_unknow_step: 0.6153846153846154
+acc_pseudo_labels_know_step: 0.6842105263157895
+acc_pseudo_labels_unknow_accum: 0.6162044464817786
+acc_pseudo_labels_know_accum: 0.7355324625798455
+pseudo_labels: tensor([6, 6, 6, 2, 5, 0, 6, 6, 6, 0, 4, 4, 6, 6, 2, 5, 6, 6, 6, 3, 3, 1, 6, 6,
+        2, 4, 3, 1, 4, 4, 1, 5, 1, 6, 6, 4, 6, 2, 6, 0, 0, 6, 2, 3, 0, 6, 6, 5,
+        6, 4, 6, 3, 4, 6, 2, 6, 1, 6, 1, 1, 4, 2, 6, 3], device='cuda:0')
+y_ground truth: tensor([6, 1, 1, 6, 6, 0, 6, 6, 6, 0, 4, 4, 6, 6, 6, 1, 6, 3, 3, 3, 3, 6, 6, 3,
+        6, 4, 3, 6, 4, 4, 1, 1, 6, 3, 6, 4, 6, 6, 5, 0, 6, 6, 6, 3, 0, 6, 3, 6,
+        3, 4, 3, 3, 4, 6, 2, 6, 6, 6, 6, 6, 4, 6, 6, 3], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 57.8125 %
+pseudo_labels Unknown same_ratio pres/true: 51.61290322580645 %
+pseudo_labels not Unknown same_ratio pres/true: 63.63636363636363 %
+y_ground truth: tensor([6, 1, 1, 6, 6, 0, 6, 6, 6, 0, 4, 4, 6, 6, 6, 1, 6, 3, 3, 3, 3, 6, 6, 3,
+        6, 4, 3, 6, 4, 4, 1, 1, 6, 3, 6, 4, 6, 6, 5, 0, 6, 6, 6, 3, 0, 6, 3, 6,
+        3, 4, 3, 3, 4, 6, 2, 6, 6, 6, 6, 6, 4, 6, 6, 3], device='cuda:0')
+preds: tensor([6, 6, 6, 2, 6, 0, 6, 6, 6, 0, 4, 4, 6, 6, 2, 3, 6, 6, 6, 3, 1, 1, 6, 6,
+        2, 4, 3, 1, 4, 4, 1, 5, 1, 6, 6, 4, 6, 6, 6, 0, 0, 6, 2, 3, 0, 6, 6, 5,
+        6, 4, 6, 3, 6, 6, 2, 6, 1, 6, 1, 1, 4, 2, 6, 3], device='cuda:0')
+preds same_ratio preds/y_ground truth: 57.8125 %
+preds Unknown same_ratio pres/true: 58.06451612903226 %
+preds not Unknown same_ratio pres/true: 57.57575757575758 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 29/64
+number of true unknown labels:  true unknown labels /total true labels: 31/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  72%|███████▏  | 621/865 [08:01<03:09,  1.29it/s, v_num=516, train_loss_step=86.20, tta_acc_step=0.625]Epoch 0:  72%|███████▏  | 621/865 [08:01<03:09,  1.29it/s, v_num=516, train_loss_step=145.0, tta_acc_step=0.578]acc_pseudo_labels_unknow_step: 0.6666666666666666
+acc_pseudo_labels_know_step: 0.9285714285714286
+acc_pseudo_labels_unknow_accum: 0.6162910422148495
+acc_pseudo_labels_know_accum: 0.7357897743501857
+pseudo_labels: tensor([6, 1, 1, 0, 0, 4, 6, 4, 6, 6, 5, 6, 6, 6, 6, 6, 6, 6, 3, 6, 6, 2, 3, 6,
+        6, 6, 6, 1, 6, 1, 6, 0, 6, 0, 3, 3, 1, 2, 6, 2, 6, 5, 4, 6, 0, 4, 0, 6,
+        6, 0, 6, 2, 1, 5, 6, 6, 2, 6, 3, 0, 3, 6, 2, 3], device='cuda:0')
+y_ground truth: tensor([6, 6, 1, 0, 0, 4, 6, 4, 2, 6, 6, 6, 6, 5, 6, 6, 3, 6, 6, 6, 6, 2, 3, 6,
+        6, 6, 5, 6, 6, 1, 6, 0, 3, 0, 3, 6, 6, 6, 5, 2, 3, 3, 4, 6, 0, 6, 0, 1,
+        6, 0, 6, 6, 6, 1, 6, 6, 6, 5, 3, 0, 3, 3, 6, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 60.9375 %
+pseudo_labels Unknown same_ratio pres/true: 60.60606060606061 %
+pseudo_labels not Unknown same_ratio pres/true: 61.29032258064516 %
+y_ground truth: tensor([6, 6, 1, 0, 0, 4, 6, 4, 2, 6, 6, 6, 6, 5, 6, 6, 3, 6, 6, 6, 6, 2, 3, 6,
+        6, 6, 5, 6, 6, 1, 6, 0, 3, 0, 3, 6, 6, 6, 5, 2, 3, 3, 4, 6, 0, 6, 0, 1,
+        6, 0, 6, 6, 6, 1, 6, 6, 6, 5, 3, 0, 3, 3, 6, 6], device='cuda:0')
+preds: tensor([6, 1, 1, 0, 0, 4, 6, 4, 6, 6, 5, 6, 6, 6, 6, 6, 6, 6, 3, 6, 6, 2, 3, 6,
+        6, 6, 6, 6, 6, 1, 6, 0, 6, 0, 3, 3, 1, 2, 6, 2, 6, 6, 6, 6, 0, 3, 0, 6,
+        6, 0, 6, 6, 1, 6, 6, 6, 2, 6, 3, 0, 3, 6, 2, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 64.0625 %
+preds Unknown same_ratio pres/true: 69.6969696969697 %
+preds not Unknown same_ratio pres/true: 58.06451612903226 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 36/64
+number of true unknown labels:  true unknown labels /total true labels: 33/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  72%|███████▏  | 622/865 [08:02<03:08,  1.29it/s, v_num=516, train_loss_step=145.0, tta_acc_step=0.578]Epoch 0:  72%|███████▏  | 622/865 [08:02<03:08,  1.29it/s, v_num=516, train_loss_step=90.50, tta_acc_step=0.641]acc_pseudo_labels_unknow_step: 0.7931034482758621
+acc_pseudo_labels_know_step: 0.6428571428571429
+acc_pseudo_labels_unknow_accum: 0.6165838615727257
+acc_pseudo_labels_know_accum: 0.7356660644670533
+pseudo_labels: tensor([0, 3, 6, 6, 6, 2, 2, 6, 2, 1, 1, 6, 3, 6, 6, 6, 3, 4, 6, 5, 6, 6, 6, 6,
+        6, 2, 6, 6, 2, 5, 2, 6, 4, 6, 4, 6, 2, 6, 6, 6, 2, 2, 1, 2, 5, 6, 3, 2,
+        1, 3, 6, 4, 6, 0, 6, 6, 4, 3, 6, 1, 1, 2, 6, 2], device='cuda:0')
+y_ground truth: tensor([0, 6, 3, 2, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 4, 6, 3, 6, 3, 6, 6,
+        6, 6, 6, 6, 6, 6, 6, 6, 4, 6, 4, 6, 6, 6, 6, 4, 6, 6, 6, 2, 3, 3, 6, 2,
+        6, 6, 6, 4, 6, 0, 6, 6, 4, 3, 6, 6, 1, 3, 3, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 54.6875 %
+pseudo_labels Unknown same_ratio pres/true: 53.48837209302325 %
+pseudo_labels not Unknown same_ratio pres/true: 57.14285714285714 %
+y_ground truth: tensor([0, 6, 3, 2, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 4, 6, 3, 6, 3, 6, 6,
+        6, 6, 6, 6, 6, 6, 6, 6, 4, 6, 4, 6, 6, 6, 6, 4, 6, 6, 6, 2, 3, 3, 6, 2,
+        6, 6, 6, 4, 6, 0, 6, 6, 4, 3, 6, 6, 1, 3, 3, 6], device='cuda:0')
+preds: tensor([0, 6, 6, 6, 6, 2, 2, 6, 2, 6, 1, 6, 3, 6, 6, 6, 3, 4, 6, 6, 6, 6, 6, 6,
+        6, 2, 6, 6, 2, 6, 6, 6, 4, 6, 4, 6, 2, 6, 6, 6, 2, 6, 1, 2, 6, 6, 3, 2,
+        1, 3, 6, 4, 6, 0, 6, 6, 4, 3, 6, 1, 1, 6, 6, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 64.0625 %
+preds Unknown same_ratio pres/true: 67.44186046511628 %
+preds not Unknown same_ratio pres/true: 57.14285714285714 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 38/64
+number of true unknown labels:  true unknown labels /total true labels: 43/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  72%|███████▏  | 623/865 [08:03<03:07,  1.29it/s, v_num=516, train_loss_step=90.50, tta_acc_step=0.641]Epoch 0:  72%|███████▏  | 623/865 [08:03<03:07,  1.29it/s, v_num=516, train_loss_step=113.0, tta_acc_step=0.641]acc_pseudo_labels_unknow_step: 0.5625
+acc_pseudo_labels_know_step: 0.8125
+acc_pseudo_labels_unknow_accum: 0.616485207775181
+acc_pseudo_labels_know_accum: 0.7357827779360107
+pseudo_labels: tensor([4, 4, 2, 6, 6, 3, 6, 1, 6, 4, 6, 6, 0, 6, 0, 6, 4, 6, 6, 4, 6, 6, 0, 6,
+        1, 0, 1, 5, 6, 4, 6, 6, 6, 3, 4, 2, 6, 6, 1, 2, 6, 3, 6, 6, 6, 6, 6, 1,
+        6, 5, 3, 3, 2, 6, 6, 2, 5, 2, 6, 1, 0, 6, 6, 6], device='cuda:0')
+y_ground truth: tensor([4, 4, 6, 6, 3, 3, 6, 1, 5, 4, 6, 6, 0, 6, 0, 3, 4, 6, 4, 4, 6, 3, 0, 6,
+        6, 0, 6, 3, 5, 4, 6, 6, 6, 6, 1, 6, 1, 1, 6, 2, 3, 3, 3, 6, 6, 1, 3, 1,
+        5, 6, 6, 3, 6, 6, 5, 2, 3, 6, 6, 1, 0, 6, 6, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 57.8125 %
+pseudo_labels Unknown same_ratio pres/true: 64.28571428571429 %
+pseudo_labels not Unknown same_ratio pres/true: 52.77777777777778 %
+y_ground truth: tensor([4, 4, 6, 6, 3, 3, 6, 1, 5, 4, 6, 6, 0, 6, 0, 3, 4, 6, 4, 4, 6, 3, 0, 6,
+        6, 0, 6, 3, 5, 4, 6, 6, 6, 6, 1, 6, 1, 1, 6, 2, 3, 3, 3, 6, 6, 1, 3, 1,
+        5, 6, 6, 3, 6, 6, 5, 2, 3, 6, 6, 1, 0, 6, 6, 6], device='cuda:0')
+preds: tensor([6, 4, 2, 6, 6, 3, 6, 1, 6, 4, 6, 6, 0, 6, 0, 6, 4, 6, 6, 4, 6, 6, 0, 6,
+        3, 0, 1, 5, 6, 4, 6, 6, 6, 3, 6, 2, 6, 6, 1, 2, 6, 3, 6, 6, 6, 6, 6, 1,
+        6, 6, 3, 6, 2, 6, 6, 2, 5, 2, 6, 1, 0, 6, 6, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 56.25 %
+preds Unknown same_ratio pres/true: 67.85714285714286 %
+preds not Unknown same_ratio pres/true: 47.22222222222222 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 36/64
+number of true unknown labels:  true unknown labels /total true labels: 28/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  72%|███████▏  | 624/865 [08:03<03:06,  1.29it/s, v_num=516, train_loss_step=113.0, tta_acc_step=0.641]Epoch 0:  72%|███████▏  | 624/865 [08:03<03:06,  1.29it/s, v_num=516, train_loss_step=107.0, tta_acc_step=0.562]acc_pseudo_labels_unknow_step: 0.5384615384615384
+acc_pseudo_labels_know_step: 0.7777777777777778
+acc_pseudo_labels_unknow_accum: 0.6163697421594855
+acc_pseudo_labels_know_accum: 0.7358544213818595
+pseudo_labels: tensor([6, 6, 6, 5, 3, 6, 3, 2, 6, 6, 6, 1, 6, 4, 5, 6, 6, 3, 3, 6, 3, 2, 2, 3,
+        2, 4, 6, 3, 6, 0, 4, 0, 3, 6, 2, 1, 0, 6, 6, 3, 5, 6, 1, 6, 5, 1, 2, 1,
+        2, 6, 6, 6, 6, 0, 1, 3, 4, 3, 6, 2, 4, 6, 6, 6], device='cuda:0')
+y_ground truth: tensor([3, 3, 6, 6, 3, 6, 6, 2, 6, 6, 3, 1, 6, 4, 3, 3, 6, 3, 3, 6, 3, 2, 6, 6,
+        6, 4, 6, 3, 6, 0, 4, 0, 3, 6, 6, 1, 0, 5, 3, 3, 6, 1, 6, 6, 6, 6, 6, 1,
+        6, 6, 3, 3, 3, 0, 1, 3, 4, 3, 3, 6, 4, 3, 6, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 59.375 %
+pseudo_labels Unknown same_ratio pres/true: 51.85185185185185 %
+pseudo_labels not Unknown same_ratio pres/true: 64.86486486486487 %
+y_ground truth: tensor([3, 3, 6, 6, 3, 6, 6, 2, 6, 6, 3, 1, 6, 4, 3, 3, 6, 3, 3, 6, 3, 2, 6, 6,
+        6, 4, 6, 3, 6, 0, 4, 0, 3, 6, 6, 1, 0, 5, 3, 3, 6, 1, 6, 6, 6, 6, 6, 1,
+        6, 6, 3, 3, 3, 0, 1, 3, 4, 3, 3, 6, 4, 3, 6, 6], device='cuda:0')
+preds: tensor([6, 6, 6, 5, 6, 6, 3, 2, 6, 6, 6, 1, 6, 4, 5, 6, 6, 3, 3, 6, 3, 2, 2, 3,
+        2, 4, 6, 6, 6, 0, 4, 0, 3, 6, 2, 1, 0, 6, 6, 3, 6, 6, 1, 6, 5, 1, 2, 1,
+        2, 6, 6, 6, 6, 0, 1, 3, 4, 3, 6, 2, 4, 6, 6, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 57.8125 %
+preds Unknown same_ratio pres/true: 55.55555555555556 %
+preds not Unknown same_ratio pres/true: 59.45945945945946 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 29/64
+number of true unknown labels:  true unknown labels /total true labels: 27/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  72%|███████▏  | 625/865 [08:04<03:06,  1.29it/s, v_num=516, train_loss_step=107.0, tta_acc_step=0.562]Epoch 0:  72%|███████▏  | 625/865 [08:04<03:06,  1.29it/s, v_num=516, train_loss_step=139.0, tta_acc_step=0.578]acc_pseudo_labels_unknow_step: 0.5757575757575758
+acc_pseudo_labels_know_step: 0.7058823529411765
+acc_pseudo_labels_unknow_accum: 0.6162936029996592
+acc_pseudo_labels_know_accum: 0.7358062074186222
+pseudo_labels: tensor([6, 2, 2, 6, 2, 6, 6, 6, 3, 0, 0, 6, 2, 6, 6, 6, 6, 0, 6, 4, 6, 6, 6, 6,
+        1, 2, 2, 6, 1, 6, 6, 4, 1, 4, 6, 2, 2, 6, 1, 6, 6, 6, 6, 6, 6, 3, 5, 1,
+        2, 2, 2, 6, 6, 6, 6, 3, 0, 1, 1, 6, 0, 3, 6, 6], device='cuda:0')
+y_ground truth: tensor([2, 6, 2, 6, 6, 6, 3, 5, 3, 6, 0, 6, 2, 6, 4, 6, 6, 0, 6, 4, 3, 6, 1, 6,
+        1, 2, 6, 6, 1, 4, 6, 3, 6, 4, 6, 2, 2, 6, 1, 5, 3, 6, 2, 1, 6, 3, 6, 6,
+        2, 2, 6, 6, 6, 3, 6, 3, 0, 6, 1, 6, 0, 3, 2, 5], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 62.5 %
+pseudo_labels Unknown same_ratio pres/true: 67.85714285714286 %
+pseudo_labels not Unknown same_ratio pres/true: 58.333333333333336 %
+y_ground truth: tensor([2, 6, 2, 6, 6, 6, 3, 5, 3, 6, 0, 6, 2, 6, 4, 6, 6, 0, 6, 4, 3, 6, 1, 6,
+        1, 2, 6, 6, 1, 4, 6, 3, 6, 4, 6, 2, 2, 6, 1, 5, 3, 6, 2, 1, 6, 3, 6, 6,
+        2, 2, 6, 6, 6, 3, 6, 3, 0, 6, 1, 6, 0, 3, 2, 5], device='cuda:0')
+preds: tensor([6, 2, 2, 6, 2, 6, 6, 6, 3, 4, 0, 6, 2, 6, 6, 6, 6, 0, 6, 4, 6, 6, 6, 6,
+        1, 2, 2, 6, 1, 6, 6, 4, 1, 4, 6, 2, 2, 6, 1, 6, 6, 6, 6, 6, 6, 3, 3, 1,
+        2, 2, 6, 6, 6, 6, 6, 3, 0, 1, 6, 6, 0, 3, 6, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 62.5 %
+preds Unknown same_ratio pres/true: 71.42857142857143 %
+preds not Unknown same_ratio pres/true: 55.55555555555556 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 35/64
+number of true unknown labels:  true unknown labels /total true labels: 28/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  72%|███████▏  | 626/865 [08:05<03:05,  1.29it/s, v_num=516, train_loss_step=139.0, tta_acc_step=0.578]Epoch 0:  72%|███████▏  | 626/865 [08:05<03:05,  1.29it/s, v_num=516, train_loss_step=112.0, tta_acc_step=0.625]acc_pseudo_labels_unknow_step: 0.52
+acc_pseudo_labels_know_step: 0.7058823529411765
+acc_pseudo_labels_unknow_accum: 0.6161570318261758
+acc_pseudo_labels_know_accum: 0.7357581483230987
+pseudo_labels: tensor([4, 3, 5, 1, 4, 2, 1, 4, 6, 3, 2, 6, 5, 4, 2, 6, 2, 6, 6, 6, 2, 6, 6, 0,
+        6, 2, 1, 4, 3, 6, 6, 3, 6, 1, 1, 2, 3, 2, 6, 6, 1, 6, 1, 6, 5, 3, 2, 2,
+        3, 4, 2, 4, 3, 6, 6, 1, 6, 6, 6, 6, 6, 6, 5, 6], device='cuda:0')
+y_ground truth: tensor([4, 3, 6, 1, 4, 6, 1, 4, 3, 6, 6, 3, 3, 4, 2, 6, 6, 6, 6, 5, 6, 6, 6, 0,
+        3, 6, 6, 4, 3, 6, 3, 3, 6, 6, 1, 6, 3, 2, 3, 3, 6, 6, 1, 3, 3, 6, 2, 6,
+        3, 6, 2, 4, 3, 6, 3, 1, 4, 6, 6, 3, 6, 6, 6, 3], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 54.6875 %
+pseudo_labels Unknown same_ratio pres/true: 46.42857142857143 %
+pseudo_labels not Unknown same_ratio pres/true: 61.111111111111114 %
+y_ground truth: tensor([4, 3, 6, 1, 4, 6, 1, 4, 3, 6, 6, 3, 3, 4, 2, 6, 6, 6, 6, 5, 6, 6, 6, 0,
+        3, 6, 6, 4, 3, 6, 3, 3, 6, 6, 1, 6, 3, 2, 3, 3, 6, 6, 1, 3, 3, 6, 2, 6,
+        3, 6, 2, 4, 3, 6, 3, 1, 4, 6, 6, 3, 6, 6, 6, 3], device='cuda:0')
+preds: tensor([4, 3, 6, 1, 4, 2, 1, 4, 6, 3, 2, 6, 2, 4, 2, 6, 0, 6, 6, 6, 2, 6, 6, 0,
+        6, 2, 1, 4, 3, 6, 6, 3, 6, 1, 1, 2, 3, 2, 6, 6, 6, 6, 1, 6, 2, 3, 2, 2,
+        3, 4, 2, 4, 3, 6, 6, 1, 6, 6, 6, 6, 6, 6, 6, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 59.375 %
+preds Unknown same_ratio pres/true: 57.14285714285714 %
+preds not Unknown same_ratio pres/true: 61.111111111111114 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 28/64
+number of true unknown labels:  true unknown labels /total true labels: 28/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  72%|███████▏  | 627/865 [08:06<03:04,  1.29it/s, v_num=516, train_loss_step=112.0, tta_acc_step=0.625]Epoch 0:  72%|███████▏  | 627/865 [08:06<03:04,  1.29it/s, v_num=516, train_loss_step=122.0, tta_acc_step=0.594]acc_pseudo_labels_unknow_step: 0.4827586206896552
+acc_pseudo_labels_know_step: 0.6
+acc_pseudo_labels_unknow_accum: 0.6159379247847757
+acc_pseudo_labels_know_accum: 0.735566037735849
+pseudo_labels: tensor([2, 6, 6, 3, 6, 6, 2, 3, 6, 2, 5, 0, 6, 4, 3, 2, 6, 6, 1, 2, 6, 2, 1, 2,
+        0, 2, 6, 2, 6, 6, 3, 4, 6, 3, 6, 6, 6, 6, 6, 3, 5, 0, 1, 6, 6, 4, 2, 6,
+        6, 1, 4, 6, 6, 2, 3, 2, 1, 6, 6, 6, 6, 6, 1, 3], device='cuda:0')
+y_ground truth: tensor([2, 6, 6, 6, 6, 6, 6, 3, 6, 2, 5, 0, 3, 4, 3, 2, 6, 6, 1, 6, 6, 6, 6, 2,
+        0, 2, 3, 6, 6, 6, 3, 3, 5, 6, 5, 4, 6, 2, 4, 3, 6, 0, 6, 5, 3, 4, 6, 6,
+        3, 6, 4, 6, 2, 2, 3, 6, 6, 3, 3, 5, 6, 3, 6, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 51.5625 %
+pseudo_labels Unknown same_ratio pres/true: 48.275862068965516 %
+pseudo_labels not Unknown same_ratio pres/true: 54.285714285714285 %
+y_ground truth: tensor([2, 6, 6, 6, 6, 6, 6, 3, 6, 2, 5, 0, 3, 4, 3, 2, 6, 6, 1, 6, 6, 6, 6, 2,
+        0, 2, 3, 6, 6, 6, 3, 3, 5, 6, 5, 4, 6, 2, 4, 3, 6, 0, 6, 5, 3, 4, 6, 6,
+        3, 6, 4, 6, 2, 2, 3, 6, 6, 3, 3, 5, 6, 3, 6, 6], device='cuda:0')
+preds: tensor([2, 6, 6, 6, 6, 6, 6, 3, 6, 2, 5, 0, 6, 4, 3, 2, 6, 6, 1, 2, 6, 2, 1, 2,
+        0, 2, 6, 2, 6, 6, 3, 6, 6, 3, 6, 6, 6, 6, 6, 3, 5, 0, 0, 6, 6, 4, 2, 6,
+        6, 1, 4, 6, 6, 2, 3, 2, 1, 6, 6, 6, 6, 6, 1, 3], device='cuda:0')
+preds same_ratio preds/y_ground truth: 54.6875 %
+preds Unknown same_ratio pres/true: 55.172413793103445 %
+preds not Unknown same_ratio pres/true: 54.285714285714285 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 32/64
+number of true unknown labels:  true unknown labels /total true labels: 29/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  73%|███████▎  | 628/865 [08:06<03:03,  1.29it/s, v_num=516, train_loss_step=122.0, tta_acc_step=0.594]Epoch 0:  73%|███████▎  | 628/865 [08:06<03:03,  1.29it/s, v_num=516, train_loss_step=103.0, tta_acc_step=0.547]acc_pseudo_labels_unknow_step: 0.5454545454545454
+acc_pseudo_labels_know_step: 0.8
+acc_pseudo_labels_unknow_accum: 0.6158064333766747
+acc_pseudo_labels_know_accum: 0.7356570890249646
+pseudo_labels: tensor([6, 2, 6, 6, 2, 0, 6, 6, 1, 6, 6, 6, 6, 3, 6, 1, 3, 6, 5, 3, 6, 4, 6, 6,
+        6, 6, 3, 3, 6, 3, 2, 6, 6, 2, 2, 6, 1, 6, 5, 2, 6, 6, 2, 6, 3, 0, 6, 1,
+        6, 0, 4, 6, 6, 0, 6, 3, 6, 2, 6, 2, 0, 6, 6, 1], device='cuda:0')
+y_ground truth: tensor([6, 6, 5, 6, 2, 0, 2, 1, 1, 6, 6, 6, 5, 3, 3, 6, 3, 3, 5, 3, 1, 4, 6, 2,
+        6, 3, 3, 3, 5, 3, 2, 3, 6, 6, 6, 6, 1, 3, 5, 6, 6, 6, 2, 6, 3, 0, 6, 6,
+        6, 0, 4, 6, 3, 0, 6, 6, 3, 2, 6, 2, 0, 5, 6, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 64.0625 %
+pseudo_labels Unknown same_ratio pres/true: 69.23076923076923 %
+pseudo_labels not Unknown same_ratio pres/true: 60.526315789473685 %
+y_ground truth: tensor([6, 6, 5, 6, 2, 0, 2, 1, 1, 6, 6, 6, 5, 3, 3, 6, 3, 3, 5, 3, 1, 4, 6, 2,
+        6, 3, 3, 3, 5, 3, 2, 3, 6, 6, 6, 6, 1, 3, 5, 6, 6, 6, 2, 6, 3, 0, 6, 6,
+        6, 0, 4, 6, 3, 0, 6, 6, 3, 2, 6, 2, 0, 5, 6, 6], device='cuda:0')
+preds: tensor([6, 2, 6, 6, 2, 0, 6, 6, 1, 6, 6, 6, 6, 6, 6, 1, 3, 6, 6, 3, 6, 4, 6, 6,
+        6, 6, 3, 3, 6, 6, 2, 6, 6, 2, 2, 6, 1, 6, 6, 2, 6, 6, 2, 6, 3, 0, 6, 1,
+        6, 0, 4, 6, 6, 0, 6, 3, 6, 2, 6, 2, 0, 6, 6, 1], device='cuda:0')
+preds same_ratio preds/y_ground truth: 57.8125 %
+preds Unknown same_ratio pres/true: 69.23076923076923 %
+preds not Unknown same_ratio pres/true: 50.0 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 37/64
+number of true unknown labels:  true unknown labels /total true labels: 26/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  73%|███████▎  | 629/865 [08:07<03:02,  1.29it/s, v_num=516, train_loss_step=103.0, tta_acc_step=0.547]Epoch 0:  73%|███████▎  | 629/865 [08:07<03:02,  1.29it/s, v_num=516, train_loss_step=96.80, tta_acc_step=0.578]acc_pseudo_labels_unknow_step: 0.5172413793103449
+acc_pseudo_labels_know_step: 0.7647058823529411
+acc_pseudo_labels_unknow_accum: 0.6156451066711819
+acc_pseudo_labels_know_accum: 0.7357035364936042
+pseudo_labels: tensor([0, 4, 6, 6, 6, 3, 3, 1, 6, 6, 6, 6, 2, 2, 6, 2, 1, 1, 6, 6, 6, 1, 1, 1,
+        6, 3, 6, 0, 0, 3, 6, 2, 6, 6, 6, 0, 1, 3, 2, 5, 4, 3, 6, 6, 5, 6, 6, 6,
+        2, 6, 2, 6, 4, 6, 1, 6, 2, 6, 6, 2, 3, 6, 5, 3], device='cuda:0')
+y_ground truth: tensor([0, 3, 6, 3, 6, 6, 3, 1, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 6, 1, 1,
+        3, 3, 6, 0, 0, 3, 6, 2, 3, 2, 3, 0, 1, 3, 6, 6, 4, 6, 3, 6, 2, 0, 2, 6,
+        6, 6, 6, 3, 6, 6, 1, 2, 2, 3, 1, 6, 3, 6, 3, 3], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 51.5625 %
+pseudo_labels Unknown same_ratio pres/true: 51.724137931034484 %
+pseudo_labels not Unknown same_ratio pres/true: 51.42857142857142 %
+y_ground truth: tensor([0, 3, 6, 3, 6, 6, 3, 1, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 6, 1, 1,
+        3, 3, 6, 0, 0, 3, 6, 2, 3, 2, 3, 0, 1, 3, 6, 6, 4, 6, 3, 6, 2, 0, 2, 6,
+        6, 6, 6, 3, 6, 6, 1, 2, 2, 3, 1, 6, 3, 6, 3, 3], device='cuda:0')
+preds: tensor([0, 1, 6, 6, 6, 3, 3, 6, 6, 6, 6, 6, 2, 6, 6, 2, 1, 1, 6, 6, 6, 1, 1, 1,
+        6, 3, 6, 0, 0, 3, 6, 2, 6, 6, 6, 0, 1, 3, 2, 5, 4, 3, 6, 6, 5, 6, 6, 6,
+        2, 6, 2, 6, 6, 6, 1, 6, 2, 6, 6, 2, 3, 6, 0, 3], device='cuda:0')
+preds same_ratio preds/y_ground truth: 53.125 %
+preds Unknown same_ratio pres/true: 58.620689655172406 %
+preds not Unknown same_ratio pres/true: 48.57142857142857 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 32/64
+number of true unknown labels:  true unknown labels /total true labels: 29/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  73%|███████▎  | 630/865 [08:08<03:02,  1.29it/s, v_num=516, train_loss_step=96.80, tta_acc_step=0.578]Epoch 0:  73%|███████▎  | 630/865 [08:08<03:02,  1.29it/s, v_num=516, train_loss_step=127.0, tta_acc_step=0.531]acc_pseudo_labels_unknow_step: 0.40625
+acc_pseudo_labels_know_step: 0.6470588235294118
+acc_pseudo_labels_unknow_accum: 0.6152676056338028
+acc_pseudo_labels_know_accum: 0.7355620246032492
+pseudo_labels: tensor([5, 2, 6, 5, 1, 6, 6, 6, 6, 6, 2, 6, 6, 6, 6, 6, 6, 2, 6, 6, 1, 6, 6, 6,
+        4, 4, 0, 4, 2, 0, 6, 5, 6, 6, 1, 4, 6, 1, 3, 6, 2, 6, 2, 2, 6, 2, 3, 6,
+        2, 6, 6, 3, 6, 6, 0, 6, 4, 6, 4, 2, 6, 3, 2, 3], device='cuda:0')
+y_ground truth: tensor([3, 6, 6, 6, 2, 3, 3, 6, 3, 6, 2, 6, 6, 6, 5, 3, 6, 2, 5, 6, 6, 5, 3, 3,
+        4, 4, 0, 4, 2, 0, 1, 2, 6, 6, 6, 4, 3, 6, 3, 2, 6, 6, 6, 6, 3, 6, 3, 3,
+        6, 6, 5, 3, 3, 3, 0, 6, 4, 3, 4, 6, 5, 3, 6, 3], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 46.875 %
+pseudo_labels Unknown same_ratio pres/true: 52.0 %
+pseudo_labels not Unknown same_ratio pres/true: 43.58974358974359 %
+y_ground truth: tensor([3, 6, 6, 6, 2, 3, 3, 6, 3, 6, 2, 6, 6, 6, 5, 3, 6, 2, 5, 6, 6, 5, 3, 3,
+        4, 4, 0, 4, 2, 0, 1, 2, 6, 6, 6, 4, 3, 6, 3, 2, 6, 6, 6, 6, 3, 6, 3, 3,
+        6, 6, 5, 3, 3, 3, 0, 6, 4, 3, 4, 6, 5, 3, 6, 3], device='cuda:0')
+preds: tensor([5, 2, 6, 5, 2, 6, 6, 6, 6, 6, 2, 6, 6, 6, 6, 6, 6, 2, 6, 6, 1, 6, 6, 6,
+        4, 4, 0, 4, 2, 0, 6, 2, 6, 6, 1, 4, 6, 1, 3, 6, 2, 6, 2, 2, 6, 2, 3, 6,
+        2, 6, 6, 3, 6, 6, 0, 6, 4, 6, 4, 2, 6, 3, 2, 3], device='cuda:0')
+preds same_ratio preds/y_ground truth: 50.0 %
+preds Unknown same_ratio pres/true: 52.0 %
+preds not Unknown same_ratio pres/true: 48.717948717948715 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 32/64
+number of true unknown labels:  true unknown labels /total true labels: 25/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  73%|███████▎  | 631/865 [08:09<03:01,  1.29it/s, v_num=516, train_loss_step=127.0, tta_acc_step=0.531]Epoch 0:  73%|███████▎  | 631/865 [08:09<03:01,  1.29it/s, v_num=516, train_loss_step=122.0, tta_acc_step=0.500]acc_pseudo_labels_unknow_step: 0.5483870967741935
+acc_pseudo_labels_know_step: 0.8666666666666667
+acc_pseudo_labels_unknow_accum: 0.6151510038805467
+acc_pseudo_labels_know_accum: 0.7357464366091523
+pseudo_labels: tensor([6, 3, 6, 1, 6, 1, 6, 4, 2, 4, 2, 6, 6, 6, 6, 6, 6, 1, 2, 6, 4, 4, 6, 5,
+        6, 3, 6, 6, 4, 2, 6, 2, 4, 3, 6, 4, 4, 4, 6, 1, 4, 2, 6, 0, 4, 6, 3, 6,
+        2, 3, 6, 6, 6, 6, 6, 2, 6, 6, 5, 6, 1, 6, 6, 2], device='cuda:0')
+y_ground truth: tensor([2, 3, 6, 1, 6, 1, 6, 4, 6, 4, 2, 2, 4, 3, 5, 6, 6, 6, 6, 4, 4, 4, 2, 6,
+        3, 3, 6, 6, 4, 2, 6, 6, 4, 3, 6, 4, 4, 4, 3, 6, 4, 6, 6, 0, 4, 3, 6, 6,
+        6, 3, 3, 6, 3, 6, 1, 2, 6, 6, 6, 3, 1, 6, 6, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 60.9375 %
+pseudo_labels Unknown same_ratio pres/true: 60.71428571428571 %
+pseudo_labels not Unknown same_ratio pres/true: 61.111111111111114 %
+y_ground truth: tensor([2, 3, 6, 1, 6, 1, 6, 4, 6, 4, 2, 2, 4, 3, 5, 6, 6, 6, 6, 4, 4, 4, 2, 6,
+        3, 3, 6, 6, 4, 2, 6, 6, 4, 3, 6, 4, 4, 4, 3, 6, 4, 6, 6, 0, 4, 3, 6, 6,
+        6, 3, 3, 6, 3, 6, 1, 2, 6, 6, 6, 3, 1, 6, 6, 6], device='cuda:0')
+preds: tensor([6, 6, 6, 1, 6, 1, 6, 4, 6, 4, 2, 6, 6, 6, 6, 6, 6, 1, 2, 6, 4, 4, 6, 5,
+        6, 3, 6, 6, 4, 2, 6, 2, 4, 3, 6, 4, 4, 4, 6, 1, 4, 2, 6, 0, 4, 6, 6, 6,
+        2, 6, 6, 6, 6, 6, 6, 2, 6, 6, 5, 6, 1, 6, 6, 2], device='cuda:0')
+preds same_ratio preds/y_ground truth: 60.9375 %
+preds Unknown same_ratio pres/true: 67.85714285714286 %
+preds not Unknown same_ratio pres/true: 55.55555555555556 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 35/64
+number of true unknown labels:  true unknown labels /total true labels: 28/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  73%|███████▎  | 632/865 [08:09<03:00,  1.29it/s, v_num=516, train_loss_step=122.0, tta_acc_step=0.500]Epoch 0:  73%|███████▎  | 632/865 [08:10<03:00,  1.29it/s, v_num=516, train_loss_step=123.0, tta_acc_step=0.609]acc_pseudo_labels_unknow_step: 0.39285714285714285
+acc_pseudo_labels_know_step: 0.625
+acc_pseudo_labels_unknow_accum: 0.6148015048570947
+acc_pseudo_labels_know_accum: 0.7355805243445693
+pseudo_labels: tensor([0, 1, 4, 1, 5, 0, 2, 2, 2, 6, 6, 2, 5, 2, 6, 2, 1, 6, 6, 2, 2, 6, 3, 3,
+        3, 6, 6, 6, 1, 1, 0, 6, 6, 1, 6, 3, 6, 6, 2, 1, 0, 6, 6, 6, 4, 6, 0, 2,
+        6, 6, 6, 5, 0, 6, 6, 4, 6, 6, 6, 6, 2, 3, 6, 5], device='cuda:0')
+y_ground truth: tensor([0, 6, 4, 1, 3, 0, 6, 2, 6, 6, 5, 6, 6, 6, 6, 2, 1, 2, 6, 6, 2, 6, 3, 3,
+        3, 0, 1, 5, 6, 6, 0, 3, 3, 6, 3, 3, 3, 3, 2, 1, 0, 2, 6, 2, 6, 6, 0, 2,
+        6, 6, 6, 6, 0, 5, 2, 4, 3, 3, 3, 6, 6, 3, 6, 3], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 50.0 %
+pseudo_labels Unknown same_ratio pres/true: 45.83333333333333 %
+pseudo_labels not Unknown same_ratio pres/true: 52.5 %
+y_ground truth: tensor([0, 6, 4, 1, 3, 0, 6, 2, 6, 6, 5, 6, 6, 6, 6, 2, 1, 2, 6, 6, 2, 6, 3, 3,
+        3, 0, 1, 5, 6, 6, 0, 3, 3, 6, 3, 3, 3, 3, 2, 1, 0, 2, 6, 2, 6, 6, 0, 2,
+        6, 6, 6, 6, 0, 5, 2, 4, 3, 3, 3, 6, 6, 3, 6, 3], device='cuda:0')
+preds: tensor([0, 1, 4, 1, 4, 0, 2, 2, 2, 6, 6, 2, 6, 2, 6, 2, 1, 6, 6, 2, 2, 6, 3, 3,
+        3, 6, 6, 6, 1, 1, 0, 6, 6, 6, 6, 3, 6, 6, 2, 1, 0, 6, 6, 6, 2, 6, 0, 2,
+        6, 6, 6, 5, 0, 6, 6, 4, 6, 6, 6, 6, 2, 6, 6, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 51.5625 %
+preds Unknown same_ratio pres/true: 54.166666666666664 %
+preds not Unknown same_ratio pres/true: 50.0 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 32/64
+number of true unknown labels:  true unknown labels /total true labels: 24/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  73%|███████▎  | 633/865 [08:10<02:59,  1.29it/s, v_num=516, train_loss_step=123.0, tta_acc_step=0.609]Epoch 0:  73%|███████▎  | 633/865 [08:10<02:59,  1.29it/s, v_num=516, train_loss_step=111.0, tta_acc_step=0.516]acc_pseudo_labels_unknow_step: 0.5806451612903226
+acc_pseudo_labels_know_step: 0.8823529411764706
+acc_pseudo_labels_unknow_accum: 0.6147421524663678
+acc_pseudo_labels_know_accum: 0.7358137795643639
+pseudo_labels: tensor([6, 0, 6, 6, 6, 5, 6, 6, 6, 6, 6, 1, 0, 2, 6, 4, 6, 6, 1, 6, 6, 0, 6, 4,
+        6, 6, 3, 6, 6, 1, 4, 2, 2, 0, 3, 6, 3, 5, 2, 6, 6, 4, 4, 0, 6, 6, 6, 6,
+        4, 0, 1, 2, 6, 1, 1, 3, 6, 3, 5, 6, 6, 2, 3, 6], device='cuda:0')
+y_ground truth: tensor([6, 0, 0, 5, 6, 6, 5, 3, 6, 3, 0, 1, 0, 2, 3, 4, 6, 5, 1, 6, 6, 6, 6, 4,
+        6, 3, 6, 4, 1, 6, 4, 2, 6, 0, 6, 6, 6, 6, 2, 3, 6, 4, 4, 0, 6, 6, 6, 6,
+        4, 0, 1, 6, 6, 6, 6, 3, 5, 3, 6, 6, 6, 2, 3, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 60.9375 %
+pseudo_labels Unknown same_ratio pres/true: 60.0 %
+pseudo_labels not Unknown same_ratio pres/true: 61.76470588235294 %
+y_ground truth: tensor([6, 0, 0, 5, 6, 6, 5, 3, 6, 3, 0, 1, 0, 2, 3, 4, 6, 5, 1, 6, 6, 6, 6, 4,
+        6, 3, 6, 4, 1, 6, 4, 2, 6, 0, 6, 6, 6, 6, 2, 3, 6, 4, 4, 0, 6, 6, 6, 6,
+        4, 0, 1, 6, 6, 6, 6, 3, 5, 3, 6, 6, 6, 2, 3, 6], device='cuda:0')
+preds: tensor([6, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 0, 2, 6, 4, 6, 6, 1, 6, 6, 0, 6, 4,
+        6, 6, 3, 6, 6, 1, 4, 2, 2, 0, 3, 6, 3, 5, 2, 6, 6, 4, 6, 0, 6, 6, 6, 6,
+        4, 0, 1, 2, 6, 1, 1, 3, 6, 3, 6, 6, 6, 2, 3, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 62.5 %
+preds Unknown same_ratio pres/true: 66.66666666666666 %
+preds not Unknown same_ratio pres/true: 58.82352941176471 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 34/64
+number of true unknown labels:  true unknown labels /total true labels: 30/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  73%|███████▎  | 634/865 [08:11<02:59,  1.29it/s, v_num=516, train_loss_step=111.0, tta_acc_step=0.516]Epoch 0:  73%|███████▎  | 634/865 [08:11<02:59,  1.29it/s, v_num=516, train_loss_step=113.0, tta_acc_step=0.625]acc_pseudo_labels_unknow_step: 0.625
+acc_pseudo_labels_know_step: 0.7916666666666666
+acc_pseudo_labels_unknow_accum: 0.6147605192479857
+acc_pseudo_labels_know_accum: 0.7359388116780151
+pseudo_labels: tensor([6, 5, 6, 2, 6, 6, 0, 0, 6, 6, 6, 0, 1, 4, 6, 6, 2, 6, 2, 6, 4, 3, 3, 3,
+        6, 6, 2, 6, 2, 6, 2, 6, 6, 4, 2, 6, 3, 2, 6, 3, 6, 6, 2, 6, 6, 2, 3, 1,
+        6, 3, 4, 6, 1, 6, 6, 6, 6, 2, 6, 0, 6, 2, 1, 6], device='cuda:0')
+y_ground truth: tensor([6, 3, 6, 6, 6, 3, 0, 0, 6, 6, 5, 0, 1, 4, 6, 6, 6, 6, 2, 6, 4, 3, 3, 3,
+        6, 6, 6, 2, 2, 6, 2, 5, 6, 4, 2, 5, 6, 2, 5, 3, 6, 6, 6, 5, 6, 2, 3, 6,
+        2, 3, 4, 6, 6, 6, 6, 3, 5, 2, 5, 0, 6, 6, 1, 5], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 67.1875 %
+pseudo_labels Unknown same_ratio pres/true: 71.42857142857143 %
+pseudo_labels not Unknown same_ratio pres/true: 63.888888888888886 %
+y_ground truth: tensor([6, 3, 6, 6, 6, 3, 0, 0, 6, 6, 5, 0, 1, 4, 6, 6, 6, 6, 2, 6, 4, 3, 3, 3,
+        6, 6, 6, 2, 2, 6, 2, 5, 6, 4, 2, 5, 6, 2, 5, 3, 6, 6, 6, 5, 6, 2, 3, 6,
+        2, 3, 4, 6, 6, 6, 6, 3, 5, 2, 5, 0, 6, 6, 1, 5], device='cuda:0')
+preds: tensor([6, 5, 6, 2, 6, 6, 0, 0, 6, 6, 6, 0, 1, 4, 6, 6, 2, 6, 2, 6, 4, 3, 6, 3,
+        6, 6, 2, 6, 2, 6, 2, 6, 6, 4, 2, 6, 3, 2, 6, 3, 6, 6, 2, 6, 6, 2, 3, 1,
+        6, 3, 4, 6, 1, 6, 6, 6, 6, 2, 6, 0, 6, 2, 1, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 65.625 %
+preds Unknown same_ratio pres/true: 71.42857142857143 %
+preds not Unknown same_ratio pres/true: 61.111111111111114 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 33/64
+number of true unknown labels:  true unknown labels /total true labels: 28/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  73%|███████▎  | 635/865 [08:12<02:58,  1.29it/s, v_num=516, train_loss_step=113.0, tta_acc_step=0.625]Epoch 0:  73%|███████▎  | 635/865 [08:12<02:58,  1.29it/s, v_num=516, train_loss_step=178.0, tta_acc_step=0.656]acc_pseudo_labels_unknow_step: 0.5882352941176471
+acc_pseudo_labels_know_step: 0.7857142857142857
+acc_pseudo_labels_unknow_accum: 0.6147101530213336
+acc_pseudo_labels_know_accum: 0.736003726129483
+pseudo_labels: tensor([2, 1, 0, 6, 6, 2, 3, 1, 1, 6, 6, 6, 6, 3, 6, 5, 2, 0, 0, 6, 2, 6, 6, 4,
+        6, 2, 6, 6, 4, 2, 3, 6, 6, 6, 3, 6, 6, 6, 2, 6, 6, 1, 6, 6, 1, 6, 6, 1,
+        2, 4, 6, 3, 6, 6, 6, 6, 5, 6, 6, 6, 0, 2, 6, 2], device='cuda:0')
+y_ground truth: tensor([6, 1, 0, 6, 6, 2, 6, 1, 6, 6, 6, 2, 6, 3, 4, 1, 2, 0, 0, 1, 6, 6, 6, 4,
+        1, 2, 0, 4, 4, 2, 3, 2, 5, 5, 3, 2, 6, 6, 6, 4, 6, 6, 6, 6, 1, 6, 6, 6,
+        2, 4, 0, 3, 6, 6, 6, 3, 5, 3, 6, 6, 0, 2, 6, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 64.0625 %
+pseudo_labels Unknown same_ratio pres/true: 71.42857142857143 %
+pseudo_labels not Unknown same_ratio pres/true: 58.333333333333336 %
+y_ground truth: tensor([6, 1, 0, 6, 6, 2, 6, 1, 6, 6, 6, 2, 6, 3, 4, 1, 2, 0, 0, 1, 6, 6, 6, 4,
+        1, 2, 0, 4, 4, 2, 3, 2, 5, 5, 3, 2, 6, 6, 6, 4, 6, 6, 6, 6, 1, 6, 6, 6,
+        2, 4, 0, 3, 6, 6, 6, 3, 5, 3, 6, 6, 0, 2, 6, 6], device='cuda:0')
+preds: tensor([2, 1, 0, 6, 6, 6, 3, 1, 0, 6, 6, 6, 6, 6, 6, 6, 2, 0, 0, 6, 2, 6, 6, 4,
+        6, 2, 6, 6, 4, 2, 3, 6, 6, 6, 3, 6, 6, 6, 2, 6, 6, 1, 6, 6, 1, 6, 6, 1,
+        2, 4, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 0, 2, 6, 0], device='cuda:0')
+preds same_ratio preds/y_ground truth: 59.375 %
+preds Unknown same_ratio pres/true: 71.42857142857143 %
+preds not Unknown same_ratio pres/true: 50.0 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 38/64
+number of true unknown labels:  true unknown labels /total true labels: 28/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  74%|███████▎  | 636/865 [08:12<02:57,  1.29it/s, v_num=516, train_loss_step=178.0, tta_acc_step=0.656]Epoch 0:  74%|███████▎  | 636/865 [08:13<02:57,  1.29it/s, v_num=516, train_loss_step=91.60, tta_acc_step=0.594]acc_pseudo_labels_unknow_step: 0.6111111111111112
+acc_pseudo_labels_know_step: 0.7692307692307693
+acc_pseudo_labels_unknow_accum: 0.6147029316687103
+acc_pseudo_labels_know_accum: 0.7360439151470041
+pseudo_labels: tensor([6, 2, 0, 2, 1, 6, 6, 6, 6, 4, 0, 6, 6, 5, 6, 6, 6, 1, 6, 6, 1, 6, 1, 1,
+        3, 6, 5, 6, 6, 2, 6, 2, 1, 4, 6, 6, 6, 1, 6, 6, 6, 6, 4, 4, 6, 6, 4, 6,
+        6, 2, 3, 6, 5, 4, 6, 6, 6, 2, 6, 6, 6, 6, 4, 2], device='cuda:0')
+y_ground truth: tensor([5, 2, 0, 2, 6, 1, 6, 6, 6, 4, 0, 6, 5, 6, 6, 0, 5, 1, 3, 3, 6, 3, 1, 6,
+        3, 5, 6, 2, 6, 6, 6, 6, 6, 4, 6, 6, 6, 6, 2, 6, 6, 6, 4, 4, 6, 3, 4, 6,
+        6, 2, 3, 6, 3, 4, 6, 6, 5, 2, 6, 6, 6, 3, 4, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 60.9375 %
+pseudo_labels Unknown same_ratio pres/true: 68.75 %
+pseudo_labels not Unknown same_ratio pres/true: 53.125 %
+y_ground truth: tensor([5, 2, 0, 2, 6, 1, 6, 6, 6, 4, 0, 6, 5, 6, 6, 0, 5, 1, 3, 3, 6, 3, 1, 6,
+        3, 5, 6, 2, 6, 6, 6, 6, 6, 4, 6, 6, 6, 6, 2, 6, 6, 6, 4, 4, 6, 3, 4, 6,
+        6, 2, 3, 6, 3, 4, 6, 6, 5, 2, 6, 6, 6, 3, 4, 6], device='cuda:0')
+preds: tensor([6, 2, 0, 2, 1, 6, 6, 6, 6, 4, 0, 6, 6, 5, 6, 6, 6, 1, 6, 6, 1, 6, 6, 1,
+        3, 6, 5, 6, 6, 2, 6, 2, 1, 4, 6, 6, 6, 1, 6, 6, 6, 6, 4, 4, 6, 6, 4, 6,
+        6, 2, 3, 6, 6, 4, 6, 6, 6, 2, 6, 6, 6, 6, 4, 2], device='cuda:0')
+preds same_ratio preds/y_ground truth: 59.375 %
+preds Unknown same_ratio pres/true: 68.75 %
+preds not Unknown same_ratio pres/true: 50.0 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 38/64
+number of true unknown labels:  true unknown labels /total true labels: 32/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  74%|███████▎  | 637/865 [08:13<02:56,  1.29it/s, v_num=516, train_loss_step=91.60, tta_acc_step=0.594]Epoch 0:  74%|███████▎  | 637/865 [08:13<02:56,  1.29it/s, v_num=516, train_loss_step=84.60, tta_acc_step=0.594]acc_pseudo_labels_unknow_step: 0.6451612903225806
+acc_pseudo_labels_know_step: 0.7058823529411765
+acc_pseudo_labels_unknow_accum: 0.6147554665331331
+acc_pseudo_labels_know_accum: 0.7359962842545286
+pseudo_labels: tensor([6, 6, 1, 6, 6, 1, 6, 6, 3, 0, 6, 6, 6, 3, 0, 2, 2, 6, 6, 4, 6, 6, 6, 2,
+        6, 2, 6, 2, 6, 6, 4, 2, 6, 6, 3, 3, 2, 6, 2, 6, 6, 6, 6, 2, 0, 4, 4, 5,
+        0, 2, 6, 6, 0, 1, 1, 6, 6, 5, 3, 2, 4, 6, 1, 6], device='cuda:0')
+y_ground truth: tensor([3, 3, 6, 6, 6, 1, 6, 5, 6, 0, 6, 6, 0, 3, 0, 2, 6, 6, 6, 6, 2, 6, 3, 6,
+        6, 6, 5, 2, 6, 3, 4, 2, 1, 6, 3, 2, 6, 6, 2, 5, 6, 6, 6, 2, 0, 4, 4, 6,
+        0, 6, 3, 6, 0, 6, 6, 6, 6, 6, 3, 6, 4, 6, 6, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 59.375 %
+pseudo_labels Unknown same_ratio pres/true: 58.82352941176471 %
+pseudo_labels not Unknown same_ratio pres/true: 60.0 %
+y_ground truth: tensor([3, 3, 6, 6, 6, 1, 6, 5, 6, 0, 6, 6, 0, 3, 0, 2, 6, 6, 6, 6, 2, 6, 3, 6,
+        6, 6, 5, 2, 6, 3, 4, 2, 1, 6, 3, 2, 6, 6, 2, 5, 6, 6, 6, 2, 0, 4, 4, 6,
+        0, 6, 3, 6, 0, 6, 6, 6, 6, 6, 3, 6, 4, 6, 6, 6], device='cuda:0')
+preds: tensor([6, 6, 6, 6, 6, 1, 6, 6, 3, 0, 6, 6, 6, 3, 0, 2, 2, 6, 6, 4, 6, 6, 6, 2,
+        6, 2, 6, 2, 6, 6, 4, 2, 6, 6, 3, 3, 2, 6, 2, 6, 6, 6, 6, 2, 0, 4, 4, 3,
+        0, 2, 6, 6, 0, 1, 6, 6, 6, 3, 3, 2, 4, 6, 1, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 62.5 %
+preds Unknown same_ratio pres/true: 64.70588235294117 %
+preds not Unknown same_ratio pres/true: 60.0 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 33/64
+number of true unknown labels:  true unknown labels /total true labels: 34/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  74%|███████▍  | 638/865 [08:14<02:55,  1.29it/s, v_num=516, train_loss_step=84.60, tta_acc_step=0.594]Epoch 0:  74%|███████▍  | 638/865 [08:14<02:55,  1.29it/s, v_num=516, train_loss_step=132.0, tta_acc_step=0.625]acc_pseudo_labels_unknow_step: 0.65625
+acc_pseudo_labels_know_step: 0.8
+acc_pseudo_labels_unknow_accum: 0.6148292141071925
+acc_pseudo_labels_know_accum: 0.7361149745016227
+pseudo_labels: tensor([1, 6, 2, 6, 2, 6, 3, 4, 4, 6, 0, 5, 6, 6, 6, 2, 6, 6, 6, 2, 6, 4, 6, 0,
+        3, 1, 6, 1, 6, 1, 6, 4, 3, 1, 3, 6, 6, 3, 2, 0, 6, 6, 2, 6, 6, 2, 6, 3,
+        6, 6, 6, 6, 6, 6, 6, 4, 6, 5, 1, 6, 1, 1, 4, 6], device='cuda:0')
+y_ground truth: tensor([1, 6, 2, 6, 6, 3, 3, 6, 4, 2, 0, 6, 6, 6, 3, 6, 6, 3, 2, 2, 6, 4, 6, 0,
+        3, 1, 5, 4, 5, 1, 6, 4, 3, 6, 3, 6, 6, 3, 6, 0, 6, 6, 2, 6, 6, 6, 6, 6,
+        6, 6, 1, 6, 4, 6, 2, 4, 6, 3, 6, 0, 6, 1, 4, 6], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 64.0625 %
+pseudo_labels Unknown same_ratio pres/true: 67.74193548387096 %
+pseudo_labels not Unknown same_ratio pres/true: 60.60606060606061 %
+y_ground truth: tensor([1, 6, 2, 6, 6, 3, 3, 6, 4, 2, 0, 6, 6, 6, 3, 6, 6, 3, 2, 2, 6, 4, 6, 0,
+        3, 1, 5, 4, 5, 1, 6, 4, 3, 6, 3, 6, 6, 3, 6, 0, 6, 6, 2, 6, 6, 6, 6, 6,
+        6, 6, 1, 6, 4, 6, 2, 4, 6, 3, 6, 0, 6, 1, 4, 6], device='cuda:0')
+preds: tensor([6, 6, 2, 6, 2, 6, 3, 6, 4, 6, 0, 6, 6, 6, 6, 6, 6, 6, 6, 2, 6, 4, 6, 0,
+        3, 1, 6, 6, 6, 1, 6, 4, 3, 6, 3, 6, 6, 3, 2, 0, 6, 6, 2, 6, 6, 2, 6, 3,
+        6, 6, 6, 6, 6, 6, 6, 4, 6, 3, 1, 6, 1, 1, 4, 6], device='cuda:0')
+preds same_ratio preds/y_ground truth: 70.3125 %
+preds Unknown same_ratio pres/true: 80.64516129032258 %
+preds not Unknown same_ratio pres/true: 60.60606060606061 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 38/64
+number of true unknown labels:  true unknown labels /total true labels: 31/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  74%|███████▍  | 639/865 [08:15<02:55,  1.29it/s, v_num=516, train_loss_step=132.0, tta_acc_step=0.625]Epoch 0:  74%|███████▍  | 639/865 [08:15<02:55,  1.29it/s, v_num=516, train_loss_step=131.0, tta_acc_step=0.703]acc_pseudo_labels_unknow_step: 0.696969696969697
+acc_pseudo_labels_know_step: 0.8666666666666667
+acc_pseudo_labels_unknow_accum: 0.6149794877480874
+acc_pseudo_labels_know_accum: 0.7362962962962963
+pseudo_labels: tensor([0, 4, 1, 3, 6, 6, 6, 6, 6, 6, 4, 2, 4, 0, 6, 3, 6, 6, 2, 2, 6, 0, 5, 3,
+        4, 5, 2, 6, 6, 3, 1, 6, 6, 6, 6, 6, 6, 6, 6, 6, 2, 6, 2, 3, 1, 3, 6, 4,
+        6, 6, 1, 6, 6, 4, 6, 4, 6, 1, 6, 6, 6, 6, 0, 4], device='cuda:0')
+y_ground truth: tensor([0, 4, 1, 3, 3, 6, 6, 2, 0, 6, 4, 6, 4, 0, 3, 6, 5, 6, 6, 2, 1, 0, 3, 2,
+        4, 6, 2, 1, 6, 6, 1, 6, 3, 6, 6, 6, 3, 6, 6, 6, 2, 6, 6, 3, 6, 6, 6, 4,
+        6, 3, 1, 6, 6, 4, 6, 4, 6, 1, 6, 6, 6, 6, 0, 4], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 68.75 %
+pseudo_labels Unknown same_ratio pres/true: 74.19354838709677 %
+pseudo_labels not Unknown same_ratio pres/true: 63.63636363636363 %
+y_ground truth: tensor([0, 4, 1, 3, 3, 6, 6, 2, 0, 6, 4, 6, 4, 0, 3, 6, 5, 6, 6, 2, 1, 0, 3, 2,
+        4, 6, 2, 1, 6, 6, 1, 6, 3, 6, 6, 6, 3, 6, 6, 6, 2, 6, 6, 3, 6, 6, 6, 4,
+        6, 3, 1, 6, 6, 4, 6, 4, 6, 1, 6, 6, 6, 6, 0, 4], device='cuda:0')
+preds: tensor([0, 4, 1, 3, 6, 6, 6, 6, 6, 6, 4, 2, 4, 0, 6, 3, 6, 6, 2, 2, 6, 0, 5, 3,
+        4, 6, 2, 6, 6, 3, 1, 6, 6, 6, 6, 6, 6, 6, 6, 6, 2, 6, 2, 3, 1, 3, 6, 4,
+        6, 6, 1, 6, 6, 4, 6, 4, 6, 1, 6, 6, 6, 6, 0, 4], device='cuda:0')
+preds same_ratio preds/y_ground truth: 70.3125 %
+preds Unknown same_ratio pres/true: 77.41935483870968 %
+preds not Unknown same_ratio pres/true: 63.63636363636363 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 34/64
+number of true unknown labels:  true unknown labels /total true labels: 31/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  74%|███████▍  | 640/865 [08:15<02:54,  1.29it/s, v_num=516, train_loss_step=131.0, tta_acc_step=0.703]Epoch 0:  74%|███████▍  | 640/865 [08:16<02:54,  1.29it/s, v_num=516, train_loss_step=94.80, tta_acc_step=0.703]acc_pseudo_labels_unknow_step: 0.7352941176470589
+acc_pseudo_labels_know_step: 0.875
+acc_pseudo_labels_unknow_accum: 0.6152058432934927
+acc_pseudo_labels_know_accum: 0.7365014792899408
+pseudo_labels: tensor([0, 1, 3, 6, 3, 6, 6, 3, 4, 4, 5, 0, 6, 6, 6, 6, 2, 3, 1, 5, 3, 2, 2, 2,
+        6, 6, 6, 6, 2, 6, 6, 2, 6, 6, 6, 2, 6, 4, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+        5, 6, 2, 3, 6, 0, 6, 6, 6, 2, 2, 2, 6, 6, 1, 1], device='cuda:0')
+y_ground truth: tensor([0, 6, 3, 3, 3, 6, 3, 3, 4, 4, 6, 0, 6, 5, 6, 6, 6, 3, 1, 3, 3, 2, 6, 2,
+        6, 6, 6, 6, 2, 6, 6, 6, 6, 3, 6, 2, 6, 4, 6, 3, 6, 6, 6, 6, 6, 6, 6, 6,
+        6, 3, 6, 3, 6, 0, 3, 2, 3, 2, 6, 2, 6, 6, 6, 1], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 70.3125 %
+pseudo_labels Unknown same_ratio pres/true: 73.52941176470588 %
+pseudo_labels not Unknown same_ratio pres/true: 66.66666666666666 %
+y_ground truth: tensor([0, 6, 3, 3, 3, 6, 3, 3, 4, 4, 6, 0, 6, 5, 6, 6, 6, 3, 1, 3, 3, 2, 6, 2,
+        6, 6, 6, 6, 2, 6, 6, 6, 6, 3, 6, 2, 6, 4, 6, 3, 6, 6, 6, 6, 6, 6, 6, 6,
+        6, 3, 6, 3, 6, 0, 3, 2, 3, 2, 6, 2, 6, 6, 6, 1], device='cuda:0')
+preds: tensor([0, 1, 3, 6, 3, 6, 6, 3, 4, 4, 6, 0, 6, 6, 6, 6, 2, 3, 1, 6, 3, 2, 2, 6,
+        6, 6, 6, 6, 2, 6, 6, 6, 6, 6, 6, 2, 6, 4, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+        5, 6, 2, 3, 6, 0, 6, 6, 6, 2, 2, 2, 6, 6, 1, 1], device='cuda:0')
+preds same_ratio preds/y_ground truth: 71.875 %
+preds Unknown same_ratio pres/true: 79.41176470588235 %
+preds not Unknown same_ratio pres/true: 63.33333333333333 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 38/64
+number of true unknown labels:  true unknown labels /total true labels: 34/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  74%|███████▍  | 641/865 [08:16<02:53,  1.29it/s, v_num=516, train_loss_step=94.80, tta_acc_step=0.703]Epoch 0:  74%|███████▍  | 641/865 [08:16<02:53,  1.29it/s, v_num=516, train_loss_step=95.30, tta_acc_step=0.719]acc_pseudo_labels_unknow_step: 0.7297297297297297
+acc_pseudo_labels_know_step: 0.875
+acc_pseudo_labels_unknow_accum: 0.6154398365453642
+acc_pseudo_labels_know_accum: 0.7367060561299852
+pseudo_labels: tensor([6, 6, 2, 4, 3, 1, 6, 2, 6, 6, 2, 6, 6, 5, 6, 6, 6, 3, 6, 0, 6, 6, 0, 6,
+        6, 6, 6, 4, 6, 4, 1, 6, 6, 6, 6, 3, 4, 1, 4, 6, 4, 6, 4, 1, 2, 6, 6, 3,
+        6, 1, 6, 6, 6, 5, 5, 4, 6, 6, 6, 6, 6, 6, 6, 4], device='cuda:0')
+y_ground truth: tensor([5, 6, 2, 4, 3, 6, 6, 6, 6, 6, 2, 6, 6, 5, 6, 3, 6, 6, 6, 0, 3, 4, 3, 6,
+        6, 6, 3, 4, 6, 4, 1, 6, 6, 4, 6, 6, 4, 1, 4, 6, 4, 5, 4, 6, 2, 3, 6, 3,
+        6, 6, 6, 3, 6, 5, 6, 4, 6, 6, 6, 6, 5, 6, 6, 4], device='cuda:0')
+pseudo_labels same_ratio pseudo_labels/y_ground truth: 71.875 %
+pseudo_labels Unknown same_ratio pres/true: 79.41176470588235 %
+pseudo_labels not Unknown same_ratio pres/true: 63.33333333333333 %
+y_ground truth: tensor([5, 6, 2, 4, 3, 6, 6, 6, 6, 6, 2, 6, 6, 5, 6, 3, 6, 6, 6, 0, 3, 4, 3, 6,
+        6, 6, 3, 4, 6, 4, 1, 6, 6, 4, 6, 6, 4, 1, 4, 6, 4, 5, 4, 6, 2, 3, 6, 3,
+        6, 6, 6, 3, 6, 5, 6, 4, 6, 6, 6, 6, 5, 6, 6, 4], device='cuda:0')
+preds: tensor([6, 6, 2, 4, 3, 1, 6, 2, 6, 6, 2, 6, 6, 5, 6, 6, 6, 3, 6, 0, 6, 6, 0, 6,
+        6, 6, 6, 4, 6, 4, 1, 6, 6, 6, 6, 3, 4, 1, 4, 6, 4, 6, 4, 1, 2, 6, 6, 3,
+        6, 1, 6, 6, 6, 6, 5, 4, 6, 6, 6, 6, 6, 6, 6, 4], device='cuda:0')
+preds same_ratio preds/y_ground truth: 70.3125 %
+preds Unknown same_ratio pres/true: 79.41176470588235 %
+preds not Unknown same_ratio pres/true: 60.0 %
+estimated number of unknown labels:  estimated unknown labels /total true labels: 38/64
+number of true unknown labels:  true unknown labels /total true labels: 34/64
+--------------self.tau_low: 0.0003279498904672489
+-------------self.tau_high: 0.17327344033952752
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+<class 'torchmetrics.classification.accuracy.MulticlassAccuracy'> MulticlassAccuracy()
+Epoch 0:  74%|███████▍  | 642/865 [08:17<02:52,  1.29it/s, v_num=516, train_loss_step=95.30, tta_acc_step=0.719]Epoch 0:  74%|███████▍  | 642/865 [08:17<02:52,  1.29it/s, v_num=516, train_loss_step=121.0, tta_acc_step=0.703]
