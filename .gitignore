@@ -166,3 +166,25 @@ cython_debug/
 
 # other
 .yaml.bak
+
+######new
+
+# WandB
+wandb/
+*.wandb
+configs/wandb/
+
+# Logs
+logs/
+*.log
+events.out.tfevents.*
+
+# Training outputs
+job_name*
+*.out
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
